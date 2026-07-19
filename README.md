@@ -48,14 +48,6 @@ You can read it linearly, but each Part stands on its own:
 
 The book is under active, single-author development — chapters are written and revised as the underlying work happens, so depth varies across Parts. See `TOC.md` for the full table of contents, current reading order, and recommendations.
 
-## Conventions
-
-- Each chapter is a single `.md` file under `chapters/`, numbered to keep ordering stable in the filesystem.
-- Internal references point to chapters by number (e.g. "ch. 15"), so the book reads standalone.
-- External references cite URLs inline; the master reading list lives in `appendices/C-reading-list.md`.
-- **No AI-attribution trailers** in commits — house style.
-- Lore-side writing aims for *Chobits warmth × Ghost in the Shell weight*. Technical writing aims for terse and useful.
-
 ## Contributing (future)
 
 For now this is single-author. If/when contributions open up, the model will be: PRs against chapters welcomed; lore canon decisions belong to the project lead.
