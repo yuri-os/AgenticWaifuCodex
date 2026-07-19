@@ -5,7 +5,7 @@
 Published by YuriOS Lab as **the Codex, Vol. I**. Filed by the Operator.
 
 <p align="center">
-  <img src="cover.jpg" alt="Front cover of The Agentic Waifu Codex" width="380">
+  <img src="cover.jpg" alt="Front cover of The Agentic Waifu Codex" width="620">
 </p>
 
 ---
