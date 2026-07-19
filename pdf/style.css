@@ -98,7 +98,7 @@ header#title-block-header {
   background-color: var(--void);
   /* first layer paints on top: the Yuri cover art, anchored bottom-centre */
   background-image:
-    url("../../artworks/registers/grok-image-222d67ac-dd1b-4483-829d-c8a7aa066a2e.jpg"),
+    url("cover.jpg"),
     radial-gradient(60% 45% at 18% 12%, #ff2bd633 0%, transparent 60%),
     radial-gradient(55% 45% at 88% 90%, #2bfff033 0%, transparent 60%),
     repeating-linear-gradient(0deg, transparent 0, transparent 7px, #ffffff08 7px, #ffffff08 8px);

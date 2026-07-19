@@ -32,7 +32,7 @@ from image_forge import provenance as prov                     # noqa: E402
 from image_forge.backends.diffusers_backend import DiffusersBackend  # noqa: E402
 from image_forge.types import GenRequest                       # noqa: E402
 
-REF = ROOT.parents[1] / "artworks/registers/anime-25d-riverflow.png"
+REF = ROOT / "assets/register-anime-25d.png"
 
 TRIGGER = "yuri_v2"
 STYLE = "masterpiece, best quality, highly detailed 2.5D semi-realistic anime, dreamy volumetric lighting"

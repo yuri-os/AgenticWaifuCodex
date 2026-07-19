@@ -91,4 +91,4 @@ lora:
 # Identity anchor for the no-train paths (IP-Adapter / reference-edit). Not used when
 # the LoRA is active; kept for build_lora_dataset / local_ipadapter_scenes.
 # reference_images:
-#   - "../../../artworks/registers/anime-25d-riverflow.png"
+#   - "assets/register-anime-25d.png"

@@ -1,7 +1,7 @@
 """Step 1 of the character-LoRA pipeline: generate N canon-frame candidates.
 
 Calls the same model/API that made the locked register (sourceful/riverflow-v2.5-pro
-on OpenRouter) with the exact manifest prompt, N times. Each call is a fresh sample,
+on OpenRouter) with the exact register prompt from assets/register.json, N times. Each call is a fresh sample,
 so you get N variations of the same character concept — pick the best one to anchor
 the dataset (→ lora/TRAINING.md, step 1).
 
@@ -28,8 +28,7 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parent.parent
 API = "https://openrouter.ai/api/v1/chat/completions"
 MODEL = "sourceful/riverflow-v2.5-pro"
-MANIFEST = ROOT.parents[1] / "artworks/manifest.json"
-REGISTER_ID = "register-anime-25d"
+REGISTER = ROOT / "assets/register.json"
 
 
 def api_key() -> str:
@@ -72,8 +71,7 @@ def main() -> None:
     ap.add_argument("--out", default=str(ROOT / "out/riverflow_variations"))
     args = ap.parse_args()
 
-    m = json.loads(MANIFEST.read_text())
-    prompt = next(e["prompt"] for e in m["images"] if e["id"] == REGISTER_ID)
+    prompt = json.loads(REGISTER.read_text())["prompt"]
     out = Path(args.out); out.mkdir(parents=True, exist_ok=True)
     key = api_key()
 

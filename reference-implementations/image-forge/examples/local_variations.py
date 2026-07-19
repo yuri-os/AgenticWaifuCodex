@@ -1,7 +1,7 @@
 """Local Yuri asset pipeline: make N on-register img2img variations of a reference.
 
 A reusable loop for generating local Yuri assets from an existing image (e.g. the
-locked register `artworks/registers/anime-25d-riverflow.png`). It keeps the
+locked register `assets/register-anime-25d.png`). It keeps the
 reference's composition and identity (img2img) while varying expression, lighting,
 and seed — the practical "give me a set, same character, slightly different" pipeline.
 
@@ -36,7 +36,7 @@ LIGHTING = ["neon", "lamplit", "golden", "screenglow", "neon", "daylight"]
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--ref", default=str(ROOT.parents[1] / "artworks/registers/anime-25d-riverflow.png"))
+    ap.add_argument("--ref", default=str(ROOT / "assets/register-anime-25d.png"))
     ap.add_argument("-n", type=int, default=5)
     ap.add_argument("--strength", type=float, default=0.5,
                     help="0.4 stays close to the reference / 0.7 diverges more")

@@ -30,7 +30,7 @@ from image_forge import provenance as prov                      # noqa: E402
 from image_forge.backends.diffusers_backend import DiffusersBackend  # noqa: E402
 from image_forge.types import GenRequest                        # noqa: E402
 
-REF = ROOT.parents[1] / "artworks/registers/anime-25d-riverflow.png"
+REF = ROOT / "assets/register-anime-25d.png"
 
 # IP-Adapter variants, low→high fidelity. "plus" (vit-h, 16 image tokens) is much
 # sharper/more faithful than "base" (bigG, 4 tokens); "plus-face" focuses on the face.
