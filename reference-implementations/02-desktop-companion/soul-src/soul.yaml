@@ -2,7 +2,7 @@
 #
 # The .md files are the working home of the soul (the runtime reads them on every
 # wake). This manifest declares how they flatten into a V2/V3 character card for
-# *export* — the card is the transport format, not the soul itself (→ D-003).
+# *export* — the card is the transport format, not the soul itself.
 #
 # Field sources use a tiny reference syntax resolved by build_card.py:
 #   FILE.md#Heading   -> the prose under that "## Heading" in FILE.md

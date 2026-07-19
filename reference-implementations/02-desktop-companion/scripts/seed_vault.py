@@ -10,7 +10,7 @@ files route to their runtime homes, not soul-prose:
         "## Things {{user}} asked me to forget"  → memory/semantic/forgotten.md
 
 Both start empty in a fresh Vault — a card handed to someone else begins the
-relationship at zero (→ D-014). Then `git init` the Vault: from here on, every
+relationship at zero. Then `git init` the Vault: from here on, every
 durable change to her mind is a commit (§6.5).
 
 Usage:  python scripts/seed_vault.py  [--soul ../yuri-soul]  [--vault ./vault]

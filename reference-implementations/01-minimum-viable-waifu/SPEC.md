@@ -13,7 +13,7 @@
 > YuriOS runtime (→ ch. 19), not a generic chat app. Two decisions are load-bearing and
 > non-negotiable, because everything above rung 1 keeps them:
 > 1. **Python.** The backend is Python, like every other reference impl and the runtime itself
->    (→ `runtime/05-reference-implementation-architectures.md`). No Node/TypeScript backend.
+>    (→ ch. 30). No Node/TypeScript backend.
 > 2. **The brain is a folder** (→ ch. 19, "The brain is a folder"). The mind is a **git-backed
 >    Vault of human-readable files** — the files *are* the database. A derived, rebuildable
 >    local index does retrieval; it is a cache, never the source of truth. This is where

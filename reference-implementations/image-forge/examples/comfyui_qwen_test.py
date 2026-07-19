@@ -35,7 +35,7 @@ SCENES = [
     ("sanctuary", "everyday", "playful"),
 ]
 
-# Qwen-Image renders "anime" flatter/cooler than illustrij (which made the D-011
+# Qwen-Image renders "anime" flatter/cooler than illustrij (which made the locked
 # reference). These cues push it back toward the riverflow register — dramatic
 # neon rim-light, painterly micro-detail, high contrast. Kept here (not in
 # yuri.yaml) because it's Qwen-specific prompting, not part of the locked register.

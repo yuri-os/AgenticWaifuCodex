@@ -2,7 +2,7 @@
 
 This is the fully-owned path: your hardware, your weights, no refusals, NSFW-capable
 (SDXL fine-tunes like ``John6666/illustrij-v50-sdxl`` have no safety checker). It is
-the in-process sibling of ``../../../YuriMedia/generate.py`` — same model registry
+shaped like a standard batch generator — same model registry
 shape, same 16 GB-VRAM offload settings — wrapped as an image-forge backend so the
 runtime calls it like any other.
 
@@ -59,7 +59,7 @@ def _quiet(*logger_names: str):
 
 
 def clean_prompt(prompt: str) -> str:
-    """Strip A1111/ComfyUI ``<lora:...>`` tags diffusers can't parse (matches YuriMedia)."""
+    """Strip A1111/ComfyUI ``<lora:...>`` tags diffusers can't parse."""
     if "<lora:" not in prompt:
         return prompt
     prompt = _LORA_TAG.sub(" ", prompt)

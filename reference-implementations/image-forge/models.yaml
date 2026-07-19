@@ -1,7 +1,7 @@
 # Local diffusers model registry for the `diffusers` backend.
 #
 # Add any Hugging Face model here: repo + the diffusers pipeline class + sane
-# defaults. Mirrors ../../../YuriMedia/generate.py so models proven there work
+# defaults. Mirrors the offline batch generator so models proven there work
 # here unchanged. Pick one with `backend.model` in config.yaml.
 #
 # Tuned for 16 GB VRAM (RTX 5070 Ti) via sequential CPU offload — illustrij
@@ -26,7 +26,7 @@ equinox:
   repo: John6666/bss-equinox-il-semi-realistic-model-v25-sdxl
   pipeline: StableDiffusionXLPipeline
   defaults: { num_inference_steps: 30, guidance_scale: 5.0 }
-  description: BSS Equinox v2.5 — 2.5D semi-realistic Illustrious (closest to D-011)
+  description: BSS Equinox v2.5 — 2.5D semi-realistic Illustrious (closest to the locked register)
 
 nova-anime:
   repo: John6666/nova-anime-xl-ilv40happyvalentine-sdxl

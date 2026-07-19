@@ -1,17 +1,17 @@
 # Yuri's visual identity — the image-side of the SOUL (canon-v1).
 #
-# These prose fields carry the locked D-011 register from artworks/manifest.json
+# These prose fields carry the locked register (the source of truth)
 # so on-demand selfies read as the same person as the brand art (→ ch. 26, one
-# source of truth). One deliberate departure from the manifest: the signature
+# source of truth). One deliberate departure from the brand set: the signature
 # outfit is factored OUT of `identity` into the `signature` wardrobe tier, so the
 # prompt drives clothing instead of the suit being forced into every render. Edit
 # `identity` to re-skin her; leave `quality_preamble` alone — it's the register.
 
 name: Yuri
 
-# {AAA} — the locked register (D-011: 2.5D semi-realistic anime). The leading
+# {AAA} — the locked register (2.5D semi-realistic anime). The leading
 # booru-style quality tags (masterpiece … newest) are what the Illustrious-lineage
-# bases — illustrij/equinox/nova — actually respond to; the prose after pins D-011.
+# bases — illustrij/equinox/nova — actually respond to; the prose after pins the register.
 # Deliberately NO "photorealistic/realistic/8k": those push the semi-realistic bases
 # (equinox-v5) all the way to photoreal, off-register.
 quality_preamble: >-

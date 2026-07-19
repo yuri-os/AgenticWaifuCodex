@@ -43,7 +43,7 @@ SDXL_MODELS = ["illustrij", "equinox", "nova-anime", "yesmix"]
 CACHE_DIR = "/mnt/6870C6B170C68572/AI/huggingface"
 
 # Qwen-specific register booster (same as comfyui_qwen_test.py — Qwen renders
-# flatter/cooler than the SDXL anime tunes, so nudge it toward the D-011 look).
+# flatter/cooler than the SDXL anime tunes, so nudge it toward the locked look).
 QWEN_STYLE = (
     "Dramatic neon rim lighting in vivid magenta and electric cyan, rich saturated "
     "cinematic color, ultra-detailed glossy reflective eyes with sharp catchlights, "

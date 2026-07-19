@@ -25,7 +25,7 @@ signing (Build #5). No multi-user auth or hosting. Not a general image editor.
   `data` dict, the token report, voice-law warnings, the placeholder portrait,
   the build, the soul-folder `.zip` export, and the card import.
 - **Frontend:** `web/` — a no-build vanilla-JS SPA in the locked dark brand
-  palette (`brand/palette.md`).
+  palette (`web/styles.css`).
 - **Working state:** `workspace/` (gitignored) holds `draft.json`, `portrait.png`,
   `settings.json`, and `dist/` (built cards).
 

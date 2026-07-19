@@ -5,7 +5,7 @@ card (a V2/V3 `.png`, or a card `.json`) back into an editable YuriOS **SOUL**
 folder (CONSTITUTION.md / PERSONA.md / SCENARIO.md / EXAMPLES.md / WORLD.md /
 NOTES.md + a generated soul.yaml).
 
-The card is only the *transport* format (→ D-003); the soul files are the
+The card is only the *transport* format; the soul files are the
 working home a runtime reads on every wake (→ ch. 07). A downloaded card is a
 flat artifact — importing it splits it back into the immutable-core / editable
 layers so a recipient can actually live with and reshape the companion.

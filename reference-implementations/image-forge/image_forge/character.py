@@ -2,11 +2,11 @@
 
 This is the image-side of the SOUL (→ yuri-soul/): a small, human-editable file
 that *is* the character's appearance, kept separate from any one generator. The
-four fields below mirror the locked D-011 register carried in
-``artworks/manifest.json`` so a runtime selfie reads as the *same person* as the
+four fields below mirror the locked register carried in
+``characters/yuri.yaml`` so a runtime selfie reads as the *same person* as the
 brand art (→ ch. 26, "one source of truth").
 
-Prompt assembly follows ``artworks/generate.py`` exactly:
+Prompt assembly is strictly ordered:
 
     positive = quality_preamble + identity + scene
     negative = base_negative + (character_negative if a person is in frame)
@@ -26,7 +26,7 @@ import yaml
 @dataclass
 class Character:
     name: str
-    # The locked register preamble (D-011: 2.5D semi-realistic anime). {AAA}
+    # The locked register preamble (2.5D semi-realistic anime). {AAA}
     quality_preamble: str = ""
     # Who she is, visually — the {YURI} block: face, build, hair, signature marks.
     identity: str = ""

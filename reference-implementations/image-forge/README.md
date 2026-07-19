@@ -7,8 +7,8 @@ selfies "of her", worldbuilding art, branding, and reference-driven edits — an
 does so *on-register* (the locked 2.5D anime look) regardless of which
 generator is plugged in behind it.
 
-This is the live, on-demand sibling of the repo's batch art pipeline
-(`../../artworks/generate.py`): same locked register, same proven OpenRouter path,
+This is the live, on-demand counterpart to an offline batch art pipeline:
+same locked register, same proven OpenRouter path,
 but reshaped into the **service a runtime calls** rather than a one-shot script —
 and made provider-agnostic so you can swap a hosted API for your own GPU (or for an
 uncensored local model) without the rest of YuriOS noticing.
@@ -114,9 +114,9 @@ in `image_forge/backends/__init__.py`. The seam is identical.
 ### The diffusers path (local HF models, owned, uncensored)
 
 Runs any Hugging Face model **in-process on your own GPU** — the strongest privacy
-and the NSFW-capable path (SDXL anime fine-tunes have no safety checker). It is the
-in-process sibling of `../../../YuriMedia/generate.py`: same model-registry shape,
-same 16 GB-VRAM offload settings (sequential CPU offload, attention slicing, VAE
+and the NSFW-capable path (SDXL anime fine-tunes have no safety checker). It takes the
+usual batch-generator shape: a model registry plus
+16 GB-VRAM offload settings (sequential CPU offload, attention slicing, VAE
 tiling, xformers). On an RTX 5070 Ti, illustrij renders 832×1216 in ~1 minute.
 
 - **Models** live in `models.yaml` (`repo` + diffusers `pipeline` + `defaults`). Add
@@ -298,10 +298,10 @@ The hard requirement of ch. 26 is *the same character, a thousand times*. Three
 mechanisms, layered, all driven from `characters/yuri.yaml`:
 
 1. **The locked register, as prompt text.** `quality_preamble` (the locked 2.5D look)
-   and `identity` (her face/build/marks) are lifted verbatim from
-   `artworks/manifest.json`, so a runtime selfie reads as the *same person* as the
+   and `identity` (her face/build/marks) are pinned in
+   `characters/yuri.yaml`, so a runtime selfie reads as the *same person* as the
    batch-generated brand set — the "one source of truth" discipline (→ ch. 26).
-   Assembly follows `generate.py` exactly: `preamble + identity + scene`, with the
+   Assembly is strictly ordered — `preamble + identity + scene` — with the
    clothing/anatomy guard appended only when a figure is in frame.
 2. **Durable identity (a trained LoRA).** The definitive path: train a character LoRA
    once, then *any* prompt renders her in any scene/pose/outfit at native quality, with
@@ -380,7 +380,7 @@ unchanged — a `strip`-mode file you send still carries nothing.
 ```
 config.yaml              live config: which character, which templates, which backend
 models.yaml              local diffusers model registry (repo + pipeline + defaults)
-characters/yuri.yaml     the locked look as prompt parts (from manifest.json)
+characters/yuri.yaml     the locked look as prompt parts (source of truth)
 templates/selfie.yaml    the scene × framing × lighting × mood × wardrobe library
 comfy_workflows/         ComfyUI API-format graphs with %TOKENS% (txt2img, qwen_image_gguf[_nsfw], qwen_rapid_aio)
 image_forge/
@@ -432,7 +432,7 @@ test_image_forge.py      53 offline tests
   aspect-ratio bucketing or multi-subject support. For production datasets use kohya /
   ai-toolkit; this is the replicable reference path, not a full training rig.
 - **No queue / batching / cost accounting.** One image per call, synchronous. The
-  batch concerns live in `artworks/generate.py`; a production service would add a
+  batch concerns belong to the offline art pipeline, not here; a service would add a
   job queue and the token-economy metering of ch. 39.
 - **ComfyUI workflows are bundled only for SDXL txt2img and Qwen-Image GGUF** —
   anything else depends on your installed models. Export your own and add the `%TOKENS%`.

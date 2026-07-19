@@ -78,7 +78,7 @@ async def test_forget_drops_doc_and_chunks(store):
 
 
 async def test_knowledge_never_pollutes_memory(store, tmp_path):
-    """The D-019 boundary: the shelf and the relationship are separate stores
+    """The knowledge/memory boundary: the shelf and the relationship are separate stores
     with separate files — nothing ingested lands in memory/, and vice versa."""
     store.reference.mkdir(parents=True)
     (store.reference / "tea.md").write_text(DOC)

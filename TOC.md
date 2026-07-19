@@ -1,6 +1,6 @@
 # Table of Contents
 
-*This book is self-contained: it teaches without requiring the rest of the repo. Sibling-folder links are optional working notes, not dependencies.*
+*This book is self-contained: it teaches without requiring the reference implementations. Links into `reference-implementations/` show the ideas running as code; they are optional, not dependencies.*
 
 ## Part I — Foundations
 

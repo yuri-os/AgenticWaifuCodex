@@ -4,8 +4,8 @@ build_card.py — flatten a Yuri SOUL (folder of .md files) into an exportable
 V2/V3 character-card PNG for SillyTavern.
 
 The .md files are the working home of the soul (read on every wake at runtime,
-split into an immutable CONSTITUTION and an editable PERSONA — D-002). A card is
-just the *export* of that soul (D-003): this script reads soul.yaml, assembles
+split into an immutable CONSTITUTION and an editable PERSONA). A card is
+just the *export* of that soul: this script reads soul.yaml, assembles
 the card fields from the .md files, and writes both a .json and a .png with the
 card embedded in a tEXt chunk.
 

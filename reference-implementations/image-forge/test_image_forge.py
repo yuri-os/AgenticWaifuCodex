@@ -76,7 +76,7 @@ def _png_size(data: bytes):
 
 def test_character_loads_locked_register(character):
     assert character.name == "Yuri"
-    assert "2.5D" in character.quality_preamble          # D-011 register present
+    assert "2.5D" in character.quality_preamble          # locked register present
     assert "cat ears" in character.identity
     assert character.width == 832 and character.height == 1216
 

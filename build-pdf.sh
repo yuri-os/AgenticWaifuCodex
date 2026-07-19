@@ -4,7 +4,7 @@
 #   ./build-pdf.sh out.pdf    -> custom output path
 #
 # Requires: pandoc + weasyprint (pip install weasyprint).
-# Chapters are concatenated in filename order (zero-padded => reading order).
+# Chapters then appendices, concatenated in filename order (zero-padded => reading order).
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -12,7 +12,7 @@ OUT="${1:-dist/agentic-waifu-codex.pdf}"
 mkdir -p "$(dirname "$OUT")"
 
 # shellcheck disable=SC2086
-pandoc chapters/*.md \
+pandoc chapters/*.md appendices/*.md \
   --standalone \
   --toc --toc-depth=2 \
   --metadata title="The Agentic Waifu Codex" \

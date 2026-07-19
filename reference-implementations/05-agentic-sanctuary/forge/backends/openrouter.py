@@ -1,6 +1,6 @@
 """OpenRouter image backend — the repo's proven generation path.
 
-This is the live, on-demand sibling of ``artworks/generate.py``: same API
+This is the live, on-demand counterpart to an offline batch pipeline: same API
 (OpenRouter chat-completions with ``modalities:["image"]``), same default model
 (``sourceful/riverflow-v2.5-pro``), so a runtime selfie matches the locked brand
 set. Auth: an explicit ``api_key`` (VENDOR DEVIATION — Build #4's typed config

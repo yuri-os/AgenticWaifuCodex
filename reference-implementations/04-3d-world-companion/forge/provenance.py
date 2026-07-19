@@ -4,8 +4,7 @@ Two postures, both supported, neither enforced (→ ch. 26, provenance + the
 no-enforcement stance; → ch. 03, user-owned):
 
 - ``strip``  — round-trip through Pillow to drop *all* upstream metadata. This is
-  the opsec default the repo's batch pipeline uses (``artworks/generate.py``,
-  → concepts/opsec.md): nothing about the generator travels with the file.
+  the opsec default for outbound art (→ ch. 26): nothing about the generator travels with the file.
 - ``embed``  — strip upstream metadata, then write a small ``content_credentials``
   record (the C2PA idea, minus cryptographic signing). A real duty-of-care build
   for a *hosted* operator would sign these; a user-owned build ships them as a

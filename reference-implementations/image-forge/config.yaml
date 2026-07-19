@@ -6,7 +6,7 @@ templates: templates/selfie.yaml
 out_dir: out
 
 # Outbound metadata posture: strip | embed | raw  (→ image_forge/provenance.py)
-#   strip = drop all upstream metadata (opsec default, → concepts/opsec.md)
+#   strip = drop all upstream metadata (opsec default, → ch. 26)
 #   embed = add a content-credentials record (the C2PA idea, → ch. 26)
 provenance: strip
 

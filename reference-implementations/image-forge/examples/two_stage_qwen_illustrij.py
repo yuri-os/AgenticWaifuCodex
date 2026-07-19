@@ -2,7 +2,7 @@
 
 Why two stages (→ ch. 26, the right tool per job):
   - Qwen-Image (20B DiT, via ComfyUI) has the best prompt adherence and structure
-    but renders the D-011 "anime" register a touch flat/clean.
+    but renders the locked "anime" register a touch flat/clean.
   - illustrij (SDXL) *is* the model that made the riverflow reference — its painterly
     2.5D surface is exactly the look we want, but on its own it's weaker at composition
     and identity from a cold prompt.
