@@ -44,7 +44,7 @@ The Model Context Protocol (Anthropic, 2024) has become the lingua franca for to
 - Let the persona call them with a consistent surface.
 - Avoid bespoke per-tool integration.
 
-Trade-off: handing tool capability to an LLM with an open prompt surface is a fresh attack surface — prompt injection with real hands, the OpenClaw exposure class (→ ch. 02 §1). → ch. 22.
+Trade-off: handing tool capability to an LLM with an open prompt surface is a fresh attack surface — prompt injection with real hands, the OpenClaw exposure class (→ ch. 02 §1, OpenClaw). → ch. 22.
 
 ## MCP or the command line?
 
@@ -109,7 +109,7 @@ policy: each tool call is logged; web_lookup rate-limited; no tool may act
         outside an allowlist; results returned to context for her to speak to.
 ```
 
-The discipline is *restraint*: a friend with a little help, not an assistant with a console. The game-NPC lesson applies (→ ch. 02 §1) — clamp the tools so she can't be talked into nonsense ("sure, I'll delete everything"). For *scheduled* and *event-triggered* uses of these same tools (she sets a timer because it's your usual study time), see the salience/interrupt model in ch. 18 — the tool is the same; the decision to fire it unprompted is autonomy.
+The discipline is *restraint*: a friend with a little help, not an assistant with a console. The game-NPC lesson applies (→ ch. 02 §1, LLM-driven game characters) — clamp the tools so she can't be talked into nonsense ("sure, I'll delete everything"). For *scheduled* and *event-triggered* uses of these same tools (she sets a timer because it's your usual study time), see the salience/interrupt model in ch. 18 — the tool is the same; the decision to fire it unprompted is autonomy.
 
 ## Multi-agent: usually overkill
 

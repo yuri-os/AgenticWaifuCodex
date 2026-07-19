@@ -1,6 +1,6 @@
 # 07 — The Character Card (V2/V3) and Prompt Anatomy
 
-The character card is the practical descendant of every portable-persona format in the field's history — ELIZA's swappable script, AIML's category files, the Ukagaka `.nar` archive (→ ch. 02 §1): **a personality as a first-class, editable, tradeable artifact.** This chapter is how to write one well; the format is also the project's distribution unit and the output of Build #3 (→ ch. 33).
+The character card is the practical descendant of every portable-persona format in the field's history — ELIZA's swappable script, AIML's category files, the Ukagaka `.nar` archive (→ ch. 02 §1, ELIZA, A.L.I.C.E., and Ukagaka): **a personality as a first-class, editable, tradeable artifact.** This chapter is how to write one well; the format is also the project's distribution unit and the output of Build #3 (→ ch. 33).
 
 ## Why character cards matter outside SillyTavern
 

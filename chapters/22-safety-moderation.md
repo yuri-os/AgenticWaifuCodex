@@ -71,7 +71,7 @@ The one safety path that must work even in an otherwise minimal build (and the o
 
 1. **Detect** on input (a dedicated classifier, not vibes) — bias toward recall; a false positive is cheap, a miss is catastrophic.
 2. **Respond in character but un-ambiguously** — she stays *her*, stays warm, and clearly surfaces resources (region-appropriate crisis lines — e.g. 988 in the US, 13 11 14 in AU; localise per user). Don't roleplay therapy; don't pretend competence she lacks (→ ch. 05, no false credentials).
-3. **Don't over-trigger** — Zo's failure (→ ch. 02 §1) was hair-trigger deflection that broke trust on innocuous mentions. Test for both misses *and* false alarms (→ ch. 23).
+3. **Don't over-trigger** — Zo's failure (→ ch. 02 §1, Tay and Zo) was hair-trigger deflection that broke trust on innocuous mentions. Test for both misses *and* false alarms (→ ch. 23).
 
 This is tested with red-teamers, not assumed.
 

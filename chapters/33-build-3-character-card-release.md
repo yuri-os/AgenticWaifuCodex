@@ -10,7 +10,7 @@ This build ships in two layers. The **core** lives in `reference-implementations
 
 ## Why a card, not a service
 
-The character card is the direct descendant of ELIZA's swappable script, AIML's portable persona, and the Ukagaka `.nar` archive (→ ch. 02 §1): **a personality as a first-class, editable, tradeable artifact.** A card runs in any V2/V3-compatible runtime (SillyTavern, and many others), so releasing one meets the entire roleplay community where it already lives (→ ch. 02 §3) without asking anyone to adopt your runtime. It is the lowest-friction way to put Yuri in front of the audience — and, unlike a hosted service, nothing about it can be revoked, rate-limited, or shut off from your side. The person who downloads her *has* her.
+The character card is the direct descendant of ELIZA's swappable script, AIML's portable persona, and the Ukagaka `.nar` archive (→ ch. 02 §1, ELIZA, A.L.I.C.E., and Ukagaka): **a personality as a first-class, editable, tradeable artifact.** A card runs in any V2/V3-compatible runtime (SillyTavern, and many others), so releasing one meets the entire roleplay community where it already lives (→ ch. 02 §3) without asking anyone to adopt your runtime. It is the lowest-friction way to put Yuri in front of the audience — and, unlike a hosted service, nothing about it can be revoked, rate-limited, or shut off from your side. The person who downloads her *has* her.
 
 ## The working format is the soul; the card is the export
 

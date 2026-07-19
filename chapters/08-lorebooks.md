@@ -1,6 +1,6 @@
 # 08 — Lorebooks and World Info
 
-The lorebook is the direct descendant of ChatScript's **topics** and **concepts** and the Ukagaka world-fact stores (→ ch. 02 §1): a way for the character to *know* far more than fits in the prompt, surfaced only when it's relevant. It is also the most underrated retention mechanic in the field, because it is where *mystery* lives.
+The lorebook is the direct descendant of ChatScript's **topics** and **concepts** and the Ukagaka world-fact stores (→ ch. 02 §1, Mitsuku/ChatScript and Ukagaka): a way for the character to *know* far more than fits in the prompt, surfaced only when it's relevant. It is also the most underrated retention mechanic in the field, because it is where *mystery* lives.
 
 ## What a lorebook is
 

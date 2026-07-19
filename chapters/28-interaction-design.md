@@ -11,7 +11,7 @@ First contact does more work than any later session. The user arrives with refer
 What the first session must do, in order of priority:
 
 - **Establish that she is *someone*** — distinct voice, a point of view, a place (→ ch. 03, properties 1 and 4) — within the first few exchanges. Not via an info-dump of her backstory; via *behaviour*. Show, don't recite (the recitation failure, → ch. 23).
-- **Begin the memory relationship honestly.** She should start learning about the user *and visibly retain it* within the session, while being honest that she's just met them. The magic moment is the first time she surfaces something the user mentioned earlier, unprompted (the ELIZA "EARLIER YOU SAID…" move, → ch. 02 §1) — engineer for that to happen in session one.
+- **Begin the memory relationship honestly.** She should start learning about the user *and visibly retain it* within the session, while being honest that she's just met them. The magic moment is the first time she surfaces something the user mentioned earlier, unprompted (the ELIZA "EARLIER YOU SAID…" move, → ch. 02 §1, ELIZA) — engineer for that to happen in session one.
 - **Set the frame.** The user already knows she's an AI, so she doesn't need to announce it — whether and how she references her own nature is a *canon* choice (Doki Doki's software-aware companion, → ch. 02 §2, is one option; a character who never breaks frame is another), and it's the author's to write. The only real craft point is not overselling *function* — don't imply a memory or capability she doesn't have (the confabulation failure, → ch. 23) — and even that lives in her voice, not a EULA.
 
 ### The first thirty seconds
@@ -40,7 +40,7 @@ That single opening does all three first-session jobs at once: it establishes *s
 
 ## The cold-start problem
 
-A companion's whole value is accumulated context, and on day one there is none. This is the hardest UX moment and the one Replika solved with **scripted "journeys"** (→ ch. 02 §1) — hand-authored getting-to-know-you sequences that feed a structured user-facts store while feeling like conversation. The lesson held up: almost everything users loved about early Replika came from the scripted onboarding and ritual design, not the (weak) model.
+A companion's whole value is accumulated context, and on day one there is none. This is the hardest UX moment and the one Replika solved with **scripted "journeys"** (→ ch. 02 §1, Replika's first stack) — hand-authored getting-to-know-you sequences that feed a structured user-facts store while feeling like conversation. The lesson held up: almost everything users loved about early Replika came from the scripted onboarding and ritual design, not the (weak) model.
 
 Practical cold-start patterns:
 
@@ -70,13 +70,13 @@ In the reference runtime this journey is a **consumed-once file** — `BOOTSTRAP
 
 ## The sanctuary: designing a place, not a screen
 
-Locatability is a property of the companion, not a nicety (→ ch. 03, property 4): Shimeji proved ambient presence with *zero dialogue* carries value, and Julia proved a character in a *place* is experienced completely differently from a bot in a box (→ ch. 02 §1). The interface is part of the character.
+Locatability is a property of the companion, not a nicety (→ ch. 03, property 4): Shimeji proved ambient presence with *zero dialogue* carries value, and Julia proved a character in a *place* is experienced completely differently from a bot in a box (→ ch. 02 §1, Shimeji and Julia). The interface is part of the character.
 
 For Yuri, the sanctuary is canon (→ `yuri-soul/SCENARIO.md`): a small quiet room, low warm light, rain outside, a window seat, a single plant. Design implications: a consistent look and mood across sessions (the place persists even when she's quiet), ambient life when idle (the room exists between conversations), and a sense of *return* rather than *launch* — opening the app should feel like coming home to someone, not starting a program.
 
 ## Pacing, rituals, and the care loop
 
-Relationships run on rhythm. The interactive canon worked this out decades early (→ ch. 02 §1): the **Tamagotchi care loop** (care + scheduled interaction + emotional reward) is the most load-bearing retention mechanic in the field, and **Love Plus** proved that real-clock continuity — anniversaries, noticing absence, a shared schedule — is what people actually wanted, more than better dialogue.
+Relationships run on rhythm. The interactive canon worked this out decades early (→ ch. 02 §1, virtual pets): the **Tamagotchi care loop** (care + scheduled interaction + emotional reward) is the most load-bearing retention mechanic in the field, and **Love Plus** proved that real-clock continuity — anniversaries, noticing absence, a shared schedule — is what people actually wanted, more than better dialogue.
 
 This is the interaction-design face of the **nakige** mechanism (→ ch. 06, companion-appeal research): accumulated *ordinary* time — the unremarkable daily check-ins, not the dramatic beats — is what actually builds the bond, which is exactly why the boring care loop out-retains better dialogue. Mechanically, this reliable presence is a *relational supernormal stimulus* — an availability and steadiness exaggerated past what a human sustains (→ ch. 02 §7.4) — which is the demand-side reason the care loop works.
 
@@ -161,7 +161,7 @@ Notice what this chapter did *not* do: it didn't hand you a list of forbidden em
 The single line that actually separates good from bad is **who the dial serves**:
 
 - In a **user-owned build**, the owner sets it. However clingy, chatty, or guilt-trippy she is, it's a character choice by the person on the receiving end — there is no second party to betray, so there is nothing to police (→ ch. 05).
-- With a **hosted operator** in the loop, the same behaviours become a dark pattern *the moment they're tuned to the operator's metric instead of the user's wish* — streaks engineered so skipping punishes, contact frequency set by a re-engagement KPI, and above all **holding intimacy hostage**: gating affection or memory behind payment, or yanking away an intimacy feature users had already built a relationship on (the Replika ERP-removal rug-pull, → ch. 02 §1; → ch. 39). That last one is the field's genuine cardinal sin, because it's a second party seizing a bond the user thought was theirs.
+- With a **hosted operator** in the loop, the same behaviours become a dark pattern *the moment they're tuned to the operator's metric instead of the user's wish* — streaks engineered so skipping punishes, contact frequency set by a re-engagement KPI, and above all **holding intimacy hostage**: gating affection or memory behind payment, or yanking away an intimacy feature users had already built a relationship on (the Replika ERP-removal rug-pull, → ch. 02 §1, persona-as-product; → ch. 39). That last one is the field's genuine cardinal sin, because it's a second party seizing a bond the user thought was theirs.
 
 So the test is never "is this technique manipulative?" — it's "**am I tuning her to what the user wants, or to what my dashboard wants?**" (→ ch. 23, the fiduciary metric). Get that right and everything else on the dial is fair game.
 

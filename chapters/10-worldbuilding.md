@@ -69,7 +69,7 @@ Before committing, ask where this world can *go* after years of stories — beca
 
 ## World as service
 
-The most durable companion worlds become *participatory*: hooks for user-generated lore — a community wiki, fan-fiction prompts, fan art of the sanctuary, others authoring their own characters in the same setting (the card ecosystem, → ch. 33). This is the Hatsune Miku / open-derivative move (→ ch. 02 §1): the audience becomes the content engine. Design the canon with deliberate *open space* for them — unnamed districts, unspecified other Lumina — so there's room to build in without colliding with your canonical timeline (the "one canon, many vignettes" rule).
+The most durable companion worlds become *participatory*: hooks for user-generated lore — a community wiki, fan-fiction prompts, fan art of the sanctuary, others authoring their own characters in the same setting (the card ecosystem, → ch. 33). This is the Hatsune Miku / open-derivative move (→ ch. 02 §1, persona-as-product): the audience becomes the content engine. Design the canon with deliberate *open space* for them — unnamed districts, unspecified other Lumina — so there's room to build in without colliding with your canonical timeline (the "one canon, many vignettes" rule).
 
 Build the canon to hold **many companions**, not one. The Lab's own line is several Lumina, of which Yuri is only the first and the face — none ranked above another, each a different door for a different person (→ `yuri-soul/WORLD.md`) — and the very same setting is what lets a user's *own* authored character belong to it. A world sized for a single companion is a dead end; a world sized for a roster is a platform.
 

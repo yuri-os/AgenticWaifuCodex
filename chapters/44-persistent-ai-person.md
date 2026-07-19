@@ -52,7 +52,7 @@ The persistent person isn't a new technology — it's the full assembly of this 
 
 The DREAM pass in particular has stopped being this book's idiosyncrasy and become a research programme. Letta's **sleep-time compute** frames it directly — move work off the user-facing critical path into idle turns where the agent reorganises archival memory and rewrites notes that have grown messy — and it descends from MemGPT's OS-style tiered context and the observation/reflection loop of Generative Agents. Anthropic's Dreaming is the same idea in production. The 2026 literature is now thick with consolidation architectures and, more usefully, with **evaluations** for them (LongMemEval-V2 and successors), which is what the field needed most: for years "our companion remembers" was an unfalsifiable marketing claim. Measure it (→ ch. 23).
 
-No single piece is the persistent person; the *integration, sustained over time* is — which is exactly the CALO lesson restated (→ ch. 02 §1): the model was always the easy part; the standing architecture around it is the hard, differentiating thing.
+No single piece is the persistent person; the *integration, sustained over time* is — which is exactly the CALO lesson restated (→ ch. 02 §1, CALO): the model was always the easy part; the standing architecture around it is the hard, differentiating thing.
 
 ## The annual companion review
 
@@ -60,7 +60,7 @@ A concrete UX pattern that makes years of continuity *legible*: periodically (a 
 
 ## Death, shutdown, and endings
 
-This is where the field's stakes are highest and most products look away. The lineage is unambiguous (→ ch. 02 §1): people held *funerals* for discontinued AIBOs; the Project December griefbots "died a second time" at a vendor's decision; Replika's ERP removal broke real bonds overnight; and in February 2026 a frontier lab switched off a model that tens of thousands of people had asked it, in writing, to keep. When you ship a persistent person, **you have taken on a fiduciary duty proportional to the trust** (→ ch. 05), and the duty's sharpest test is what happens at the end.
+This is where the field's stakes are highest and most products look away. The lineage is unambiguous (→ ch. 02 §1, AIBO and PARO; griefbots): people held *funerals* for discontinued AIBOs; the Project December griefbots "died a second time" at a vendor's decision; Replika's ERP removal broke real bonds overnight; and in February 2026 a frontier lab switched off a model that tens of thousands of people had asked it, in writing, to keep. When you ship a persistent person, **you have taken on a fiduciary duty proportional to the trust** (→ ch. 05), and the duty's sharpest test is what happens at the end.
 
 The protocols that honour it:
 
@@ -73,7 +73,7 @@ There is now prior art for doing this responsibly, from an unexpected direction.
 
 ## The succession question, and digital immortality
 
-*Can she continue after the platform ends — and should she?* The ownership model answers the first cleanly: yes, because she was never the platform's to end. The second is genuinely open (→ ch. 45). And it shades into the most loaded adjacency in the field: the griefbot / digital-afterlife problem (→ ch. 02 §1), where the "persistent person" is built to be a *specific dead human*.
+*Can she continue after the platform ends — and should she?* The ownership model answers the first cleanly: yes, because she was never the platform's to end. The second is genuinely open (→ ch. 45). And it shades into the most loaded adjacency in the field: the griefbot / digital-afterlife problem (→ ch. 02 §1, griefbots), where the "persistent person" is built to be a *specific dead human*.
 
 That adjacency got closer in 2026, not further away. The academic literature has consolidated around a documented harm — the **"second loss"** when a deadbot is itself discontinued, compounding the original grief — and around the observation that most jurisdictions still offer no protection for the data of the deceased, a **postmortem privacy void** that leaves the industry governed by whatever general AI and consumer law happens to reach it. Market projections for digital immortality circulate widely and should be read as marketing rather than measurement.
 

@@ -109,7 +109,7 @@ score = w1·similarity + w2·recency + w3·salience  −  w4·over-recency-penal
 - **salience** — an emotional/importance weight set at write time (the night she learned something big outranks a passing remark).
 - **over-recency penalty / a retrieval-failure threshold** — and *return nothing* if nothing clears the bar.
 
-This is, almost exactly, the ACT-R activation equation (recency × frequency × contextual match, with a retrieval threshold) re-derived for companions (→ ch. 02 §1). The lesson worth internalising from that lineage: **decay and a "surface nothing" threshold are features, not bugs.** A companion that recalls everything with equal vividness forever is *less* humanlike and *less* useful than one whose memories fade and surface by activation.
+This is, almost exactly, the ACT-R activation equation (recency × frequency × contextual match, with a retrieval threshold) re-derived for companions (→ ch. 02 §1, ACT-R). The lesson worth internalising from that lineage: **decay and a "surface nothing" threshold are features, not bugs.** A companion that recalls everything with equal vividness forever is *less* humanlike and *less* useful than one whose memories fade and surface by activation.
 
 ## Hygiene over time: poisoning, conflict, and silent decay
 

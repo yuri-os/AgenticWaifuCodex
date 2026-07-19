@@ -20,7 +20,7 @@ A scratchpad of *the things we don't know* about agentic waifu design — the cl
 
 - How do you learn the per-user **interrupt threshold** *without* the telemetry the ownership model forbids (→ ch. 18)? The central unsolved tension of the always-on companion.
 - What's the right **commitment strategy** per goal type — when should a proactive intention survive the user changing the subject (→ ch. 18, the BDI dial)?
-- Can self-modifying memory (the SOUL split) achieve genuine *learning* without the over-generalisation that killed Creatures' successors (→ ch. 18, ch. 02 §1)?
+- Can self-modifying memory (the SOUL split) achieve genuine *learning* without the over-generalisation that killed Creatures' successors (→ ch. 18, ch. 02 §1, Creatures)?
 
 ## Ethics and well-being
 
