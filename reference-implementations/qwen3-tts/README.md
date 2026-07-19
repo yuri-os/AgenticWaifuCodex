@@ -9,7 +9,7 @@ because it collapses what the two sibling impls do separately into one model:
 - and a trick neither has: **designing a voice from a text description** — `design` mode.
 
 All open-weight (0.6B / 1.7B), ~97 ms latency, streaming, 10 languages
-(→ `../../book/chapters/24-voice.md` §"TTS short list").
+(→ `../../chapters/24-voice.md` §"TTS short list").
 
 ## What it teaches
 

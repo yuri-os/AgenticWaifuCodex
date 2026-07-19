@@ -16,19 +16,19 @@ A book-shaped synthesis of the field — the technical research, the creative an
 
 It is opinionated. It assumes you want to ship something that feels *alive*, not a generic chatbot wrapper.
 
-## How the repo fits together
+## How this repo fits together
 
 ```
-AICompanionResearch/
-├── brain_research/      ← deep technical reference (the "brain" stack)
-├── competitors/         ← per-product intel (what's already out there)
-├── analysis/            ← market, monetization, regulation, gaps
-├── concepts/            ← companion lore + creator lore concepts
-├── monetization/        ← business paths + 6-month gameplan
-└── book/                ← you are here — the synthesis
+AgenticWaifuCodex/
+├── chapters/                   ← the book itself, one .md file per chapter
+├── appendices/                 ← glossary, tools, communities, reading list, impl index
+├── reference-implementations/  ← the Build chapters as independently runnable code
+├── pdf/                        ← stylesheet + fonts for the PDF build
+├── build-pdf.sh                ← concatenate chapters → single PDF
+└── TOC.md                      ← full table of contents + reading recommendations
 ```
 
-The book is the layer that ties it all together for a builder who wants to **make and ship**, not just analyse.
+Everything needed to follow the argument lives here — the book is self-contained, and the reference implementations are the Build chapters made runnable.
 
 ## How to read this book
 
@@ -44,16 +44,9 @@ You can read it linearly, but each Part stands on its own:
 - **Part VIII — Future.** Embodied companions, long-arc storytelling, open research.
 - **Appendices.** Glossary, tools, communities, reading list, reference-implementation index.
 
-## Status of each chapter
+## Status
 
-Most chapters are intentionally **skeletons** — section headings, key questions, and the bones of what belongs there. The author is filling them in over time as the work happens. Substantive chapters as of the initial scaffold:
-
-- `02-literature-review.md` (Part I)
-- `35-creator-persona-yuri.md` (Part VI)
-- `38-monetization-overview.md` (Part VII)
-- `39-six-month-gameplan.md` (Part VII)
-
-See `TOC.md` for the full table of contents and reading recommendations.
+The book is under active, single-author development — chapters are written and revised as the underlying work happens, so depth varies across Parts. See `TOC.md` for the full table of contents, current reading order, and recommendations.
 
 ## Conventions
 

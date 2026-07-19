@@ -349,7 +349,7 @@ is out of scope here — left to the separate optional course (→ ch. 11, ch. 3
 `provenance:` in `config.yaml` controls what metadata leaves with an image:
 
 - `strip` (default) — round-trip through Pillow, dropping **all** upstream metadata.
-  This is the opsec posture the batch pipeline uses (→ `concepts/opsec.md`): nothing
+  This is the opsec posture the batch pipeline uses: nothing
   about the generator travels with the file.
 - `embed` — strip, then write a small `content_credentials` record (the C2PA idea
   from ch. 26, minus cryptographic signing). A hosted operator's duty-of-care build

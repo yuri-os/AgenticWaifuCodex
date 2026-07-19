@@ -1,6 +1,6 @@
 # Reference Implementations
 
-Working minimal examples for the builds in `../book/chapters/30-reference-implementations.md`
+Working minimal examples for the builds in `../chapters/30-reference-implementations.md`
 (overview) and the per-build walkthroughs, chapters 31–35.
 
 The numbered builds (1–5) are the book's teaching ladder; the lettered rows are the
@@ -22,7 +22,7 @@ independently. See ch. 30, "What's actually in the repo today," for how the two 
 | 4a | VRM avatar control pipeline (Python-driven, WebSocket) | working | `vrm-viewer/` |
 | 5 | Agentic Sanctuary — Build #4 + the always-on mind | working | `05-agentic-sanctuary/` |
 
-See `../book/appendices/D-reference-implementations.md` for the live index and conventions.
+See `../appendices/D-reference-implementations.md` for the live index and conventions.
 
 ## Conventions
 

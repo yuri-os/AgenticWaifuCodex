@@ -1,6 +1,6 @@
 # Build #1 — The Minimum Viable Waifu · Implementation Spec
 
-> **Status:** planned · **Book chapter:** [ch. 31](../../book/chapters/31-build-1-minimum-viable-waifu.md) · **Ladder:** rung 1 (→ [ch. 30](../../book/chapters/30-reference-implementations.md))
+> **Status:** planned · **Book chapter:** [ch. 31](../../chapters/31-build-1-minimum-viable-waifu.md) · **Ladder:** rung 1 (→ [ch. 30](../../chapters/30-reference-implementations.md))
 >
 > This document is **self-contained and normative**. A coding harness that sees only this file
 > should be able to implement the whole build. Where it depends on sibling artifacts

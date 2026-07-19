@@ -2,7 +2,7 @@
 
 A minimal client for **GPT-SoVITS**, the book's pick when the persona has a
 *specific* voice you need to reproduce — a canon read, a reference you're
-matching (→ `../../book/chapters/24-voice.md` §"Cloning a specific voice"). It
+matching (→ `../../chapters/24-voice.md` §"Cloning a specific voice"). It
 clones an identity from a short reference clip (zero-shot) or a fine-tune, where
 the sibling [`../kokoro`](../kokoro) impl instead picks one fixed, un-cloned
 voice. That's the whole trade: identity control vs. weight and latency.

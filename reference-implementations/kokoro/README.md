@@ -2,7 +2,7 @@
 
 A minimal, runnable text-to-speech service built on **Kokoro-82M** — the book's
 pick for a *fixed* companion voice: tiny (82M params), faster-than-real-time on
-CPU, Apache-2.0, no cloning (→ `../../book/chapters/24-voice.md`, "TTS short
+CPU, Apache-2.0, no cloning (→ `../../chapters/24-voice.md`, "TTS short
 list"). If your companion has one settled voice, this is the cheapest good one,
 and it leaves the whole GPU for the LLM.
 
