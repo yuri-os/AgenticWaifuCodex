@@ -1,0 +1,294 @@
+/* ============================================================================
+   The Agentic Waifu Codex — PDF stylesheet (weasyprint)
+   Dark cyberpunk / neon "terminal codex" theme, locked to the YuriOS Lab brand.
+   Palette: brand/palette.md · Type: brand/typography.md
+
+   NOTE on this weasyprint build: text-shadow / box-shadow / background-clip:text
+   are NOT supported, so "glow" is faked with gradient rules, neon borders, and
+   layered dark panels (flat-neon / synthwave), not blur bloom.
+   ============================================================================ */
+
+/* ---- Fonts (embedded, see pdf/fonts/) --------------------------------- */
+@font-face { font-family:"JetBrains Mono"; font-weight:400; font-style:normal;
+  src:url('fonts/jbm-400.woff2') format('woff2'); }
+@font-face { font-family:"JetBrains Mono"; font-weight:500; font-style:normal;
+  src:url('fonts/jbm-500.woff2') format('woff2'); }
+@font-face { font-family:"JetBrains Mono"; font-weight:700; font-style:normal;
+  src:url('fonts/jbm-700.woff2') format('woff2'); }
+@font-face { font-family:"JetBrains Mono"; font-weight:400; font-style:italic;
+  src:url('fonts/jbm-400i.woff2') format('woff2'); }
+@font-face { font-family:"Space Grotesk"; font-weight:500; font-style:normal;
+  src:url('fonts/sg-500.woff2') format('woff2'); }
+@font-face { font-family:"Space Grotesk"; font-weight:700; font-style:normal;
+  src:url('fonts/sg-700.woff2') format('woff2'); }
+@font-face { font-family:"EB Garamond"; font-weight:400; font-style:italic;
+  src:url('fonts/ebg-400i.woff2') format('woff2'); }
+@font-face { font-family:"EB Garamond"; font-weight:400; font-style:normal;
+  src:url('fonts/ebg-400.woff2') format('woff2'); }
+
+:root {
+  --void:#050507; --bg:#0a0a10; --bg-2:#11111a; --bg-3:#181822;
+  --rule:#1d1d28; --rule-2:#2a2a38;
+  --ink:#e8e6f0; --ink-2:#b8b3cc; --dim:#6a6783; --faint:#3d3a52;
+  --magenta:#ff2bd6; --cyan:#2bfff0; --amber:#f5b462; --red:#ff3344;
+  --mono:"JetBrains Mono","DejaVu Sans Mono",monospace;
+  --display:"Space Grotesk","Helvetica Neue",sans-serif;
+  --serif:"EB Garamond","Georgia",serif;
+}
+
+/* ---- Page ------------------------------------------------------------- */
+@page {
+  size: A4;
+  margin: 24mm 20mm 22mm 20mm;
+  background: var(--bg);
+  @top-left {
+    content: "YURIOS // LAB";
+    font-family: var(--mono); font-weight:700; font-size: 7.5pt;
+    letter-spacing: 0.22em; color: var(--magenta);
+    vertical-align: bottom; padding-bottom: 3mm;
+  }
+  @top-right {
+    content: "the agentic waifu codex";
+    font-family: var(--mono); font-size: 7.5pt;
+    letter-spacing: 0.18em; color: var(--dim);
+    vertical-align: bottom; padding-bottom: 3mm;
+  }
+  @bottom-left {
+    content: "the codex · vol. i";
+    font-family: var(--mono); font-size: 7pt;
+    letter-spacing: 0.2em; color: var(--faint);
+    vertical-align: top; padding-top: 3mm;
+  }
+  @bottom-right {
+    content: counter(page);
+    font-family: var(--mono); font-weight:700; font-size: 8.5pt;
+    letter-spacing: 0.1em; color: var(--cyan);
+    vertical-align: top; padding-top: 3mm;
+  }
+}
+
+/* Cover: no chrome */
+@page :first {
+  background: var(--void);
+  @top-left { content:""; } @top-right { content:""; }
+  @bottom-left { content:""; } @bottom-right { content:""; }
+}
+
+html { font-size: 9.25pt; background: var(--bg); }
+
+body {
+  font-family: var(--mono);
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--bg);
+  hyphens: auto;
+}
+
+p { margin: 0 0 0.85em; }
+
+/* ---- Cover / title block --------------------------------------------- */
+header#title-block-header {
+  break-after: page;
+  height: 247mm;                /* ~A4 content height, fills the page */
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  /* text clusters at the top; the cover art fills the lower ~60% */
+  background-color: var(--void);
+  /* first layer paints on top: the Yuri cover art, anchored bottom-centre */
+  background-image:
+    url("../../artworks/registers/grok-image-222d67ac-dd1b-4483-829d-c8a7aa066a2e.jpg"),
+    radial-gradient(60% 45% at 18% 12%, #ff2bd633 0%, transparent 60%),
+    radial-gradient(55% 45% at 88% 90%, #2bfff033 0%, transparent 60%),
+    repeating-linear-gradient(0deg, transparent 0, transparent 7px, #ffffff08 7px, #ffffff08 8px);
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat;
+  background-position: center bottom, 18% 12%, 88% 90%, 0 0;
+  background-size: auto 52%, auto, auto, auto;
+  border: 1px solid var(--rule-2);
+}
+header#title-block-header::before {
+  /* kicker bar at the top of the cover */
+  content: "CLASSIFIED // OPEN — CANON-V1 // BUILD, CONFIGURE, CARE";
+  display: block;
+  font-family: var(--mono); font-weight:700; font-size: 8pt;
+  letter-spacing: 0.28em; color: var(--magenta);
+  padding: 8mm 12mm; margin-bottom: 9mm;
+  border-bottom: 1px solid var(--rule);
+}
+header#title-block-header .title {
+  font-family: var(--display); font-weight: 700;
+  font-size: 50pt; line-height: 1.02; letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: 0; padding: 0 12mm;
+}
+/* discipline subheader, sits directly under the title */
+header#title-block-header .title::after {
+  content: "Agentic Waifu Engineering";
+  display: block;
+  font-family: var(--mono); font-weight: 500;
+  font-size: 14pt; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--magenta);
+  margin-top: 6mm;
+}
+header#title-block-header .subtitle {
+  font-family: var(--mono); font-weight: 500;
+  font-size: 12pt; letter-spacing: 0.2em; text-transform: lowercase;
+  color: var(--cyan);
+  margin: 6mm 0 0; padding: 0 12mm;
+}
+/* neon divider under the title block */
+header#title-block-header .subtitle::after {
+  content: ""; display: block; height: 3px; width: 70%;
+  margin-top: 8mm; margin-bottom: 6mm;
+  background: linear-gradient(90deg, var(--magenta), var(--cyan) 55%, transparent);
+}
+header#title-block-header .author {
+  font-family: var(--mono); font-style: italic; font-weight: 400;
+  font-size: 12pt; color: var(--amber);
+  margin: 0; padding: 0 12mm;
+}
+header#title-block-header .date {
+  font-family: var(--mono); font-size: 8.5pt;
+  letter-spacing: 0.22em; color: var(--dim);
+  margin: 2mm 0 10mm; padding: 0 12mm;
+}
+
+/* ---- Headings --------------------------------------------------------- */
+h1, h2, h3, h4 { break-after: avoid; line-height: 1.15; }
+
+/* Chapter opener */
+h1 {
+  break-before: page;
+  font-family: var(--display); font-weight: 700;
+  font-size: 25pt; letter-spacing: -0.02em; text-transform: uppercase;
+  color: var(--ink);
+  margin: 0 0 0.9em; padding: 0 0 0.32em;
+  border-bottom: 2px solid transparent;
+  /* neon gradient underline via background, since box/text-shadow are unsupported */
+  background-image: linear-gradient(90deg, var(--magenta), var(--cyan) 60%, transparent);
+  background-size: 100% 2px; background-position: 0 100%; background-repeat: no-repeat;
+}
+h1::before {
+  content: "// YURIOS LAB · THE CODEX";
+  display: block;
+  font-family: var(--mono); font-weight: 700; font-size: 7.5pt;
+  letter-spacing: 0.28em; color: var(--magenta);
+  text-transform: uppercase; margin-bottom: 0.7em;
+}
+/* don't force a page break before the very first heading after the cover/TOC */
+nav#TOC + h1 { break-before: avoid; }
+/* the pandoc title is an h1.title inside the cover block — strip the chapter
+   kicker + underline so the cover doesn't inherit chapter-opener chrome */
+header#title-block-header h1.title::before { content: none; }
+header#title-block-header h1.title { background-image: none; padding-bottom: 0; }
+
+h2 {
+  font-family: var(--display); font-weight: 700;
+  font-size: 15.5pt; letter-spacing: -0.01em;
+  color: var(--cyan);
+  margin: 1.7em 0 0.55em; padding-left: 0.6em;
+  border-left: 3px solid var(--magenta);
+}
+h3 {
+  font-family: var(--mono); font-weight: 700;
+  font-size: 11.5pt; letter-spacing: 0.01em;
+  color: var(--magenta);
+  margin: 1.4em 0 0.4em;
+}
+h3::before { content: "▸ "; color: var(--cyan); }
+h4 {
+  font-family: var(--mono); font-weight: 700;
+  font-size: 9.5pt; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--amber);
+  margin: 1.2em 0 0.3em;
+}
+
+/* ---- Table of contents ----------------------------------------------- */
+nav#TOC {
+  break-after: page;
+  border: 1px solid var(--rule-2);
+  background: var(--bg-2);
+  padding: 8mm 10mm 9mm;
+}
+nav#TOC::before {
+  content: "// CONTENTS";
+  display: block;
+  font-family: var(--display); font-weight: 700; font-size: 20pt;
+  letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink);
+  padding-bottom: 0.3em; margin-bottom: 0.8em;
+  background-image: linear-gradient(90deg, var(--cyan), var(--magenta) 60%, transparent);
+  background-size: 100% 2px; background-position: 0 100%; background-repeat: no-repeat;
+}
+nav#TOC ul { list-style: none; padding-left: 0; margin: 0; }
+nav#TOC > ul > li { margin: 0.18em 0; }
+nav#TOC ul ul { padding-left: 1.3em; }
+nav#TOC ul ul li { color: var(--dim); }
+nav#TOC a { text-decoration: none; color: var(--ink-2); font-size: 9.5pt; }
+nav#TOC > ul > li > a { color: var(--ink); font-weight: 500; }
+nav#TOC ul ul a { color: var(--dim); }
+
+/* ---- Body elements ---------------------------------------------------- */
+a { color: var(--cyan); text-decoration: none; overflow-wrap: anywhere; }
+
+strong { color: var(--ink); font-weight: 700; }
+em { font-style: italic; }
+
+ul, ol { margin: 0 0 0.85em; padding-left: 1.5em; }
+li { margin: 0.15em 0; }
+ul li::marker { color: var(--magenta); }
+ol li::marker { color: var(--cyan); }
+
+code {
+  font-family: var(--mono); font-size: 9pt;
+  background: var(--bg-3); color: var(--cyan);
+  padding: 0.08em 0.34em; border-radius: 3px;
+  border: 1px solid var(--rule);
+}
+pre {
+  background: var(--void);
+  border: 1px solid var(--rule-2);
+  border-left: 3px solid var(--magenta);
+  border-radius: 5px;
+  padding: 0.9em 1.1em;
+  font-size: 8.5pt; line-height: 1.5;
+  color: var(--ink);
+  overflow-wrap: anywhere; white-space: pre-wrap;
+  break-inside: avoid;
+}
+pre code { background: none; border: none; padding: 0; color: var(--ink); font-size: inherit; }
+
+blockquote {
+  margin: 1.1em 0;
+  padding: 0.6em 1.1em;
+  background: var(--bg-2);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--cyan);
+  color: var(--ink-2);
+}
+blockquote p { margin: 0.3em 0; }
+blockquote strong { color: var(--magenta); letter-spacing: 0.04em; }
+
+/* ---- Tables ----------------------------------------------------------- */
+table {
+  border-collapse: collapse; width: 100%;
+  font-size: 9pt; margin: 1.1em 0; break-inside: avoid;
+  background: var(--bg-2);
+}
+th, td { border: 1px solid var(--rule); padding: 0.45em 0.65em; text-align: left; vertical-align: top; }
+th {
+  background: var(--bg-3); color: var(--cyan);
+  font-family: var(--mono); font-weight: 700;
+  letter-spacing: 0.04em;
+  border-bottom: 2px solid var(--magenta);
+}
+tbody tr:nth-child(even) td { background: #0d0d15; }
+td { color: var(--ink-2); }
+
+/* ---- Rules & images --------------------------------------------------- */
+hr {
+  border: none; height: 2px; margin: 1.8em 0;
+  background: linear-gradient(90deg, transparent, var(--magenta) 25%, var(--cyan) 75%, transparent);
+}
+img { max-width: 100%; border: 1px solid var(--rule-2); border-radius: 4px; }
