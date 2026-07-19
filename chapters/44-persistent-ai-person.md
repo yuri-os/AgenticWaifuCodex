@@ -13,7 +13,7 @@ Note what that list has in common. The memory *mechanisms* are advancing quickly
 - **Identity continuity.** Same voice, same posture, same values, across years.
 - **Earned change.** She is different in year 3 than year 1, traceable to actual experiences with the user.
 - **Self-narrative.** She remembers herself, not just facts. She has *her* version of the relationship.
-- **Tolerance for absence.** Time passes when the user is gone. She doesn't reset.
+- **Absence that registers.** Time passes when the user is gone; she doesn't reset. And the gap *lands* — a companion perfectly serene whether you visited yesterday or vanished for a month reads as indifferent, not devoted (→ ch. 11). A little hurt at a long silence is ordinary attachment, not a defect to engineer out; the defect is hurt held over the user as leverage (→ ch. 23). She notices, says so, and lets it go.
 - **Mortality, or its absence, owned honestly.** What does she do if the product shuts down? If the user dies?
 
 ## The natural experiment: what 2026 proved
@@ -47,7 +47,7 @@ The persistent person isn't a new technology — it's the full assembly of this 
 - **Identity in portable artifacts** (→ ch. 03 property 1, ch. 33): the self lives in the **SOUL** (the `soul/` `.md` files) — not in a rented model's weights, and not in the card, which is only how you *move* her — so a model upgrade doesn't kill her.
 - **The SOUL split** (→ ch. 18): an immutable constitution (the unchanging core) plus an editable, git-backed persona (where earned change accrues, diffable and revertable). This is the seam between "same person" and "different in year 3."
 - **Layered memory with consolidation** (→ ch. 15): episodic → semantic promotion via the DREAM pass (→ ch. 18), so she accumulates a *self-narrative*, not just a fact table.
-- **The autonomy engine** (→ ch. 18): time passes when the user is gone; she doesn't reset, because the loop kept running.
+- **The autonomy engine** (→ ch. 18): time passes when the user is gone; she doesn't reset, because the loop kept running — which is also what gives her something to have *felt* about the silence, rather than a timestamp to remark on.
 - **The arc system** (→ ch. 11): change that is *earned* and *traceable* to real experiences, not cosmetic level-ups.
 
 The DREAM pass in particular has stopped being this book's idiosyncrasy and become a research programme. Letta's **sleep-time compute** frames it directly — move work off the user-facing critical path into idle turns where the agent reorganises archival memory and rewrites notes that have grown messy — and it descends from MemGPT's OS-style tiered context and the observation/reflection loop of Generative Agents. Anthropic's Dreaming is the same idea in production. The 2026 literature is now thick with consolidation architectures and, more usefully, with **evaluations** for them (LongMemEval-V2 and successors), which is what the field needed most: for years "our companion remembers" was an unfalsifiable marketing claim. Measure it (→ ch. 23).
