@@ -18,7 +18,6 @@ pandoc chapters/*.md appendices/*.md \
   --metadata title="The Agentic Waifu Codex" \
   --metadata subtitle="YuriOS Lab · The Codex · Vol. I" \
   --metadata author="The Operator" \
-  --metadata date="$(date +%Y-%m-%d)" \
   --pdf-engine=weasyprint \
   --css pdf/style.css \
   -o "$OUT"

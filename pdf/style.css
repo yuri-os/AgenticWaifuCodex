@@ -147,12 +147,7 @@ header#title-block-header .subtitle::after {
 header#title-block-header .author {
   font-family: var(--mono); font-style: italic; font-weight: 400;
   font-size: 12pt; color: var(--amber);
-  margin: 0; padding: 0 12mm;
-}
-header#title-block-header .date {
-  font-family: var(--mono); font-size: 8.5pt;
-  letter-spacing: 0.22em; color: var(--dim);
-  margin: 2mm 0 10mm; padding: 0 12mm;
+  margin: 0 0 10mm; padding: 0 12mm;
 }
 
 /* ---- Headings --------------------------------------------------------- */
