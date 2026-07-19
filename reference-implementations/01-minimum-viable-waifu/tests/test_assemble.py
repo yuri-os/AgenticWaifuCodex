@@ -12,7 +12,7 @@ from app.memory.store import Memory
 def tiny_soul(**over) -> Soul:
     base = dict(
         name="Yuri",
-        card_version="yuri-v2@canon-v2",
+        card_version="yuri-v1@canon-v1",
         voice_law="Speak plainly and warmly. VOICE-LAW-MARKER.",
         backbone="She is a Lumina. BACKBONE-MARKER.",
         personality="devoted, warm, a little wry",

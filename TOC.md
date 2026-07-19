@@ -1,6 +1,6 @@
 # Table of Contents
 
-*This book is self-contained (D-012): it teaches without requiring the rest of the repo. Sibling-folder links are optional working notes, not dependencies.*
+*This book is self-contained: it teaches without requiring the rest of the repo. Sibling-folder links are optional working notes, not dependencies.*
 
 ## Part I — Foundations
 

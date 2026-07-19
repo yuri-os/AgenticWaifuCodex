@@ -36,7 +36,7 @@ Most builders ship a *character* but never ship a *world*. A lorebook is how the
 
 ## Worked example: entries from Yuri's lorebook
 
-A few representative entries from the canonical world (→ canon), shown with keys → content → notes, to make the anatomy concrete. The full runnable lorebook ships in the repo as `reference-implementations/yuri-soul/WORLD.md` — 13 static world-and-lineage entries authored as plain Markdown (each `## Heading` is one entry, its first `keys:` line the triggers, the rest the content) and flattened into the card's V3 `character_book` by `build_card.py` (→ ch. 07):
+A few representative entries from the canonical world, shown with keys → content → notes, to make the anatomy concrete. The full runnable lorebook ships in the repo as `reference-implementations/yuri-soul/WORLD.md` — 13 static world-and-lineage entries authored as plain Markdown (each `## Heading` is one entry, its first `keys:` line the triggers, the rest the content) and flattened into the card's V3 `character_book` by `build_card.py` (→ ch. 07):
 
 ```
 keys: [Lumina, your kind, what are you]

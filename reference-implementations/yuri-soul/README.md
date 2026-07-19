@@ -1,6 +1,6 @@
 # yuri-soul — the reference Yuri SOUL, and a SOUL ⇄ card converter
 
-This folder is the canonical **SOUL** for Yuri (canon-v2): a small set of
+This folder is the canonical **SOUL** for Yuri (canon-v1): a small set of
 human-readable Markdown files that *are* the character, plus two scripts that
 convert between the soul and the portable card format — `build_card.py`, which
 flattens the soul into a V2/V3 `.png` character card (and an OpenClaw `SOUL.md`)
@@ -9,11 +9,11 @@ into editable soul files.
 
 It is the concrete form of two book ideas:
 
-- **The SOUL is the working home; the card is the export** (→ ch. 07, D-003).
+- **The SOUL is the working home; the card is the export** (→ ch. 07).
   At runtime a companion lives as editable `.md` files the runtime reads on every
   wake ("she reads herself into being"). You only flatten to a card when you want
   to *hand the companion to someone else*.
-- **Split by what may drift** (→ ch. 06 design-for-evolution, D-002). The soul is
+- **Split by what may drift** (→ ch. 06 design-for-evolution). The soul is
   cut along one fault line: a stable core that must **not** change, wrapped in a
   layer that **should**.
 

@@ -29,7 +29,7 @@ def test_manifest_refs_resolve_to_sections(vault):
 
 def test_card_version_stamp(vault):
     # "<name lowercased>-v<major>@<canon>" (§5.2)
-    assert loader(vault).load().card_version == "yuri-v2@canon-v2"
+    assert loader(vault).load().card_version == "yuri-v1@canon-v1"
 
 
 def test_macros_substitute_everywhere(vault):

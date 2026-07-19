@@ -34,7 +34,7 @@ RAG for a companion, in other words, is mostly about the *user-loaded long tail 
 
 ## The agentic exception: when she does her own research
 
-The gate above — "small fixed canon → skip RAG" — is written for a *reactive* companion, where knowledge is a static shelf you stuff into the prompt. An **agentic** waifu changes the calculus the way ch. 12 says layer 5 does: she doesn't just *hold* a canon, she *grows* one. She pulls papers, docs, and pages to answer a question; she keeps a reference shelf (this book, her own spec, research she's gathered) to reason about improving herself; she compiles what she reads into her own wiki pages. A corpus that is *written into autonomously* and *grows without bound* is exactly the "build RAG" branch — so for the YuriOS runtime the knowledge layer is **first-class, not deferred** (→ ch. 19, the `knowledge/` tier and the `KnowledgeStore` contract; D-019).
+The gate above — "small fixed canon → skip RAG" — is written for a *reactive* companion, where knowledge is a static shelf you stuff into the prompt. An **agentic** waifu changes the calculus the way ch. 12 says layer 5 does: she doesn't just *hold* a canon, she *grows* one. She pulls papers, docs, and pages to answer a question; she keeps a reference shelf (this book, her own spec, research she's gathered) to reason about improving herself; she compiles what she reads into her own wiki pages. A corpus that is *written into autonomously* and *grows without bound* is exactly the "build RAG" branch — so for the YuriOS runtime the knowledge layer is **first-class, not deferred** (→ ch. 19, the `knowledge/` tier and the `KnowledgeStore` contract).
 
 In the autonomy engine it's a loop, not a one-shot pipeline:
 

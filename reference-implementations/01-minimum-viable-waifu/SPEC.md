@@ -297,7 +297,7 @@ CLI. This makes changing `EMBED_BACKEND` self-healing — no manual re-seed.
 
 Build #1 loads the persona **the way the runtime does — by reading the SOUL files directly**
 (→ ch. 19, "she reads herself into being"), not by consuming a flattened card. The SOUL is the
-sibling `../yuri-soul` reference impl (→ ch. 07, D-003).
+sibling `../yuri-soul` reference impl (→ ch. 07).
 
 ### 5.1 Seeding & loading
 
@@ -306,7 +306,7 @@ sibling `../yuri-soul` reference impl (→ ch. 07, D-003).
   homes: `USER.md` → `vault/soul/USER.md` (starts as the empty-relationship template);
   `MEMORY.md` → the memory tier (`#What I know that matters` → `memory/semantic/facts.md`,
   `#Things {{user}} asked me to forget` → `memory/semantic/forgotten.md`, §6.7). Both start empty
-  in a fresh Vault — a card handed to someone else begins the relationship at zero (→ D-014).
+  in a fresh Vault — a card handed to someone else begins the relationship at zero.
 - **Load every turn:** `SoulLoader` reads `soul.yaml` and resolves its source references against
   the `.md` files. This reuses `yuri-soul`'s field-assembly logic (import it, or vendor the ~40
   lines of resolver). The reference syntax:
@@ -336,7 +336,7 @@ From `soul.yaml` (authoritative), the mapping Build #1 consumes:
 | Lore (keyword-fired) | `WORLD.md` (structured, §5.3) |
 
 `card_version` used throughout = `"<name lowercased>-v<major>@<canon>"`, all three from
-`soul.yaml` (`name: Yuri`, `character_version: 2.0.0`, `canon: canon-v2` → `yuri-v2@canon-v2`),
+`soul.yaml` (`name: Yuri`, `character_version: 1.0.0`, `canon: canon-v1` → `yuri-v1@canon-v1`),
 stamped on every journal entry and every corpus record.
 
 ### 5.3 Macros & lorebook

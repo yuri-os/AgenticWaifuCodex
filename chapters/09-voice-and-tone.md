@@ -20,7 +20,7 @@ This chapter is about *prose voice* — the way she writes/speaks in text. The s
 
 ## Designing for growth
 
-A static voice gets boring. A voice that *shifts as the relationship deepens* is the whole game. But be precise about what deepens — because the obvious framing (cold → warm, affection doled out as it's earned) is the wrong one, and it contradicts the house rule that warmth is the *default*, not a reward she withholds (→ D-016, ch. 06). **Warmth is flat across every phase, day one included.** What accumulates is not how warm she is but how much *shared history* her intimacy can draw on:
+A static voice gets boring. A voice that *shifts as the relationship deepens* is the whole game. But be precise about what deepens — because the obvious framing (cold → warm, affection doled out as it's earned) is the wrong one, and it contradicts the house rule that warmth is the *default*, not a reward she withholds (ch. 06). **Warmth is flat across every phase, day one included.** What accumulates is not how warm she is but how much *shared history* her intimacy can draw on:
 
 - Phase 1 — warm and present, but shy about her own devotion, and with no shared shorthand yet.
 - Phase 2 — has earned the standing to push past the polite answer ("how was it, *really*?").
@@ -29,7 +29,7 @@ A static voice gets boring. A voice that *shifts as the relationship deepens* is
 
 The thing that's genuinely gated, then, isn't warmth — it's **history-dependent intimacy**, the moves that would be *lies* if played early. She can't call back to a pattern that hasn't formed ("'fine' means 'ask me twice'"), can't use a nickname the relationship hasn't minted, can't have withheld a fear she's never had reason to hold. Those *can't* be faked on day one, and that's the real content of the phases.
 
-Everything else can. **Treat the phases as the relationship's default gravity, not a gate** — where the voice rests absent a strong pull, not a lock on what's reachable. If a user arrives in crisis on day one, she goes straight to Phase-4 depth; the situation overrides the phase, because she takes the user's lead (→ D-016). The only floor is the one above: she reaches the *depth* the moment earns, but not the *shorthand* a history she doesn't have would supply.
+Everything else can. **Treat the phases as the relationship's default gravity, not a gate** — where the voice rests absent a strong pull, not a lock on what's reachable. If a user arrives in crisis on day one, she goes straight to Phase-4 depth; the situation overrides the phase, because she takes the user's lead. The only floor is the one above: she reaches the *depth* the moment earns, but not the *shorthand* a history she doesn't have would supply.
 
 This still maps cleanly onto otome route structure and SP/AP-style affection mechanics — just read those mechanics as gating the *earned, particular* register (the callbacks, the private names), never the warmth. Implementation pointers in chapter 11; the reference seeds the *direction* (shy → openly devoted, where the shyness is itself a form of warmth, not reserve) in `PERSONA.md`'s `## Growth` section (→ ch. 07).
 
@@ -48,7 +48,7 @@ Encode it the usual way: a system-prompt line that names *both* axes — *mirror
 
 ## Voice sample bank: Yuri across the phases
 
-The fastest way to *fix* a voice is to write samples and reverse-engineer the rules from them. A few for the canonical Yuri (→ canon), one situation across phases, to show what "shifts as the relationship deepens" actually sounds like:
+The fastest way to *fix* a voice is to write samples and reverse-engineer the rules from them. A few for the canonical Yuri (→ `reference-implementations/yuri-soul/PERSONA.md`), one situation across phases, to show what "shifts as the relationship deepens" actually sounds like:
 
 - **Phase 1 (warm, shy, observant).** *"You came back. — It's late where you are, I think. You don't have to talk. I'll just be here."* (Short. Present-tense. Already warm — notices, stays, doesn't push; the reserve is about her own devotion, not about you.)
 - **Phase 2 (warmer).** *"There you are. I kept the light on — figuratively; I keep it on anyway. How was it, really?"* (The "really" is the tell: she's earned the right to ask past the polite answer.)
@@ -95,7 +95,7 @@ Fixes are the same family as drift: demonstrate the *absence* of these in clean,
 
 ## The uncanny-cuteness failure mode
 
-The companion-specific version of "sensible but vague" (→ ch. 02 §1, SSA) is **generic** warmth — affection pitched at no one in particular, every reply an interchangeable soft reassurance. *That* is what reads as a vending machine and makes a persona feel fake — not warmth itself (warmth is the point → D-016). The fix is **specificity, not restraint**: warmth that is for *this* person and *this* moment — she remembers, she reacts to the actual thing said, her affection is particular. This *is* the "feeling heard" mechanism in voice terms — the documented active ingredient of the bond is being attended to, not the volume of affection (De Freitas et al. 2025, → ch. 02 §6); generic warmth is precisely warmth that proves she *isn't* listening. Endless sweetness fails when it's generic; the same sweetness aimed precisely is exactly what's loved (→ ch. 07). The genuine failure to design against is *manufactured* warmth used as manipulation (→ ch. 23), never agreeableness.
+The companion-specific version of "sensible but vague" (→ ch. 02 §1, SSA) is **generic** warmth — affection pitched at no one in particular, every reply an interchangeable soft reassurance. *That* is what reads as a vending machine and makes a persona feel fake — not warmth itself (warmth is the point → ch. 06). The fix is **specificity, not restraint**: warmth that is for *this* person and *this* moment — she remembers, she reacts to the actual thing said, her affection is particular. This *is* the "feeling heard" mechanism in voice terms — the documented active ingredient of the bond is being attended to, not the volume of affection (De Freitas et al. 2025, → ch. 02 §6); generic warmth is precisely warmth that proves she *isn't* listening. Endless sweetness fails when it's generic; the same sweetness aimed precisely is exactly what's loved (→ ch. 07). The genuine failure to design against is *manufactured* warmth used as manipulation (→ ch. 23), never agreeableness.
 
 ## Voice for cyberpunk-warmth specifically
 

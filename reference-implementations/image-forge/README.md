@@ -4,7 +4,7 @@ The companion's **image capability behind one stable API, with interchangeable
 generator backends** (→ book ch. 26, *Generated Imagery and Selfies*). It renders
 the things the project needs pixels for — the hero portrait, in-conversation
 selfies "of her", worldbuilding art, branding, and reference-driven edits — and it
-does so *on-register* (the locked D-011 2.5D anime look) regardless of which
+does so *on-register* (the locked 2.5D anime look) regardless of which
 generator is plugged in behind it.
 
 This is the live, on-demand sibling of the repo's batch art pipeline
@@ -19,7 +19,7 @@ uncensored local model) without the rest of YuriOS noticing.
         ▼
   ┌──────────────────────────────────────────────┐
   │ ImageForge (service.py)                        │
-  │  • Character  — the locked look (D-011 register)│
+  │  • Character  — the locked 2.5D anime register  │
   │  • SelfieBook — scene × framing × … templates  │
   │  • provenance — strip / embed metadata          │
   └───────────────────────┬────────────────────────┘
@@ -297,7 +297,7 @@ the trade-off is it's Edit/AIO-flavored rather than the pristine base Qwen-Image
 The hard requirement of ch. 26 is *the same character, a thousand times*. Three
 mechanisms, layered, all driven from `characters/yuri.yaml`:
 
-1. **The locked register, as prompt text.** `quality_preamble` (the D-011 2.5D look)
+1. **The locked register, as prompt text.** `quality_preamble` (the locked 2.5D look)
    and `identity` (her face/build/marks) are lifted verbatim from
    `artworks/manifest.json`, so a runtime selfie reads as the *same person* as the
    batch-generated brand set — the "one source of truth" discipline (→ ch. 26).
@@ -339,7 +339,7 @@ at**, not by this code: a hosted frontier model refuses the register; a local
 uncensored / abliterated model does not. That is exactly the ch. 11 "model
 requirement" — uncensoredness is backend selection (`capabilities().uncensored`),
 not engine policy. The shipped `character_negative` keeps the *default* register at
-"alluring but no nudity" (the D-011 taste guard); loosen or remove that line for
+"alluring but no nudity" (the taste guard); loosen or remove that line for
 your own build. The engine takes **no enforcement posture** on what gets generated
 (→ ch. 26); the user is sovereign (→ ch. 05). The explicit *craft* of the register
 is out of scope here — left to the separate optional course (→ ch. 11, ch. 39).
@@ -380,7 +380,7 @@ unchanged — a `strip`-mode file you send still carries nothing.
 ```
 config.yaml              live config: which character, which templates, which backend
 models.yaml              local diffusers model registry (repo + pipeline + defaults)
-characters/yuri.yaml     the locked look as prompt parts (D-011, from manifest.json)
+characters/yuri.yaml     the locked look as prompt parts (from manifest.json)
 templates/selfie.yaml    the scene × framing × lighting × mood × wardrobe library
 comfy_workflows/         ComfyUI API-format graphs with %TOKENS% (txt2img, qwen_image_gguf[_nsfw], qwen_rapid_aio)
 image_forge/
@@ -416,7 +416,7 @@ test_image_forge.py      53 offline tests
 | Chapter idea | Where |
 |---|---|
 | The use cases (portrait, selfie, worldbuilding, merch source) | `ImageForge.portrait/selfie/scenery/edit` |
-| Why this register (supernormal stimulus, uncanny valley, D-011) | `characters/yuri.yaml` `quality_preamble`/`identity` |
+| Why this register (supernormal stimulus, uncanny valley) | `characters/yuri.yaml` `quality_preamble`/`identity` |
 | Consistency: LoRA / reference-editing / IP-Adapter | **`lora/TRAINING.md`** (full LoRA pipeline), `character.py` (trigger/lora/refs), `edit()`, diffusers IP-Adapter, the comfyui/replicate edit models |
 | Tooling: ComfyUI, diffusers, base generators, hosted inference | the five backends |
 | One source of truth (selfie ⇄ rig read as same person) | register lifted from `manifest.json`; the canonical portrait |
@@ -441,4 +441,4 @@ test_image_forge.py      53 offline tests
 - **`embed` provenance isn't signed C2PA** — it's the metadata record without the
   cryptographic manifest a hosted duty-of-care build would attach.
 
-License: MIT (per `../README.md`). Yuri's look/canon is reserved brand IP (→ D-015).
+License: MIT (per `../README.md`). Yuri's look/canon is reserved brand IP.

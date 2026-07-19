@@ -115,7 +115,7 @@ So the financial target isn't revenue, it's **profit per hour worked.** Optimise
 3. **Productised services** — a fixed-price persona audit or card-+-implementation bundle. Higher rate than hourly, capped time.
 4. **Hourly consulting** — last resort. Real money, zero compounding, trades your scarcest asset directly for cash. Use it to fund the others, not as the destination.
 
-Pause monetisation entirely if it's corrupting the work (per the project's own locked decisions) — but when you do charge, charge for the leveraged things first.
+Pause monetisation entirely if it's corrupting the work (ch. 39) — but when you do charge, charge for the leveraged things first.
 
 ## Health
 
@@ -232,7 +232,7 @@ To close the loop on the prior art — adopt the consensus, but adjust three thi
 
 1. **Part-time pace, not full-time.** Read Levels/Welsh/Lavingia for ratios and discipline; ignore their absolute throughput. Your unit of planning is the 12-week cycle at 80–120 hours, not their full-time year.
 2. **Attachment exposure is a first-class risk.** The *Health* section isn't optional polish — for a companion creator it's load-bearing. The generic literature underweights it because they didn't build attachment machines.
-3. **Ethics can override the money.** Every source optimises for sustainable profit. This project sometimes pauses profit on purpose (the locked decisions; ch. 5). That's a feature, and it's the one place where being a *company of one* with no investors is pure advantage: no one can make you grow in a direction you've decided is wrong.
+3. **Ethics can override the money.** Every source optimises for sustainable profit. This project sometimes pauses profit on purpose when the money would pull against the ethics (ch. 5). That's a feature, and it's the one place where being a *company of one* with no investors is pure advantage: no one can make you grow in a direction you've decided is wrong.
 
 ---
 

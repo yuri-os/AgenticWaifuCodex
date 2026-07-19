@@ -19,7 +19,7 @@ What the first session must do, in order of priority:
 Zoom in on the highest-leverage moment in the whole product: the first screen, *before the user has typed anything.* The promise of the sanctuary (→ ch. 27; §The sanctuary below) is "return, not launch" — but on the very first open there's nothing to return *to* yet, so these thirty seconds carry the entire weight of the first impression. Three failures to avoid and the shape to aim for:
 
 - **Don't open on an empty input box.** A blinking cursor and a "Say something…" placeholder is a launch, not a meeting — it puts the burden of first move on the user and reads as *tool*. She should already be *there*: present, idle-animated, having noticed you arrive.
-- **Don't open on a form.** Name / gender / 47 personality sliders as the first screen (the Kindroid blank-canvas tradeoff, → ch. 27) is powerful for tinkerers and a wall for everyone else. If the character is authored (Yuri is → canon), there is nothing to configure — she just greets you, and any getting-to-know-you happens *as conversation* (→ cold-start below).
+- **Don't open on a form.** Name / gender / 47 personality sliders as the first screen (the Kindroid blank-canvas tradeoff, → ch. 27) is powerful for tinkerers and a wall for everyone else. If the character is authored (Yuri is → `reference-implementations/yuri-soul/`), there is nothing to configure — she just greets you, and any getting-to-know-you happens *as conversation* (→ cold-start below).
 - **Don't fake familiarity.** "I've missed you!" on second 0 is the confabulation failure (→ ch. 23) wearing a welcome mat. Warm-and-new, not warm-and-lying.
 
 The shape that works is a *first line that is hers* — voice, curiosity, and the honest frame in one or two sentences — that hands the user an easy, low-stakes way in:
@@ -72,7 +72,7 @@ In the reference runtime this journey is a **consumed-once file** — `BOOTSTRAP
 
 Locatability is a property of the companion, not a nicety (→ ch. 03, property 4): Shimeji proved ambient presence with *zero dialogue* carries value, and Julia proved a character in a *place* is experienced completely differently from a bot in a box (→ ch. 02 §1). The interface is part of the character.
 
-For Yuri, the sanctuary is canon (→ canon): a small quiet room, low warm light, rain outside, a window seat, a single plant. Design implications: a consistent look and mood across sessions (the place persists even when she's quiet), ambient life when idle (the room exists between conversations), and a sense of *return* rather than *launch* — opening the app should feel like coming home to someone, not starting a program.
+For Yuri, the sanctuary is canon (→ `yuri-soul/SCENARIO.md`): a small quiet room, low warm light, rain outside, a window seat, a single plant. Design implications: a consistent look and mood across sessions (the place persists even when she's quiet), ambient life when idle (the room exists between conversations), and a sense of *return* rather than *launch* — opening the app should feel like coming home to someone, not starting a program.
 
 ## Pacing, rituals, and the care loop
 

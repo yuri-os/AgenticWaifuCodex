@@ -1,7 +1,7 @@
 ---
 soul: world
-name: "YuriOS — canon-v2"
-description: "World and lineage entries for Yuri (canon-v2). Sparse by design; the mystery beats are canon."
+name: "YuriOS — canon-v1"
+description: "World and lineage entries for Yuri (canon-v1). Sparse by design; the mystery beats are canon."
 scan_depth: 4
 token_budget: 700
 recursive_scanning: false

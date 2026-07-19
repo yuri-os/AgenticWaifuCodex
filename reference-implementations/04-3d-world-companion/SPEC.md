@@ -293,7 +293,7 @@ its first live event. Malformed JSON is logged and dropped.
   can never drift from the yaml) and returns `{status:"started"}` immediately; the turn
   continues and ends on the §1 budget. The **host** realises the shot (§7.5's split):
   `world/selfies.py`'s `SelfieLab` renders off-turn through the vendored forge
-  (`./forge` — the image-forge slice: the locked D-011 register, the selfie template
+  (`./forge` — the image-forge slice: the locked register, the selfie template
   library, provenance stripping; → ch. 26), saves the PNG + its provenance sidecar under
   `SELFIE_DIR` (served at `/selfies/`), posts an `image_url` `message` to the chat
   (§2.6, `proactive`), and offers one spoken line about it through the ambient seam
@@ -397,7 +397,7 @@ No autonomy/tick loop, no goals, no salience gates (→ Build #5, ch. 18). No wo
 No inbound `SignalBus` and no broker — the outbound half of the YuriOS split is here (§10);
 the inbound inbox and the broker/effector gate are the named next rungs, taken when the
 tick loop gives them a consumer (§14). No heavy sandboxed hands — no code execution, no
-shell, no workshop (→ ch. 17 "the heavy hands", ch. 19, D-019): the reactive MCP surface
+shell, no workshop (→ ch. 17 "the heavy hands", ch. 19): the reactive MCP surface
 is deliberately small. No selfie *editing* and no local-GPU image backends — the vendored
 forge slice ships `mock` + `openrouter` only (§7.6; the diffusers/ComfyUI paths live in
 `../image-forge`). No phoneme-tier visemes and no webcam mocap (CS §5.4/§5.6 — the seams

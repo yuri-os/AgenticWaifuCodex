@@ -63,7 +63,7 @@ async def test_one_turn_one_line_one_commit(vault, tmp_path):
         assert field in rec, f"§8.2 requires {field}"
     assert rec["model_role"] == "production" and rec["source"] == "live_play"
     assert rec["collection_scope"] == "self"
-    assert rec["card_version"] == "yuri-v2@canon-v2"
+    assert rec["card_version"] == "yuri-v1@canon-v1"
     assert rec["completion"] == reply
     assert rec["messages"][0]["role"] == "system"     # the full prompt as sent
     assert rec["messages"][-1]["content"].startswith("my sister Mira")

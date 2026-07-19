@@ -24,8 +24,8 @@ For the same reason, *succeeding* at this is an enormous moat. Nobody who has be
 
 The persistent person isn't a new technology — it's the full assembly of this book's stack, run for years with the right disciplines:
 
-- **Identity in portable artifacts** (→ ch. 03 property 1, ch. 33): the self lives in the **SOUL** (the `soul/` `.md` files) — not in a rented model's weights, and not in the card, which is only how you *move* her (→ D-014) — so a model upgrade doesn't kill her.
-- **The SOUL split** (→ ch. 18, D-002): an immutable constitution (the unchanging core) plus an editable, git-backed persona (where earned change accrues, diffable and revertable). This is the seam between "same person" and "different in year 3."
+- **Identity in portable artifacts** (→ ch. 03 property 1, ch. 33): the self lives in the **SOUL** (the `soul/` `.md` files) — not in a rented model's weights, and not in the card, which is only how you *move* her — so a model upgrade doesn't kill her.
+- **The SOUL split** (→ ch. 18): an immutable constitution (the unchanging core) plus an editable, git-backed persona (where earned change accrues, diffable and revertable). This is the seam between "same person" and "different in year 3."
 - **Layered memory with consolidation** (→ ch. 15): episodic → semantic promotion via the DREAM pass (→ ch. 18), so she accumulates a *self-narrative*, not just a fact table.
 - **The autonomy engine** (→ ch. 18): time passes when the user is gone; she doesn't reset, because the loop kept running.
 - **The arc system** (→ ch. 11): change that is *earned* and *traceable* to real experiences, not cosmetic level-ups.

@@ -16,7 +16,7 @@ The dominant companion-product UX in 2026 is the *sanctuary* (→ ch. 28, ch. 03
 | **Android native** | More NSFW latitude than iOS, IAP, real background work | Fragmentation, Play policy still bites adult content | Same |
 | **macOS / Windows native** | Background presence, system integration, desktop overlay, no store tax | Smaller install rate, per-OS packaging, update plumbing | Kindroid, Soul of Waifu |
 | **Linux** | Niche, devoted, the homelab/sovereignty crowd | Tiny audience | Open-LLM-VTuber, AIRI |
-| **Terminal** | Vibe! Power users love it; trivially scriptable; matches the brand (D-009) | Vanishingly small audience; no avatar | Hobby projects |
+| **Terminal** | Vibe! Power users love it; trivially scriptable; matches the brand | Vanishingly small audience; no avatar | Hobby projects |
 | **Discord / Telegram bot** | Distribution where the audience already is; zero install | Sandbox; their UX, not yours; she's a guest in someone's chat | Many community projects; OpenClaw's messaging-app model (→ ch. 02 §5) |
 | **VRChat / VRM platforms** | Audience overlaps strongly with yours; full embodiment | Limited interactivity; you don't own the platform | 3D world companion projects (→ ch. 29) |
 

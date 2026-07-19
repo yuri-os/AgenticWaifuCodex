@@ -247,7 +247,7 @@ collapsing them is precisely Clippy.
 ## §19 — The world model (the present tense)
 
 `mind/world.py` — the `WorldModelStore`, the organ B4 §2.5 was a rendering of
-(→ ch. 19; D-022). SENSE writes it, APPRAISE scores against it, DECIDE plans over it,
+(→ ch. 19). SENSE writes it, APPRAISE scores against it, DECIDE plans over it,
 and every prompt is built from it.
 
 - §19.1 **Beliefs, not facts.** Every entry is a time-stamped, confidence-tagged
@@ -272,7 +272,7 @@ and every prompt is built from it.
 ## §20 — The knowledge layer (drop-folder RAG)
 
 `mind/knowledge.py` — the `KnowledgeStore`, a **sibling of memory, never folded in**
-(→ ch. 16; D-019). The boundary is enforced by shape: **knowledge cites a document +
+(→ ch. 16). The boundary is enforced by shape: **knowledge cites a document +
 span; memory cites a conversation turn** — separate files, separate indexes, separate
 `inspect()`.
 
@@ -326,7 +326,7 @@ strategy**; lifecycle `pending → active → waiting → done | abandoned`.
 
 ## §23 — The SOUL split and gated self-edits
 
-`mind/selfedit.py`, `mind/vaultio.py` (→ ch. 14; D-002). Who she is, immutably; who
+`mind/selfedit.py`, `mind/vaultio.py` (→ ch. 14). Who she is, immutably; who
 she's becoming, reviewably.
 
 - §23.1 **The constitution is read-only, even to her.** Every mind write path goes

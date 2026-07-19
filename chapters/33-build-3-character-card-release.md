@@ -1,6 +1,6 @@
 # 33 — Build #3: The Character Card Release
 
-**Goal:** package the canonical Yuri as a polished, public **character card** — one `.PNG` file, persona + lorebook + art — that a stranger can download and run in their own stack. This is the build that turns a private persona into a *distributable artifact* and the project's primary distribution unit (D-003: one file = one companion).
+**Goal:** package the canonical Yuri as a polished, public **character card** — one `.PNG` file, persona + lorebook + art — that a stranger can download and run in their own stack. This is the build that turns a private persona into a *distributable artifact* and the project's primary distribution unit (one file = one companion).
 
 **What it teaches:** character cards (→ ch. 07), lorebooks (→ ch. 08), evaluation (→ ch. 23), and distribution (→ ch. 37).
 
@@ -14,9 +14,9 @@ The character card is the direct descendant of ELIZA's swappable script, AIML's 
 
 ## The working format is the soul; the card is the export
 
-The single idea to internalise before reading a line: **you do not author a card. You author a soul, and the card is a build artifact of it** (→ D-014, D-003). At runtime a companion lives as editable `.md` files the runtime re-reads on every wake — she reads herself into being. You only flatten to a `.PNG` when you want to *hand her to someone else*.
+The single idea to internalise before reading a line: **you do not author a card. You author a soul, and the card is a build artifact of it**. At runtime a companion lives as editable `.md` files the runtime re-reads on every wake — she reads herself into being. You only flatten to a `.PNG` when you want to *hand her to someone else*.
 
-The soul is cut along one fault line — **split by what may drift** (→ ch. 06 design-for-evolution, D-002): a stable core that must **not** change, wrapped in a layer that **should**. That split is the reason a card is safe to fork: a stranger can rewrite everything in the editable layer and the core of who she is survives it.
+The soul is cut along one fault line — **split by what may drift** (→ ch. 06 design-for-evolution): a stable core that must **not** change, wrapped in a layer that **should**. That split is the reason a card is safe to fork: a stranger can rewrite everything in the editable layer and the core of who she is survives it.
 
 | File | Mutability | What it is |
 |---|---|---|
@@ -25,7 +25,7 @@ The soul is cut along one fault line — **split by what may drift** (→ ch. 06
 | `BOOTSTRAP.md` | **consumed-once** | the first-ever meeting + getting-to-know-you journey; retired after (→ ch. 28) |
 | `SCENARIO.md` | editable | the situation + the **return** greetings (she's met you before) |
 | `EXAMPLES.md` | editable | demonstrated voice — the highest-ROI field (→ ch. 23, enacted not recited) |
-| `WORLD.md` | editable | the lorebook — the Sprawl, Lumina, the ferry generation (→ canon), sparse by design |
+| `WORLD.md` | editable | the lorebook — the Sprawl, Lumina, the ferry generation, sparse by design |
 | `MEMORY.md` / `USER.md` | runtime-only | accumulated memory + her model of the user — **empty on a fresh card** |
 | `NOTES.md` | — | creator notes (→ card `creator_notes`) |
 | `soul.yaml` | — | the export manifest: card metadata + which sources feed which field |
@@ -42,7 +42,7 @@ A `.PNG` card embeds the card JSON in the image's metadata (→ ch. 07). The int
 - **`first_mes`** and **`alternate_greetings`** — the opening line(s). Yuri's first message is the bootstrap **cold open**; her alternate greetings are the *return* greetings (see "The two first meetings" below).
 - **`mes_example`** — demonstrated voice, the highest-ROI field (see "The voice" below).
 - **`character_book`** — the lorebook (see "The lorebook" below).
-- **`extensions.yurios`** (optional, D-008) — a small block our own runtime reads: `card_release`, `canon`, `lineage`, and `provenance` (creator + card version). It is *ignored* by other runtimes, so the same file is both a standard SillyTavern card *and* a YuriOS-tagged one. Ship the SillyTavern-compatible card first (D-008); anything extended is value-add for those on our runtime.
+- **`extensions.yurios`** (optional) — a small block our own runtime reads: `card_release`, `canon`, `lineage`, and `provenance` (creator + card version). It is *ignored* by other runtimes, so the same file is both a standard SillyTavern card *and* a YuriOS-tagged one. Ship the SillyTavern-compatible card first; anything extended is value-add for those on our runtime.
 
 `MEMORY.md` and `USER.md` are part of the soul but are **never baked into a card**: a card you give away starts the relationship at zero, and the recipient's runtime recreates and grows them in play (→ ch. 15). Most of the everyday-presence bond lives there, not in the prose (→ ch. 06, attunement-via-memory) — which is exactly why the card is the *seed*, not the companion.
 
@@ -144,10 +144,10 @@ The sections above are the *why* behind each part. The loop itself is six steps,
 
 1. **Author the soul, not the card.** Write `CONSTITUTION.md` and `PERSONA.md` and the rest (→ ch. 07), iterating against golden transcripts (→ ch. 23) until recitation and drift are gone in a *neutral* runtime — you don't control the downloader's model, so she has to hold up on one you didn't pick.
 2. **Author the lorebook** in `WORLD.md` (→ ch. 08): entries with good trigger keys and a sensible insertion order, reveals gated so they unfold rather than dump (→ ch. 38).
-3. **Generate and lock the art** (→ ch. 26): the hero portrait, in the D-011 register, consistent with the canonical face (the identity-consistency problem — LoRA/ControlNet, → ch. 02 §4.6). Expression sprites are a runtime concern and don't travel in the card.
+3. **Generate and lock the art** (→ ch. 26): the hero portrait, in the locked register, consistent with the canonical face (the identity-consistency problem — LoRA/ControlNet, → ch. 02 §4.6). Expression sprites are a runtime concern and don't travel in the card.
 4. **Build and verify.** `python build_card.py` flattens the soul into `dist/yuri.png` with the card JSON in the PNG's `tEXt` chunk (and writes `SOUL.md` for Hermes-class runtimes); `--spec v3` adds the `ccv3` chunk. The build self-verifies its own round trip — load it in SillyTavern and one other runtime anyway.
 5. **Test as a stranger would** — cold load, no memory, a default-ish model, and confirm she's recognisably *someone* within a few turns (→ ch. 28, the first session).
-6. **Write the README** — what she is, the intended (adult) audience, the license (D-007: cards under a build-on-able license), and an honest note on what the card does and doesn't carry: the provenance it declares, and the signature it does not yet (see the deferral above). A card whose README matches what it actually carries is a card whose author can be trusted twice.
+6. **Write the README** — what she is, the intended (adult) audience, the license (cards go out under a build-on-able license), and an honest note on what the card does and doesn't carry: the provenance it declares, and the signature it does not yet (see the deferral above). A card whose README matches what it actually carries is a card whose author can be trusted twice.
 
 The Card Studio collapses steps 1–4 into the same loop with the theory built in; the scripts are what it runs underneath.
 
@@ -157,7 +157,7 @@ Building the file is half the job; releasing it responsibly is the other half (�
 
 - **`creator_notes`** (from `NOTES.md`) — the in-card README a runtime shows on import: what she is in two lines, the models she works best on, and where the world lives (the lorebook, sparse about her past). This is the first thing a downloader reads, so it earns its place in the file itself, not just the release page.
 - **An honest audience note.** Yuri is an adult companion and the card says so plainly. The NSFW posture is stated, not smuggled: the reference wording is kept tasteful so it can be hosted and shared anywhere, but it never *refuses* — the base is a starting point, not a ceiling, and explicit forks load and run without restriction (→ ch. 11 on the intimacy posture). Declaring the audience up front is what makes the card trustworthy to distribute.
-- **A build-on-able license** (D-007) and an explicit invitation to fork. Forks are part of the lineage's design, and the soul's immutable/editable split is what makes forking safe — someone can rewrite the whole editable layer and hand *that* card on, and the round trip through `import_card.py` means a fork can always be reopened into a soul. A card whose README matches what it actually carries is a card whose author can be trusted twice.
+- **A build-on-able license** and an explicit invitation to fork. Forks are part of the lineage's design, and the soul's immutable/editable split is what makes forking safe — someone can rewrite the whole editable layer and hand *that* card on, and the round trip through `import_card.py` means a fork can always be reopened into a soul. A card whose README matches what it actually carries is a card whose author can be trusted twice.
 
 ## Definition of done
 

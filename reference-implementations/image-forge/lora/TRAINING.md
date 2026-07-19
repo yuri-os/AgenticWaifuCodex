@@ -194,4 +194,4 @@ A diffusers-format base (an HF repo) skips step 1 — just set `--pretrained_mod
   4 is local/free. A re-train reuses the dataset — you only pay once.
 - **Licensing.** `train_dreambooth_lora_sdxl.py` is vendored from diffusers
   (Apache-2.0). The base model and its license are your responsibility; the trained
-  LoRA + Yuri's look are reserved brand IP (→ D-015).
+  LoRA + Yuri's look are reserved brand IP.

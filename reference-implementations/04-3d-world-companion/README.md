@@ -266,7 +266,7 @@ functions), and `DESKTOP_BODY` / `--body` picks who stands in it:
 
 Still **reactive** — the idle machine is scripted life, not a mind (→ Build #5, ch. 18).
 Tools are the *small reactive* surface; the heavy sandboxed hands (code execution, the
-workshop) are Build #5+ (→ ch. 17, ch. 19, D-019). The **inbound half of the YuriOS
+workshop) are Build #5+ (→ ch. 17, ch. 19). The **inbound half of the YuriOS
 split** — the `SignalBus` inbox and the broker/effector gate — is a named next rung, not
 built: it has no consumer until the tick loop exists, so user input keeps the voice
 socket's turn semantics. Selfie *editing* and the local-GPU image backends stay in

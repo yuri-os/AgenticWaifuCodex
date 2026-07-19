@@ -44,8 +44,8 @@ Builds 1, 2, and 4 are increasingly embodied *reactive* companions (a persona on
 
 ## Two decisions that shape every build
 
-- **Own the runtime (D-004).** The builds use our own host-runtime + per-character autonomy-engine design (→ ch. 18). The reactive, turn-driven loop in the existing open agent stacks is incompatible with the always-on brain this project is actually about; AIRI, ElizaOS, and the rest (→ ch. 02 §5) remain reference points to study, not bases to build on.
-- **The distribution artifact is the `.PNG` character card (D-003).** One file = one companion: a V3-compatible card with embedded JSON, optionally carrying an `extensions.yurios` block for the autonomy runtime. Build #3 produces it; Build #5 loads it.
+- **Own the runtime.** The builds use our own host-runtime + per-character autonomy-engine design (→ ch. 18). The reactive, turn-driven loop in the existing open agent stacks is incompatible with the always-on brain this project is actually about; AIRI, ElizaOS, and the rest (→ ch. 02 §5) remain reference points to study, not bases to build on.
+- **The distribution artifact is the `.PNG` character card.** One file = one companion: a V3-compatible card with embedded JSON, optionally carrying an `extensions.yurios` block for the autonomy runtime. Build #3 produces it; Build #5 loads it.
 
 ## A cross-cutting practice: capture the corpus from day one
 

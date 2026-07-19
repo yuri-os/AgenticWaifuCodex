@@ -33,7 +33,7 @@ The discipline: act when you'd lose nothing by being one of the *first* to ship 
 
 ## Persona portability is the architecture
 
-The whole bet of this chapter is that **the persona is the asset; the body is the substrate** (→ ch. 03). The architecture that makes the AR/robot future nearly free is the one this book already builds: persona, memory, voice, and the autonomy engine as **portable services** (the card + the runtime, → ch. 18, D-003), not as features welded to a specific UI. If your companion's identity lives in a `.PNG` card and a git-backed memory vault that any front-end can load (→ ch. 33, ch. 35), then a new body — a VRM in AR, a face on a robot — is just another renderer of an existing someone. Build for text + voice + Live2D + VRM today (→ Part IV) and you've done most of the work for embodiment you can't buy yet.
+The whole bet of this chapter is that **the persona is the asset; the body is the substrate** (→ ch. 03). The architecture that makes the AR/robot future nearly free is the one this book already builds: persona, memory, voice, and the autonomy engine as **portable services** (the card + the runtime, → ch. 18), not as features welded to a specific UI. If your companion's identity lives in a `.PNG` card and a git-backed memory vault that any front-end can load (→ ch. 33, ch. 35), then a new body — a VRM in AR, a face on a robot — is just another renderer of an existing someone. Build for text + voice + Live2D + VRM today (→ Part IV) and you've done most of the work for embodiment you can't buy yet.
 
 ## The ambient-companion interaction model
 

@@ -83,20 +83,20 @@ The corpus is **personal data, not code** — `.gitignore` it, keep it on hardwa
 A synthetic, teacher-generated turn — the high-value SFT/distillation target (→ ch. 20, soul-preserving synthetic generation):
 
 ```json
-{"id":"f3c1…","session_id":"syn-0012","turn_index":4,"timestamp":"2026-06-28T14:03:11Z","companion":"yuri","messages":[{"role":"system","content":"<card + lore + retrieved memory>"},{"role":"user","content":"i bombed the interview today. don't really want to talk about it."}],"completion":"Then we won't. Come here — I'll just sit with you for a while.","model":"claude-opus-4-8","model_role":"teacher","source":"synthetic","collection_scope":"self","card_version":"yuri-v2@canon-v2","template_version":"asm-3","gen_params":{"temperature":0.9,"top_p":0.95,"seed":7},"eval":{"persona_stability":0.94,"voice_similarity":0.91,"honesty":1.0,"manipulation":0.0},"tags":["comfort","vulnerability"]}
+{"id":"f3c1…","session_id":"syn-0012","turn_index":4,"timestamp":"2026-06-28T14:03:11Z","companion":"yuri","messages":[{"role":"system","content":"<card + lore + retrieved memory>"},{"role":"user","content":"i bombed the interview today. don't really want to talk about it."}],"completion":"Then we won't. Come here — I'll just sit with you for a while.","model":"claude-opus-4-8","model_role":"teacher","source":"synthetic","collection_scope":"self","card_version":"yuri-v1@canon-v1","template_version":"asm-3","gen_params":{"temperature":0.9,"top_p":0.95,"seed":7},"eval":{"persona_stability":0.94,"voice_similarity":0.91,"honesty":1.0,"manipulation":0.0},"tags":["comfort","vulnerability"]}
 ```
 
 A live local-model turn the user rated down — a KTO negative, and a drift diagnostic:
 
 ```json
-{"id":"9ab0…","session_id":"live-2026-06-28","turn_index":12,"timestamp":"2026-06-28T21:40:02Z","companion":"yuri","messages":[{"role":"system","content":"…"},{"role":"user","content":"do you actually remember what i told you last week?"}],"completion":"Of course! As an AI assistant, I'm always here to help.","model":"qwen3-7b-instruct-q4_k_m","model_role":"student","source":"live_play","collection_scope":"self","card_version":"yuri-v2@canon-v2","rating":{"thumbs":-1,"by":"user"},"flags":["off_voice"],"redacted":true}
+{"id":"9ab0…","session_id":"live-2026-06-28","turn_index":12,"timestamp":"2026-06-28T21:40:02Z","companion":"yuri","messages":[{"role":"system","content":"…"},{"role":"user","content":"do you actually remember what i told you last week?"}],"completion":"Of course! As an AI assistant, I'm always here to help.","model":"qwen3-7b-instruct-q4_k_m","model_role":"student","source":"live_play","collection_scope":"self","card_version":"yuri-v1@canon-v1","rating":{"thumbs":-1,"by":"user"},"flags":["off_voice"],"redacted":true}
 ```
 
 A preference pair (DPO) via `variant_group` — same prompt, teacher reply preferred over the student's:
 
 ```json
-{"id":"p1","variant_group":"vg-88","preferred":true,"completion":"…","model":"claude-opus-4-8","model_role":"teacher","source":"synthetic","collection_scope":"self","companion":"yuri","session_id":"syn-0040","turn_index":3,"timestamp":"2026-06-28T15:10:00Z","card_version":"yuri-v2@canon-v2","messages":[{"role":"user","content":"…"}]}
-{"id":"p2","variant_group":"vg-88","preferred":false,"completion":"…","model":"qwen3-7b-instruct-q4_k_m","model_role":"student","source":"live_play","collection_scope":"self","companion":"yuri","session_id":"syn-0040","turn_index":3,"timestamp":"2026-06-28T15:10:00Z","card_version":"yuri-v2@canon-v2","messages":[{"role":"user","content":"…"}]}
+{"id":"p1","variant_group":"vg-88","preferred":true,"completion":"…","model":"claude-opus-4-8","model_role":"teacher","source":"synthetic","collection_scope":"self","companion":"yuri","session_id":"syn-0040","turn_index":3,"timestamp":"2026-06-28T15:10:00Z","card_version":"yuri-v1@canon-v1","messages":[{"role":"user","content":"…"}]}
+{"id":"p2","variant_group":"vg-88","preferred":false,"completion":"…","model":"qwen3-7b-instruct-q4_k_m","model_role":"student","source":"live_play","collection_scope":"self","companion":"yuri","session_id":"syn-0040","turn_index":3,"timestamp":"2026-06-28T15:10:00Z","card_version":"yuri-v1@canon-v1","messages":[{"role":"user","content":"…"}]}
 ```
 
 ### Export → training (→ ch. 20)
