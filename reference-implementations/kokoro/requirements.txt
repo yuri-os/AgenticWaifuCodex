@@ -1,0 +1,10 @@
+# Kokoro voice reference implementation.
+#
+# System dependency (NOT pip): espeak-ng for phonemization.
+#   Debian/Ubuntu:  sudo apt-get install espeak-ng
+#   macOS:          brew install espeak-ng
+
+kokoro>=0.9.4        # Kokoro-82M TTS pipeline (pulls torch, transformers)
+soundfile>=0.12      # wav I/O
+numpy>=1.24
+PyYAML>=6.0

@@ -1,0 +1,16 @@
+# personal + derived + fetched — never committed (SPEC §8.2, §12)
+.env
+.venv/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+
+# fetched third-party avatar assets (proprietary Cubism Core + sample model)
+web/vendor/
+
+# her mind — seeded locally, its own git repo, never nested in this one (§8.2)
+vault/
+
+# latency traces — personal debug data, like Build #1's corpus
+traces/
+corpus/

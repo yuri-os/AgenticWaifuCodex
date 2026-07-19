@@ -1,0 +1,14 @@
+[project]
+name = "memory-lab"
+version = "0.1.0"
+description = "A runnable teaching extract of the companion memory subsystem (book ch. 15)"
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.24"]
+
+[project.optional-dependencies]
+# only needed if you swap HashingEmbedder for real semantic embeddings
+semantic = ["sentence-transformers>=2.2"]
+dev = ["pytest>=8.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

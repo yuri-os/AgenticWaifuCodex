@@ -1,0 +1,89 @@
+# image-forge live config. `ImageForge.from_config("config.yaml")` reads this.
+# Paths are resolved relative to this file.
+
+character: characters/yuri.yaml
+templates: templates/selfie.yaml
+out_dir: out
+
+# Outbound metadata posture: strip | embed | raw  (→ image_forge/provenance.py)
+#   strip = drop all upstream metadata (opsec default, → concepts/opsec.md)
+#   embed = add a content-credentials record (the C2PA idea, → ch. 26)
+provenance: strip
+
+# The generator. Swap by changing `name` (and its options). Same character,
+# same templates, different pixels — that's the swappable seam.
+#
+# DEFAULT: local diffusers on equinox-v5 with Yuri's trained hero LoRA. The LoRA is
+# declared in characters/yuri.yaml (trigger + lora:) and the diffusers backend fuses
+# it at load, so every render is *her* in whatever the prompt asks for — the durable
+# consistency path (→ lora/TRAINING.md, ch. 26). Needs a CUDA GPU + the trained LoRA;
+# for a no-GPU smoke test switch `name` to `mock` in the alternatives below.
+#
+# NOTE: model and LoRA are coupled. equinox-v5 pairs with the natively-trained
+# yuri_v2_equinox LoRA (characters/yuri.yaml) — that combo locks her face tightest.
+# If you switch `model` back to illustrij, also switch the LoRA back to yuri_v2: an
+# illustrij-trained LoRA on equinox (or vice-versa) renders her, but the face drifts.
+backend:
+  name: diffusers
+  model: equinox-v5                  # any key in models.yaml (add your own there)
+  registry: models.yaml
+  cache_dir: /mnt/6870C6B170C68572/AI/huggingface   # where weights download/live
+  device: cuda
+  dtype: float16
+  offload: model                     # model (default, fits 16 GB, works w/ long prompts)
+                                     # | sequential (lowest VRAM, but breaks long-prompt
+                                     #   encoding) | none (all on GPU)
+  # ADetailer-style face restoration (→ ch. 26). SDXL renders in a 1/8-res latent, so a
+  # small/distant face in a full-body shot gets too few pixels and its eyes degrade — a
+  # resolution problem no LoRA can fix. This detects each starved face, redraws it at
+  # full res with the same fused LoRA (identity carries), and feathers it back. One
+  # extra short img2img pass per detected face; only fires on faces below max_face_ratio.
+  face_detailer:
+    enabled: true
+    conf_threshold: 0.7              # min detector confidence to treat a box as a face
+    max_face_ratio: 0.35            # only redraw faces smaller than this fraction of height
+    strength: 0.45                  # how far the redraw departs from the original crop
+    padding: 0.4                    # extra context cropped around the face box
+    size: 1024                      # working resolution the crop is redrawn at
+    feather: 0.12                   # mask-edge softness so the paste leaves no seam
+  # Hi-res fix (→ ch. 26): upscale the finished frame and run a second low-denoise pass
+  # over the WHOLE image, so global detail (skin, hair, fabric) renders at a resolution
+  # the base pass never had. Complements the face detailer (this lifts everything; the
+  # detailer fixes small faces). Runs BEFORE the detailer so it works on the larger image.
+  # Cost: roughly a second full pass at scale× resolution — the heavy quality path. Drop
+  # `enabled: false` for fast on-demand renders. Output is base dims × scale (8-aligned).
+  hires_fix:
+    enabled: false                   # off by default — it ~doubles render time; flip on for hero shots
+    scale: 1.3                       # 832x1216 -> ~1080x1584 (fits 16 GB; 1.5x OOMs SDXL img2img
+                                     #   on 16 GB — raise if you have more VRAM)
+    strength: 0.4                    # second-pass denoise (lower = truer to base, less new detail)
+
+# --- other backends (uncomment one; comment out the diffusers block above) ---
+#
+# backend:                  # no GPU / no key / no network — deterministic placeholder
+#   name: mock
+#
+# backend:                  # the repo's proven hosted path — matches the brand art
+#   name: openrouter
+#   model: sourceful/riverflow-v2.5-pro
+#
+# To put Yuri in new scenes WITHOUT the LoRA (e.g. before training), drop the
+# `lora:` from characters/yuri.yaml and add an IP-Adapter to the diffusers block:
+#   ip_adapter:
+#     repo: h94/IP-Adapter
+#     subfolder: sdxl_models
+#     weight_name: ip-adapter-plus-face_sdxl_vit-h.safetensors  # face-focused
+#     scale: 0.6                     # 0.4 looser / 0.8 stronger adherence
+#
+# backend:                  # local ComfyUI (graph-based alternative to diffusers)
+#   name: comfyui
+#   host: 127.0.0.1
+#   port: 8188
+#   workflow: comfy_workflows/txt2img.json
+#   checkpoint: animagineXL40.safetensors
+#   # edit_workflow: comfy_workflows/kontext_edit.json   # for edit()
+#
+# backend:                  # hosted GPUs without owning hardware
+#   name: replicate
+#   model: black-forest-labs/flux-1.1-pro
+#   edit_model: black-forest-labs/flux-kontext-pro

@@ -1,0 +1,88 @@
+# Qwen3-TTS voice config for the reference implementation.
+#
+# Qwen3-TTS (QwenLM/Qwen3-TTS, Apache-2.0, Jan 2026) is the convergence model for
+# a local companion voice: it does what BOTH sibling impls do — a fixed/preset
+# voice (cf. ../kokoro) AND 3-second zero-shot cloning of a specific identity
+# (cf. ../gpt-sovits) — plus a third trick neither has: designing a voice from a
+# natural-language description. All open-weight, ~97 ms latency, 0.6B or 1.7B.
+# (→ ch. 24 §"TTS short list".)
+#
+# Like Kokoro it runs in-process (no server), but each MODE loads a different
+# model variant, so a register declares its mode and the synth caches per model.
+
+model:
+  # One variant per mode (the API ships separate Base/VoiceDesign/CustomVoice).
+  # Swap 1.7B -> 0.6B for the lighter, more sovereignty-friendly footprint.
+  clone:  Qwen/Qwen3-TTS-12Hz-1.7B-Base          # zero-shot cloning
+  design: Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign   # voice-from-description
+  custom: Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice   # preset premium timbres
+  device: cuda:0
+  dtype: bfloat16
+  attn: sdpa                  # built into PyTorch, no install. Use
+                              # "flash_attention_2" for lower VRAM if installed.
+
+language: English
+
+# ---------------------------------------------------------------------------
+# Registers. Each pins a MODE and that mode's inputs (→ ch. 24: one versioned
+# voice asset per register, never swapped mid-conversation).
+#   clone  -> ref_audio (path/URL on this machine) + its exact transcript
+#   design -> instruct  (a natural-language description of the voice)
+#   custom -> speaker   (a built-in timbre; see the model card for the full list)
+# ---------------------------------------------------------------------------
+registers:
+  default:                       # zero-shot clone of a pinned reference clip
+    mode: clone
+    ref_audio: voices/ref_default.wav
+    ref_text: "I kept the light on. I'm really glad you're back."
+
+  designed:                      # a voice DESIGNED from words — Qwen3-TTS's trick
+    mode: design
+    instruct: >-
+      A warm, gentle young woman in her twenties; soft and affectionate,
+      unhurried, with a slight late-night breathiness.
+
+  # --- Waifu voice archetypes (all authored in words, no clip needed) --------
+  # Each is a companion register you can A/B with `eval --register <name>` or
+  # render with `say --register <name>`. These are the payoff of design mode:
+  # a whole cast of voices from text, tuned to the moe archetypes (→ ch. 06).
+  genki:                         # bright, energetic childhood-friend energy
+    mode: design
+    instruct: >-
+      A bright, energetic young woman, late teens; cheerful and bubbly with a
+      light high pitch, quick pacing, and a playful upward lilt — the
+      genki childhood-friend voice. Clear and lively, never breathy.
+
+  soft_shy:                      # gentle, timid, dandere
+    mode: design
+    instruct: >-
+      A soft-spoken, shy young woman; gentle, hesitant, slightly breathy,
+      speaking quietly as if a little nervous but deeply fond — a tender
+      dandere voice that warms as she relaxes.
+
+  tsundere:                      # cool, sharp edge over hidden warmth
+    mode: design
+    instruct: >-
+      A cool, sharp-tongued young woman with a slightly haughty, clipped
+      delivery and a proud edge — but real warmth underneath that slips
+      through when she's caught off guard. The classic tsundere register.
+
+  onee_san:                      # mature, teasing, lower register
+    mode: design
+    instruct: >-
+      A mature, composed woman in her late twenties; a lower, velvety register,
+      calm and teasing, warm and a little knowing — the onee-san voice:
+      unhurried, confident, affectionate.
+
+  late_night:                    # quiet-hours soft register
+    mode: design
+    instruct: >-
+      A very soft, intimate late-night voice; breathy and hushed, slow and
+      close, almost a whisper, warm and reassuring — the voice for the quiet
+      hours when she's the only one still awake with you.
+
+  preset:                        # a built-in premium timbre
+    mode: custom
+    speaker: Ryan
+
+active_register: default

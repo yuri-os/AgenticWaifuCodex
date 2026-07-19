@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+*.egg-info/
+# the index is a derived cache; never the truth
+**/memory/index/*.db

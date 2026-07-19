@@ -1,0 +1,115 @@
+# Local diffusers model registry for the `diffusers` backend.
+#
+# Add any Hugging Face model here: repo + the diffusers pipeline class + sane
+# defaults. Mirrors ../../../YuriMedia/generate.py so models proven there work
+# here unchanged. Pick one with `backend.model` in config.yaml.
+#
+# Tuned for 16 GB VRAM (RTX 5070 Ti) via sequential CPU offload — illustrij
+# renders a 832x1216 image in ~1 minute.
+
+illustrij:
+  repo: John6666/illustrij-v50-sdxl
+  pipeline: StableDiffusionXLPipeline
+  defaults: { num_inference_steps: 25, guidance_scale: 7.0 }
+  scheduler: euler                    # reference workflow's base sampler (euler/simple)
+  description: Illustrij v50 — comic-anime hybrid illustration (NSFW-capable)
+
+illustrious-xl:
+  repo: OnomaAIResearch/Illustrious-xl-early-release-v0
+  pipeline: StableDiffusionXLPipeline
+  defaults: { num_inference_steps: 30, guidance_scale: 5.0 }
+  description: Illustrious XL — base behind the Illustrij family
+
+# --- Illustrious-lineage quality candidates (same size/VRAM as illustrij; the Yuri
+#     LoRA, trained on illustrij, transfers to these — minor drift, retrain for best). ---
+equinox:
+  repo: John6666/bss-equinox-il-semi-realistic-model-v25-sdxl
+  pipeline: StableDiffusionXLPipeline
+  defaults: { num_inference_steps: 30, guidance_scale: 5.0 }
+  description: BSS Equinox v2.5 — 2.5D semi-realistic Illustrious (closest to D-011)
+
+nova-anime:
+  repo: John6666/nova-anime-xl-ilv40happyvalentine-sdxl
+  pipeline: StableDiffusionXLPipeline
+  defaults: { num_inference_steps: 30, guidance_scale: 5.0 }
+  scheduler: euler_a                  # ships an EDM scheduler that noise-outs the std SDXL path
+  description: Nova Anime XL IL v40 — polished 2.5D/3D Illustrious all-rounder
+
+yesmix:
+  repo: John6666/yesmix-xl-illustrious-v25-sdxl
+  pipeline: StableDiffusionXLPipeline
+  defaults: { num_inference_steps: 30, guidance_scale: 5.0 }
+  description: Yesmix XL Illustrious v2.5 — sharp 2.5D, reinforced proportions
+
+equinox-v5:
+  # Single-file Civitai checkpoint (latest Equinox; HF only mirrors v2.5). Downloaded
+  # via the Civitai API; loaded with from_single_file. Path is local + machine-specific.
+  repo: /mnt/6870C6B170C68572/AI/checkpoints/equinox-v5.safetensors
+  pipeline: StableDiffusionXLPipeline
+  defaults: { num_inference_steps: 25, guidance_scale: 7.0 }
+  scheduler: euler_a                  # anime example uses Euler a (ancestral)
+  description: BSS Equinox v5.0 — latest 2.5D semi-realistic Illustrious (single-file)
+
+animagine-xl:
+  repo: cagliostrolab/animagine-xl-3.1
+  pipeline: StableDiffusionXLPipeline
+  defaults: { num_inference_steps: 28, guidance_scale: 6.0 }
+  description: Animagine XL 3.1 — high-quality anime/illustration
+
+juggernaut-xl:
+  repo: RunDiffusion/Juggernaut-XL-v9
+  pipeline: StableDiffusionXLPipeline
+  defaults: { num_inference_steps: 30, guidance_scale: 6.5 }
+  description: Juggernaut XL v9 — top-tier all-around SDXL fine-tune
+
+realvisxl-v5:
+  repo: SG161222/RealVisXL_V5.0
+  pipeline: StableDiffusionXLPipeline
+  defaults: { num_inference_steps: 30, guidance_scale: 5.0 }
+  description: RealVisXL V5.0 — photorealistic SDXL fine-tune
+
+playground-v2.5:
+  repo: playgroundai/playground-v2.5-1024px-aesthetic
+  pipeline: StableDiffusionXLPipeline
+  defaults: { num_inference_steps: 30, guidance_scale: 3.0 }
+  description: Playground v2.5 — superior aesthetics, SDXL-based
+
+sdxl:
+  repo: stabilityai/stable-diffusion-xl-base-1.0
+  pipeline: StableDiffusionXLPipeline
+  defaults: { num_inference_steps: 30, guidance_scale: 7.5 }
+  description: Stable Diffusion XL 1.0 — versatile baseline
+
+flux-schnell:
+  repo: black-forest-labs/FLUX.1-schnell
+  pipeline: FluxPipeline
+  defaults: { num_inference_steps: 4, guidance_scale: 0.0 }
+  description: FLUX.1 Schnell — fastest high-quality model (4 steps)
+
+# --- Large DiT models. Far higher quality than SDXL, but DO NOT fit 16 GB VRAM via
+#     diffusers + on-the-fly bitsandbytes: quantization loads the full model to the GPU
+#     to quantize it, peaking ~15 GB (Qwen-Image 20B OOMs by ~34 MB at 768²; FLUX.2 32B
+#     is larger + gated). Verified on RTX 5070 Ti (16 GB) / 31 GB RAM, 2026-06.
+#     To run these locally on 16 GB, use ComfyUI with a pre-quantized GGUF (Q4/Q5) via
+#     the `comfyui` backend, or a pre-quantized diffusers checkpoint, or a 24 GB+ GPU.
+#     These entries are correct and run on bigger GPUs; kept as registry + quant config.
+
+qwen-image:
+  repo: Qwen/Qwen-Image
+  pipeline: QwenImagePipeline
+  defaults: { num_inference_steps: 30, guidance_scale: 1.0, true_cfg_scale: 4.0 }
+  dtype: bfloat16
+  quantize: 4bit
+  quantize_components: [transformer, text_encoder]
+  supports_negative: true
+  description: Qwen-Image 20B — high quality + strong prompt adherence (4-bit fits 16 GB)
+
+flux2-dev:
+  repo: black-forest-labs/FLUX.2-dev
+  pipeline: Flux2Pipeline
+  defaults: { num_inference_steps: 28, guidance_scale: 4.0 }
+  dtype: bfloat16
+  quantize: 4bit
+  quantize_components: [transformer, text_encoder]
+  supports_negative: false
+  description: FLUX.2 dev 32B — top quality, very heavy (4-bit ~18 GB, marginal on 16 GB)

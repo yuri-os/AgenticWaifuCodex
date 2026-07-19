@@ -1,0 +1,17 @@
+# Core — the service runs on these alone (the mock backend needs nothing else).
+Pillow>=10.0
+PyYAML>=6.0
+
+# Optional, per backend:
+#   openrouter  — stdlib only (urllib); just needs $OPENROUTER_TOKEN
+#   comfyui     — stdlib only (urllib); needs a running local ComfyUI
+#   replicate   — pip install replicate ; needs $REPLICATE_API_TOKEN
+#   diffusers   — pip install torch diffusers transformers accelerate safetensors ; a CUDA GPU
+#                 IP-Adapter identity also needs: pip install peft
+#                 Full-length (>77-token) prompts on SDXL need an extra encoder, installed
+#                 WITHOUT touching your other pins:
+#                   pip install --no-deps git+https://github.com/xhinker/sd_embed.git
+#                 (without it, SDXL silently truncates long prompts to 77 tokens)
+#                 The face detailer (config.yaml backend.face_detailer) needs a face
+#                 detector: pip install facexlib  (RetinaFace; weights auto-download).
+#                 Without it the detailer logs once and is skipped (renders still work).

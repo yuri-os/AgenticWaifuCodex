@@ -1,0 +1,103 @@
+/* The sanctuary — YuriOS Lab visual tokens (SPEC §9.2). Dark everywhere.
+   Her lines lean warm (amber/ink); yours dim/cyan; background near-black. */
+
+:root{
+  --void:#050507; --bg:#0a0a10; --bg-2:#11111a; --bg-3:#181822;
+  --rule:#1d1d28; --ink:#e8e6f0; --ink-2:#b8b3cc; --dim:#6a6783;
+  --magenta:#ff2bd6; --cyan:#2bfff0; --amber:#f5b462;   /* amber = warmth, used rarely */
+  --font:"JetBrains Mono", ui-monospace, monospace;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+::selection{ background:var(--magenta); color:var(--void); }
+
+html,body{ height:100%; }
+body{
+  background:var(--void);
+  color:var(--ink);
+  font-family:var(--font);
+  font-size:14px;
+  line-height:1.65;
+  display:flex; justify-content:center;
+}
+
+.sanctuary{
+  width:min(720px, 100%);
+  height:100dvh;
+  display:flex; flex-direction:column;
+  background:var(--bg);
+  border-left:1px solid var(--rule);
+  border-right:1px solid var(--rule);
+}
+
+/* slim header: sanctuary glyph + name (§9.1) */
+.masthead{
+  display:flex; align-items:baseline; gap:.6em;
+  padding:.8em 1.2em;
+  border-bottom:1px solid var(--rule);
+  background:var(--bg-2);
+}
+.glyph{ color:var(--magenta); }
+.name{ color:var(--ink); letter-spacing:.08em; }
+.status{ margin-left:auto; color:var(--dim); font-size:.85em; }
+
+/* the room */
+.messages{
+  flex:1; overflow-y:auto;
+  padding:1.4em 1.2em;
+  display:flex; flex-direction:column; gap:1.1em;
+  scrollbar-width:thin; scrollbar-color:var(--rule) transparent;
+}
+
+.msg{ max-width:100%; }
+.msg .who{ font-size:.8em; margin-bottom:.15em; }
+.msg .body{ white-space:pre-wrap; word-wrap:break-word; }
+
+.msg.assistant .who{ color:var(--amber); }
+.msg.assistant .body{ color:var(--ink); }
+.msg.user .who{ color:var(--cyan); opacity:.7; }
+.msg.user .body{ color:var(--ink-2); }
+
+/* streaming caret (§9.1) */
+.msg.streaming .body::after{
+  content:"▏"; color:var(--magenta);
+  animation:blink 1s steps(1) infinite;
+}
+@keyframes blink{ 50%{ opacity:0; } }
+
+/* per-message rating — subtle, only on her messages (§8.2) */
+.rate{ margin-top:.25em; opacity:0; transition:opacity .2s; }
+.msg.assistant:hover .rate{ opacity:.55; }
+.rate button{
+  background:none; border:none; cursor:pointer;
+  color:var(--dim); font-family:var(--font); font-size:.85em;
+  padding:0 .3em;
+}
+.rate button:hover{ color:var(--ink); }
+.rate button.chosen{ color:var(--amber); opacity:1; }
+
+/* the composer */
+.composer{
+  display:flex; gap:.6em; align-items:flex-end;
+  padding:.9em 1.2em;
+  border-top:1px solid var(--rule);
+  background:var(--bg-2);
+}
+.composer textarea{
+  flex:1; resize:none;
+  background:var(--bg-3); color:var(--ink);
+  border:1px solid var(--rule); border-radius:4px;
+  font-family:var(--font); font-size:14px; line-height:1.5;
+  padding:.55em .8em;
+  max-height:9em;
+}
+.composer textarea:focus{ outline:1px solid var(--dim); }
+.composer button{
+  background:var(--bg-3); color:var(--dim);
+  border:1px solid var(--rule); border-radius:4px;
+  font-family:var(--font); font-size:14px;
+  padding:.55em .9em; cursor:pointer;
+}
+.composer button:hover{ color:var(--cyan); border-color:var(--dim); }
+
+.error{ color:var(--magenta); font-size:.85em; padding:0 1.2em .6em; }

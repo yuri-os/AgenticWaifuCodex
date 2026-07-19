@@ -1,0 +1,53 @@
+[project]
+name = "agentic-sanctuary"
+version = "0.1.0"
+description = "Build #5 — the agentic sanctuary: Build #4's body and room with an always-on autonomy engine behind it (book ch. 35, SPEC.md)"
+requires-python = ">=3.11"
+dependencies = [
+    # This build is STANDALONE — the Build #1 brain is vendored into ./app and the
+    # Build #2 voice stack into ./desktop (see the two VENDORED.md files), so these
+    # are their deps too. Copy the folder, install, run; nothing points at a sibling.
+    "fastapi",
+    "uvicorn[standard]",      # [standard] pulls the websockets impl for /ws/voice
+    "litellm",                # the model-router seam (B1 §3.1) — local or hosted
+    "pydantic-settings",      # typed config (§11)
+    "pyyaml",                 # soul.yaml + .md frontmatter
+    "numpy",                  # the flat vector index + audio frames
+    "httpx",                  # ollama embeddings, GPT-SoVITS client, Open-Meteo (§7.5)
+    "mcp",                    # the hands (§7): real MCP server + client, in-repo
+    "Pillow",                 # her camera (§7.6): the vendored forge's mock backend + provenance
+]
+
+[project.optional-dependencies]
+# Real voice backends are optional imports (B2 §3): the loop runs against fakes with
+# none installed, so `pytest` is green on a machine with no models or GPU.
+stt = ["faster-whisper"]                     # ears (B2 §3.2)
+# `tts` includes BOTH voices so the vendored fallback warning's advice
+# ("pip install -e '.[tts]'") fixes the DEFAULT backend (kokoro), not only qwen:
+tts = ["qwen-tts", "kokoro", "soundfile"]    # designed voice (GPU) + the GPU-free default
+tts-kokoro = ["kokoro", "soundfile"]         # just the fast, GPU-free default voice
+vad = ["silero-vad"]                         # turn-taking (B2 §3.4)
+local-embed = ["sentence-transformers"]      # EMBED_BACKEND=sentence_tf (else LM Studio/Ollama)
+# `--window`: float her on the desktop (§6.5, world/window.py). Installs the Qt
+# engine (QtWebEngine = Chromium), which the vendored launcher prefers: WebKitGTK
+# caps rAF at ~30fps and needs NVIDIA quirks — a full 3D body suffers more than
+# B2's Live2D did. WINDOW_GUI=gtk + pywebview[gtk] is the lighter fallback.
+desktop = ["pywebview", "qtpy", "PyQt6", "PyQt6-WebEngine"]
+test = ["pytest", "pytest-asyncio", "httpx", "numpy"]
+# the whole local stack in one go:
+all = ["faster-whisper", "qwen-tts", "kokoro", "soundfile", "silero-vad", "sentence-transformers"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.setuptools]
+# four top-level packages: the vendored brain (app), the vendored voice stack
+# (desktop), the vendored image service (forge, §7.6), and Build #4's new code (world)
+packages = { find = { include = ["app*", "desktop*", "forge*", "world*", "mind*"] } }
+
+[tool.setuptools.package-data]
+# the pinned voice clip the qwen3_tts backend clones (B2 §3.3) ships with the package
+desktop = ["voice/assets/*.wav"]
+# her look + the selfie template library (§7.6) travel with the forge
+forge = ["characters/*.yaml", "templates/*.yaml"]

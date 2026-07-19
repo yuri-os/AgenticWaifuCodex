@@ -1,0 +1,53 @@
+# GPT-SoVITS voice config for the reference implementation.
+#
+# GPT-SoVITS is a *voice cloner* (→ ch. 24 §"Cloning a specific voice"): hand it
+# a short reference clip and it speaks new text in that timbre (zero-shot), or
+# fine-tune it on a few minutes of audio for the most stable voice across
+# thousands of turns. This is the path you take when the persona has a *specific*
+# canon voice — the opposite trade from the fixed-voice `../kokoro` impl.
+#
+# Unlike Kokoro, the model is heavy and dependency-finicky, so it runs as its own
+# server (GPT-SoVITS `api_v2.py`) and this impl is a thin client to it — the
+# clean backend seam from ch. 26 (swap the voice backend without touching the
+# runtime). See README for standing the server up.
+
+server:
+  url: http://127.0.0.1:9880   # GPT-SoVITS api_v2.py default
+  timeout_s: 180
+
+sample_rate: 32000             # GPT-SoVITS v1/v2 output rate (v3/v4 differ)
+
+# ---------------------------------------------------------------------------
+# Voices. Each is a PINNED asset (→ ch. 24: "define each as one versioned asset,
+# pin it, never drift cloners mid-conversation"):
+#   - zero-shot:  a reference clip + its exact transcript (prompt_text)
+#   - fine-tuned: also point gpt_weights / sovits_weights at trained checkpoints
+# ref_audio is a path on the SERVER's filesystem (here: local, so repo-relative).
+# ---------------------------------------------------------------------------
+voices:
+  default:
+    ref_audio: voices/ref_default.wav
+    prompt_text: "I kept the light on. I'm really glad you're back."
+    prompt_lang: en
+    text_lang: en
+    # gpt_weights:   GPT_weights_v2/yuri-e15.ckpt      # optional fine-tune
+    # sovits_weights: SoVITS_weights_v2/yuri_e8_s200.pth
+
+  late_night:
+    ref_audio: voices/ref_late_night.wav
+    prompt_text: "I know it's late. You don't have to say anything."
+    prompt_lang: en
+    text_lang: en
+
+registers:
+  default: default
+  late_night: late_night
+active_register: default
+
+# Per-request inference knobs (api_v2 defaults are sane; these are explicit).
+inference:
+  top_k: 15
+  top_p: 1.0
+  temperature: 1.0
+  speed_factor: 1.0
+  text_split_method: cut5      # api_v2's sentence-cut strategy

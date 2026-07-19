@@ -1,0 +1,27 @@
+[project]
+name = "minimum-viable-waifu"
+version = "0.1.0"
+description = "Build #1 — persona-driven web chat that remembers you across sessions (book ch. 31, SPEC.md)"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "litellm",                # the model-router seam (SPEC §3.1) — OpenRouter now, local later.
+                              # A swappable seam, not a spine: if it goes bad it drops out the same
+                              # way Build #2 drops a local model in. Deps run latest here (see README);
+                              # supply-chain hardening is a whole-tree concern, deferred to ch. 45.
+    "sentence-transformers",  # local embeddings (SPEC §3) — the mind stays ownable
+    "pydantic-settings",      # §11 typed config
+    "pyyaml",                 # soul.yaml + .md frontmatter
+    "numpy",                  # flat vector scan over the derived index (§4.3)
+]
+
+[project.optional-dependencies]
+test = ["pytest", "pytest-asyncio", "httpx"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.setuptools]
+packages = { find = { include = ["app*"] } }

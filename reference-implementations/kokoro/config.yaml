@@ -1,0 +1,47 @@
+# Kokoro voice config for the reference implementation.
+#
+# Kokoro-82M (hexgrad/Kokoro-82M, Apache-2.0) is the book's pick for a *fixed*
+# companion voice: tiny, faster-than-real-time on CPU, no cloning (→ ch. 24 §"TTS
+# short list"). This file pins the voice as a versioned asset so it never drifts
+# turn-to-turn — the "consistency" axis the eval checks (→ ch. 24 §Evaluation).
+
+# espeak-ng must be installed on the system for phonemization:
+#   Debian/Ubuntu:  sudo apt-get install espeak-ng
+#   macOS:          brew install espeak-ng
+
+# Language pipeline. Kokoro loads one pipeline per language code:
+#   a = American English   b = British English   j = Japanese
+#   z = Mandarin           e = Spanish           f = French   ... (see README)
+lang_code: a
+
+sample_rate: 24000   # Kokoro always outputs 24 kHz; do not change.
+
+# ---------------------------------------------------------------------------
+# Persona voices. The "multi-voice" move from ch. 24: ship her usual register
+# and a quieter late-night one, switch on context. Each is one pinned asset.
+# Swap voices for any of the 54 Kokoro voices (run `... voices` to list them).
+#
+# WAIFU-ALIGNED VOICE PICK. Kokoro publishes per-voice quality grades; the two
+# highest-graded female English voices are also the most companion-suited:
+#   af_heart  (grade A,  warm, the flagship) — chosen DEFAULT. Warmth-first is
+#             the book's whole thesis for what makes a companion liked
+#             (→ ch. 06 §1), and af_heart is the warmest top-grade voice.
+#   af_bella  (grade A-, most training data, livelier/more expressive) — the
+#             "genki" alternative, exposed as `expressive` to A/B with the eval.
+# af_nicole (breathy/ASMR-leaning) is kept for the late-night register, where
+# its softer read is a feature. For a genuinely Japanese-language waifu, switch
+# lang_code to `j` and use jf_alpha — but for an English companion the warm
+# native-English voice reads less "uncanny," so af_heart is the best available.
+# ---------------------------------------------------------------------------
+registers:
+  default:
+    voice: af_heart    # grade A — warm flagship female (best waifu-aligned)
+    speed: 1.0
+  expressive:
+    voice: af_bella    # grade A- — livelier; A/B against default via `eval`
+    speed: 1.0
+  late_night:
+    voice: af_nicole   # softer, breathier read for the quiet-hours register
+    speed: 0.9
+
+active_register: default

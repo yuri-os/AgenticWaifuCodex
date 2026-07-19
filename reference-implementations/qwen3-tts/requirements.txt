@@ -1,0 +1,14 @@
+# Qwen3-TTS reference implementation.
+#
+# First synthesis downloads model weights from Hugging Face (several GB).
+# FlashAttention-2 is recommended for lower VRAM; set model.attn: eager in
+# config.yaml if you can't install it.
+
+qwen-tts>=0.1            # Qwen3TTSModel (pulls torch, transformers)
+soundfile>=0.12
+sounddevice>=0.4         # realtime speaker playback for `live` (needs PortAudio)
+numpy>=1.24
+PyYAML>=6.0
+
+# Optional — enables the identity-fidelity + consistency eval axes:
+# resemblyzer>=0.1.3

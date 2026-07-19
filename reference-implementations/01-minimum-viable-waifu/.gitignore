@@ -1,0 +1,14 @@
+# SPEC §14 — MUST include these three:
+corpus/
+vault/memory/index/
+.env
+
+# the Vault is its own git repo (§4.1), never nested in the app's repo
+vault/
+
+# local tooling
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/

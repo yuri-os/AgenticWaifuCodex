@@ -1,1 +1,14 @@
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Build / temp artifacts
+node_modules/
+dist/
+*.log
+tmp/
+
+# Generated book PDFs
 dist/

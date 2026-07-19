@@ -1,0 +1,12 @@
+# node
+web/node_modules/
+web/dist/
+web/.vite/
+
+# python
+server/__pycache__/
+server/**/__pycache__/
+server/.venv/
+*.pyc
+
+# keep the bundled model assets (web/public/models/*.vrm, *.vrma) tracked

@@ -1,0 +1,16 @@
+# the studio's working directory: draft, chosen portrait, built cards, saved key
+workspace/
+
+# local config / secrets — .env.example is the tracked template
+.env
+
+# python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+*.egg-info/
+
+# playwright
+node_modules/
+test-results/

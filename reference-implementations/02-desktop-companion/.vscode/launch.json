@@ -1,0 +1,75 @@
+{
+  // Run/debug the Build #2 desktop companion. Open THIS folder in VSCode
+  // (File > Open Folder > 02-desktop-companion) so ${workspaceFolder} and the
+  // .venv/.env below resolve. Uses the modern "debugpy" adapter (Python ext).
+  //
+  // Every config sets "envFile": "" to DISABLE VSCode's own .env injection.
+  // VSCode's dotenv parser does NOT strip inline "# ..." comments, so it would
+  // set e.g. MAX_REPLY_TOKENS='400   # voice replies stay short' in os.environ,
+  // which then wins over the app's parsing and breaks pydantic (int/bool raise;
+  // string vars silently absorb the comment). The app loads .env itself via
+  // pydantic-settings (python-dotenv, which DOES strip them), so letting it own
+  // .env gives debug-time parity with `python -m desktop`.
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // `python -m desktop` — serves http://HOST:PORT from .env; open it yourself.
+      "name": "Desktop Companion (browser)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "desktop",
+      "cwd": "${workspaceFolder}",
+      "envFile": "",
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      // `python -m desktop --window` — the frameless transparent desktop pet
+      // (needs the [desktop] extra: pip install -e ".[desktop]").
+      "name": "Desktop Companion (--window)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "desktop",
+      "args": ["--window"],
+      "cwd": "${workspaceFolder}",
+      "envFile": "",
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      // The §13 suite — offline against fakes, the hard gate.
+      "name": "Pytest (all)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": ["tests"],
+      "cwd": "${workspaceFolder}",
+      "envFile": "",
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      // Debug just the test file you have open.
+      "name": "Pytest (current file)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": ["${file}", "-vv"],
+      "cwd": "${workspaceFolder}",
+      "envFile": "",
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      // Run/debug whatever .py you're editing (e.g. scripts/seed_vault.py).
+      "name": "Python: current file",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "cwd": "${workspaceFolder}",
+      "envFile": "",
+      "console": "integratedTerminal",
+      "justMyCode": false
+    }
+  ]
+}

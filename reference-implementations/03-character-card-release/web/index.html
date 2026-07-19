@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>YuriOS Card Studio</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="dot"></span>
+      <span class="wordmark">CARD&nbsp;STUDIO</span>
+      <span class="sub">design · test · ship one <code>.PNG</code></span>
+    </div>
+    <div class="topbar-right">
+      <span id="save-state" class="save-state">saved</span>
+      <span id="key-badge" class="key-badge" title="OpenRouter key status"></span>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button data-tab="design" class="active">Design</button>
+    <button data-tab="art">Art</button>
+    <button data-tab="test">Test</button>
+    <button data-tab="generate">Generate</button>
+    <button data-tab="settings">Settings</button>
+  </nav>
+
+  <main>
+    <section id="tab-design" class="tab active"></section>
+    <section id="tab-art" class="tab"></section>
+    <section id="tab-test" class="tab"></section>
+    <section id="tab-generate" class="tab"></section>
+    <section id="tab-settings" class="tab"></section>
+  </main>
+
+  <!-- assist / suggestion modal -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-head"><span id="modal-title">Assistant</span>
+        <button id="modal-close" class="ghost">✕</button></div>
+      <div id="modal-body" class="modal-body"></div>
+      <div id="modal-actions" class="modal-actions"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

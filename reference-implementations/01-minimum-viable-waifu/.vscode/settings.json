@@ -1,0 +1,8 @@
+{
+  // Use the project venv created in the Quickstart (python3 -m venv .venv).
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+  // Let the Test Explorer discover and debug the suite too.
+  "python.testing.pytestEnabled": true,
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestArgs": ["tests"]
+}

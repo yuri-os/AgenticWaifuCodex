@@ -1,0 +1,41 @@
+{
+  // Debug configs for Build #1. Open THIS folder in VSCode
+  // (File > Open Folder > reference-implementations/01-minimum-viable-waifu)
+  // so ${workspaceFolder} is the build root and .env resolves.
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // Run the sanctuary with breakpoints. Single uvicorn process, no reload,
+      // so breakpoints in routes/memory/assemble hit directly.
+      "name": "Sanctuary (python -m app)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "app",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      // Debug the whole test suite (runs offline against the fakes).
+      "name": "pytest (all)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": ["-v"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      // Debug only the currently open test file.
+      "name": "pytest (current file)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": ["-v", "${file}"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false
+    }
+  ]
+}

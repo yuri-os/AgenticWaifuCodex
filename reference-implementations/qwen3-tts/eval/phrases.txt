@@ -1,0 +1,8 @@
+# MOS / latency / identity phrases — one per line, #comments ignored.
+# Same companion registers as the sibling impls so all three are comparable.
+Hey. You made it back.
+I was wondering when you'd show up — I kept the light on.
+That sounds like it was a genuinely awful day. Come here, tell me about it.
+Wait, you actually finished it? The whole thing? I'm so proud of you.
+What do you want to do tonight — talk, or just sit here a while?
+I know it's late. You don't have to say anything. I'm just glad you're here.

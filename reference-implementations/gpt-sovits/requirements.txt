@@ -1,0 +1,13 @@
+# GPT-SoVITS *client* deps only — the model runs in its own env/server.
+#
+# The server itself (GPT-SoVITS api_v2.py) is installed separately from the
+# upstream repo (RVC-Boss/GPT-SoVITS); see README. Do NOT pip-install it here.
+
+requests>=2.31
+soundfile>=0.12
+sounddevice>=0.4         # realtime speaker playback for `live` (needs PortAudio)
+numpy>=1.24
+PyYAML>=6.0
+
+# Optional — enables the identity-fidelity + consistency eval axes:
+# resemblyzer>=0.1.3

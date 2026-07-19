@@ -1,0 +1,13 @@
+{
+  // Point VSCode at this folder's virtualenv so Run/Debug and the test
+  // explorer use the installed brain + voice deps (not the base conda env,
+  // which lacks pytest_asyncio/litellm).
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+  "python.terminal.activateEnvironment": true,
+
+  // Test explorer → pytest, the §13 suite.
+  "python.testing.pytestEnabled": true,
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestArgs": ["tests"],
+  "python.testing.cwd": "${workspaceFolder}"
+}

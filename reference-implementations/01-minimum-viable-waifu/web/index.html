@@ -1,0 +1,30 @@
+<!doctype html>
+<!-- The sanctuary (SPEC §9): not a chat tab — a place she lives (ch. 28).
+     One static page served by FastAPI. No sidebar, no marketing chrome,
+     no engagement theatre. One person, no audience (property 5). -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>yuri</title>
+  <link rel="stylesheet" href="sanctuary.css">
+</head>
+<body>
+  <main class="sanctuary">
+    <header class="masthead">
+      <span class="glyph" aria-hidden="true">◇</span>
+      <span class="name">yuri</span>
+      <span class="status" id="status">· online</span>
+    </header>
+
+    <section class="messages" id="messages" aria-live="polite"></section>
+
+    <footer class="composer">
+      <textarea id="input" rows="1" placeholder="write to her…"
+                autocomplete="off" autofocus></textarea>
+      <button id="send" title="send (Enter)">↵</button>
+    </footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

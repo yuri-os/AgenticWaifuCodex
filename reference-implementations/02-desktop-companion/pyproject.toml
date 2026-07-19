@@ -1,0 +1,46 @@
+[project]
+name = "desktop-companion"
+version = "0.1.0"
+description = "Build #2 — a local-first desktop companion: voice + Live2D avatar around Build #1's brain (book ch. 32, SPEC.md)"
+requires-python = ">=3.11"
+dependencies = [
+    # This build is STANDALONE — the Build #1 brain is vendored into ./app
+    # (see app/VENDORED.md), so these are its deps too. Copy the folder, install,
+    # run; nothing points back at ../01-minimum-viable-waifu.
+    "fastapi",
+    "uvicorn[standard]",      # [standard] pulls the websockets impl for /ws/voice
+    "litellm",                # the model-router seam (Build #1 §3.1) — local or hosted
+    "pydantic-settings",      # typed config (§11)
+    "pyyaml",                 # soul.yaml + .md frontmatter
+    "numpy",                  # the flat vector index + audio frames
+    "httpx",                  # ollama embeddings + the GPT-SoVITS client
+]
+
+[project.optional-dependencies]
+# Real backends are optional imports (SPEC §3): the loop runs against fakes with
+# none installed, so `pytest` is green on a machine with no models or GPU.
+stt = ["faster-whisper"]                     # ears (SPEC §3.2)
+tts = ["qwen-tts", "soundfile"]              # the default voice: Qwen3-TTS (SPEC §3.3)
+tts-kokoro = ["kokoro", "soundfile"]         # the fast, GPU-free alternative voice
+vad = ["silero-vad"]                         # turn-taking (SPEC §3.4)
+local-embed = ["sentence-transformers"]      # EMBED_BACKEND=sentence_tf (else Ollama)
+# `--window`: float her on the desktop (§6, desktop/window.py). Installs the Qt
+# engine (QtWebEngine = Chromium), which window.py auto-prefers: WebKitGTK caps
+# WebGL at ~30fps (her sway blurs) and needs NVIDIA quirks. WINDOW_GUI=gtk +
+# pywebview[gtk] (system webkit2gtk) is the lighter fallback if Qt won't install.
+desktop = ["pywebview", "qtpy", "PyQt6", "PyQt6-WebEngine"]
+test = ["pytest", "pytest-asyncio", "httpx", "numpy"]
+# the whole local stack in one go:
+all = ["faster-whisper", "qwen-tts", "kokoro", "soundfile", "silero-vad", "sentence-transformers"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.setuptools]
+# two top-level packages: the vendored brain (app) + Build #2's new code (desktop)
+packages = { find = { include = ["app*", "desktop*"] } }
+
+[tool.setuptools.package-data]
+# the pinned voice clip the default TTS clones (SPEC §3.3) ships with the package
+desktop = ["voice/assets/*.wav"]

@@ -1,0 +1,66 @@
+{
+  "_comment": "Qwen-Image GGUF txt2img + the starsfriday/Qwen-Image-NSFW LoRA, so the (otherwise SFW-filtered) Qwen base can lay down NSFW composition. Same graph as qwen_image_gguf.json with a LoraLoaderModelOnly node (73) inserted between the GGUF unet (37) and ModelSamplingAuraFlow (66). The LoRA file must be in ComfyUI/models/loras/qwen_image_nsfw.safetensors. Strength is the %LORA_STRENGTH% token (pass via the comfyui backend's extra_tokens, e.g. 0.85; ~0.7-1.0 is the useful range). %CKPT% still names the GGUF in models/diffusion_models.",
+  "37": {
+    "class_type": "UnetLoaderGGUF",
+    "inputs": { "unet_name": "%CKPT%" }
+  },
+  "73": {
+    "class_type": "LoraLoaderModelOnly",
+    "inputs": {
+      "lora_name": "qwen_image_nsfw.safetensors",
+      "strength_model": "%LORA_STRENGTH%",
+      "model": ["37", 0]
+    }
+  },
+  "38": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen_2.5_vl_7b_fp8_scaled.safetensors",
+      "type": "qwen_image",
+      "device": "default"
+    }
+  },
+  "39": {
+    "class_type": "VAELoader",
+    "inputs": { "vae_name": "qwen_image_vae.safetensors" }
+  },
+  "66": {
+    "class_type": "ModelSamplingAuraFlow",
+    "inputs": { "shift": 3.1, "model": ["73", 0] }
+  },
+  "6": {
+    "class_type": "CLIPTextEncode",
+    "inputs": { "text": "%POSITIVE%", "clip": ["38", 0] }
+  },
+  "7": {
+    "class_type": "CLIPTextEncode",
+    "inputs": { "text": "%NEGATIVE%", "clip": ["38", 0] }
+  },
+  "58": {
+    "class_type": "EmptySD3LatentImage",
+    "inputs": { "width": "%WIDTH%", "height": "%HEIGHT%", "batch_size": 1 }
+  },
+  "3": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": "%SEED%",
+      "steps": 30,
+      "cfg": 4.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0,
+      "model": ["66", 0],
+      "positive": ["6", 0],
+      "negative": ["7", 0],
+      "latent_image": ["58", 0]
+    }
+  },
+  "8": {
+    "class_type": "VAEDecode",
+    "inputs": { "samples": ["3", 0], "vae": ["39", 0] }
+  },
+  "9": {
+    "class_type": "SaveImage",
+    "inputs": { "filename_prefix": "imageforge_qwen_nsfw", "images": ["8", 0] }
+  }
+}
