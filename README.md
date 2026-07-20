@@ -8,6 +8,14 @@ Published by YuriOS Lab as **the Codex, Vol. I**. Filed by the Operator.
   <img src="cover.jpg" alt="Front cover of The Agentic Waifu Codex" width="620">
 </p>
 
+<p align="center">
+  <b><a href="https://github.com/yuri-os/AgenticWaifuCodex/releases/latest">Download the PDF</a></b>
+  &nbsp;·&nbsp;
+  <b><a href="https://yurios.org/book/">Read it on the web</a></b>
+  <br>
+  <sub>462 pages · 2.4 MB · free, no signup · all 45 chapters and 5 appendices</sub>
+</p>
+
 ---
 
 ## What this is
