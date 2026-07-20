@@ -60,16 +60,16 @@ With that in hand: memory is four pipelines wrapped around one store, not a data
   conversation turn
         │
         ▼
-  ┌─ WRITE PATH ──────────────────────────────────────────────┐
-  │  extract   → is anything here worth keeping? (facts, events)│
-  │  embed     → vector for episodic snippet                    │
-  │  store     → episodic table + semantic-facts table          │
-  └────────────────────────────────────────────────────────────┘
+  ┌─ WRITE PATH ─────────────────────────────────────────────────┐
+  │  extract   → is anything here worth keeping? (facts, events) │
+  │  embed     → vector for episodic snippet                     │
+  │  store     → episodic table + semantic-facts table           │
+  └──────────────────────────────────────────────────────────────┘
         │ (next turn)
         ▼
-  ┌─ READ PATH ───────────────────────────────────────────────┐
+  ┌─ READ PATH ─────────────────────────────────────────────────┐
   │  embed query → retrieve top-k → rerank → inject into prompt │
-  └────────────────────────────────────────────────────────────┘
+  └─────────────────────────────────────────────────────────────┘
         │ (every N turns)
         ▼
   SUMMARISE  → compress old turns into the running digest

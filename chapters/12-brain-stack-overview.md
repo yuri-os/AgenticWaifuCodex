@@ -17,22 +17,22 @@ Think of the brain as a dependency stack. Each layer rests on the one below it a
 This taxonomy is not idiosyncratic; it tracks the way the wider field now decomposes an LLM application — a *substrate/serving* layer, a *behavior/specialization* layer, a *knowledge-access* layer (RAG), an *execution* layer (tools/agents), and an *orchestration* layer that conducts the rest. The companion-specific move is to lift **memory** out of "knowledge" and name it as its own load-bearing layer, because for a companion it is (→ ch. 15).
 
 ```
-        ┌─────────────────────────────────────────────┐
-   5    │  ORCHESTRATION   agent loop · routing ·        │   what happens next?
-        │                  reflection · scheduling       │
-        ├─────────────────────────────────────────────┤
-   4    │  KNOWLEDGE & TOOLS   RAG · graphs · function    │   reach beyond the weights
-        │                      calls · MCP servers        │
-        ├─────────────────────────────────────────────┤
-   3    │  MEMORY   context · long-term store ·           │   continuity (the moat)
-        │           summarisation · extraction            │
-        ├─────────────────────────────────────────────┤
-   2    │  BEHAVIOR   system prompt · card · lorebook ·   │   who is she? (the persona)
-        │             adapters                            │
-        ├─────────────────────────────────────────────┤
-   1    │  SUBSTRATE   base model · quantisation ·        │   the raw next-token engine
-        │              inference engine                   │
-        └─────────────────────────────────────────────┘
+        ┌───────────────────────────────────────────────┐
+   5    │  ORCHESTRATION   agent loop · routing ·       │   what happens next?
+        │                  reflection · scheduling      │
+        ├───────────────────────────────────────────────┤
+   4    │  KNOWLEDGE & TOOLS   RAG · graphs · function  │   reach beyond the weights
+        │                      calls · MCP servers      │
+        ├───────────────────────────────────────────────┤
+   3    │  MEMORY   context · long-term store ·         │   continuity (the moat)
+        │           summarisation · extraction          │
+        ├───────────────────────────────────────────────┤
+   2    │  BEHAVIOR   system prompt · card · lorebook · │   who is she? (the persona)
+        │             adapters                          │
+        ├───────────────────────────────────────────────┤
+   1    │  SUBSTRATE   base model · quantisation ·      │   the raw next-token engine
+        │              inference engine                 │
+        └───────────────────────────────────────────────┘
 ```
 
 Two properties of this stack matter more than any individual layer.

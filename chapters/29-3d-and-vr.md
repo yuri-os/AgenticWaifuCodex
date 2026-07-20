@@ -47,10 +47,10 @@ There are two ways an engine and the companion can meet, and they point in oppos
             │                                              │
       drives one avatar                       binds as one profile per NPC
             ▼                                    ┌─────────┼─────────┐
-     ┌───────────────┐                           ▼         ▼         ▼
+     ┌────────────────┐                          ▼         ▼         ▼
      │ engine renders │                        NPC A     NPC B     NPC C
      │   her + room   │                       (one mind, many front-ends)
-     └───────────────┘
+     └────────────────┘
 ```
 
 The first — *engine as her body* — is everything above: the engine renders Yuri and her room, and the brain drives one avatar. The second — *engine as host for many* — is the "one engine, many characters" idea from ch. 19: the game becomes the renderer, animation system, and world-event source, and YuriOS is the **character brain** a game NPC binds to as a second profile over the same contracts. The NPC is then just another front-end on the same mind — voice, memory, autonomy, world-model — that the browser and desktop builds already use.

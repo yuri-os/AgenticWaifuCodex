@@ -52,15 +52,15 @@ A "journey" is just a lightweight script that *sequences* those high-value quest
 
 ```
    session 1  ──────────────────────────────────►  session 2
-   ┌─────────────────────────────────────┐         ┌──────────────────────┐
-   │ she asks (as curiosity)   → she stores│        │ opens with continuity │
-   │  "who are you?"           → user.name │        │  "morning, {name} —   │
-   │  "what do you do?"        → user.work │  ───►  │   how'd the {work}     │
-   │  "what are you into?"     → user.likes│        │   thing go?"          │
-   │  "how are you, really?"   → user.mood │        │                       │
-   │           +  the ELIZA callback         │        │ = accumulated context │
-   │  "earlier you said…" (in-session)      │        │   from a single day    │
-   └─────────────────────────────────────┘         └──────────────────────┘
+   ┌───────────────────────────────────────┐        ┌─────────────────────────┐
+   │ she asks (as curiosity)   → she stores│        │ opens with continuity   │
+   │  "who are you?"           → user.name │        │  "morning, {name} —     │
+   │  "what do you do?"        → user.work │  ───►  │   how'd the {work}      │
+   │  "what are you into?"     → user.likes│        │   thing go?"            │
+   │  "how are you, really?"   → user.mood │        │                         │
+   │           +  the ELIZA callback       │        │ = accumulated context   │
+   │  "earlier you said…" (in-session)     │        │   from a single day     │
+   └───────────────────────────────────────┘        └─────────────────────────┘
         empty context on arrival                    day two is no longer cold
 ```
 
@@ -85,8 +85,8 @@ And its emotional pull is a *feature*, not a hazard to be sanded off. A companio
 ```
    the care loop (→ Tamagotchi, Love Plus):
 
-        ┌─► presence / check-in ─► user responds …or doesn't ─┐
-        │                                                     │
+        ┌─► presence / check-in ─► user responds …or doesn't ──┐
+        │                                                      │
         └──── emotional reward: she noticed, she's glad ◄──────┘
 
    how hard it tugs = a dial the USER sets, by taste:

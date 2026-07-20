@@ -127,7 +127,7 @@ on mic_frame(frame):
         if tts.is_playing():          # user talked over her → interruption
             tts.stop()                #   kill audio immediately
             llm.cancel()              #   abort the in-flight generation
-        stt.feed(frame)              # (re)start listening
+        stt.feed(frame)               # (re)start listening
     else:
         stt.mark_silence(frame)       # silence advances endpointing
 

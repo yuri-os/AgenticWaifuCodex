@@ -18,18 +18,18 @@ Before the phases, the shape. The tick loop is the *heart*, but the engine aroun
 
 ```
   GOVERNS EVERY TICK
-  ┌────────────────────────────────────────────────────────────────────────┐
+  ┌─────────────────────────────────────────────────────────────────────────┐
   │ ACTIVITY STATE  ENGAGED · IDLE · DORMANT · DREAM   → cadence            │
   │ BUDGET GOVERNOR (host)  → model tier                                    │
-  └───────────────────────────────────┬────────────────────────────────────┘
+  └───────────────────────────────────┬─────────────────────────────────────┘
                                        ▼
   INPUTS → SENSE:  user message · timer / wake-up · file or OS event · vision / audio
                                        │
                                        ▼
-  ┌────────────────────────────────────────────────────────────────────────┐
+  ┌─────────────────────────────────────────────────────────────────────────┐
   │ THE COGNITIVE TICK LOOP  —  one intention per tick                      │
   │ SENSE → APPRAISE → DECIDE → ACT → REFLECT → REGULATE   (repeat)         │
-  └─┬──────────────────────────────────────────────────────────────────────┘
+  └─┬───────────────────────────────────────────────────────────────────────┘
     │
     ├─ every phase READS / WRITES the persistent Vault surfaces (→ ch. 19,
     │     files on disk):  world model (the live situation) · working memory

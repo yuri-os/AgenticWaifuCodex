@@ -75,17 +75,17 @@ This is the **full-sovereignty, power-user** version, and read straight the expo
 ### The shape
 
 ```
-   ┌─────────────────────────── your home ───────────────────────────┐
-   │                                                                  │
-   │   one always-on box  (desktop / mini-PC / homelab server)        │
-   │   ┌──────────────────────────────────────────────────────────┐  │
-   │   │  YuriOS runtime: tick loop + activity states (→ ch.18)     │  │
-   │   │  brain: card/SOUL + memory (plain files) + LLM (→ ch.13,20)│  │
-   │   │  web server: serves the sanctuary frontend + API           │  │
-   │   └──────────────────────────────────────────────────────────┘  │
+   ┌─────────────────────────── your home ─────────────────────────────┐
+   │                                                                   │
+   │   one always-on box  (desktop / mini-PC / homelab server)         │
+   │   ┌─────────────────────────────────────────────────────────────┐ │
+   │   │  YuriOS runtime: tick loop + activity states (→ ch.18)      │ │
+   │   │  brain: card/SOUL + memory (plain files) + LLM (→ ch.13,20) │ │
+   │   │  web server: serves the sanctuary frontend + API            │ │
+   │   └─────────────────────────────────────────────────────────────┘ │
    │            ▲                                                      │
    │            │  exposed securely (one of the ladder rungs below)    │
-   └────────────┼──────────────────────────────────────────────────┘
+   └────────────┼──────────────────────────────────────────────────────┘
                 │
         ════════╪═══════ the internet ═══════════════
                 │
@@ -168,16 +168,16 @@ The canonical companion screen, in priority order: **the avatar/presence is the 
    │                             │
    │                             │
    │           ( her )           │ ← avatar / presence: THE focus —
-   │        gently breathing,     │   centred, large, slow idle motion
-   │       driven by emotion tag  │   (→ ch. 25). Not the input box.
+   │        gently breathing,    │   centred, large, slow idle motion
+   │       driven by emotion tag │   (→ ch. 25). Not the input box.
    │                             │
    │                             │
-   │   "…"  ← her last line       │ ← conversation, minimal, streamed
+   │   "…"  ← her last line      │ ← conversation, minimal, streamed
    │                             │
    │  ┌───────────────────────┐  │
-   │  │  say something…    🎤  │  │ ← restrained input + push-to-talk;
+   │  │  say something…    🎤 │  │ ← restrained input + push-to-talk;
    │  └───────────────────────┘  │   recedes, doesn't dominate
-   │  ☰ journal        ● online   │ ← inner-life surface (→ ch. 18) +
+   │  ☰ journal        ● online │ ← inner-life surface (→ ch. 18) +
    └─────────────────────────────┘   connection pip, both out of the way
 ```
 
