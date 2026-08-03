@@ -52,7 +52,7 @@ class Config(VoiceConfig):
     mind_max_interrupts_per_day: int = 3        # the hard daily cap (§18.2)
     mind_consider_cooldown_s: float = 3600.0    # min gap between re-chewing one goal
     mind_daily_tokens: int = 200_000            # the budget governor's cap (§17.3)
-    mind_dream_tick_tokens: int = 4000          # per-DREAM-tick consolidation budget (§21)
+    mind_dream_tick_tokens: int = 40000         # per-DREAM-tick consolidation budget (§21)
     trace_max_bytes: int = 2_000_000             # per JSONL trace/signal generation
 
     # activity-state cadences + drift timeouts (§17.1)
