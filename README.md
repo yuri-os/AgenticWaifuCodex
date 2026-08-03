@@ -13,7 +13,7 @@ Published by YuriOS Lab as **the Codex, Vol. I**. Filed by the Operator.
   &nbsp;·&nbsp;
   <b><a href="https://yurios.org/book/">Read it on the web</a></b>
   <br>
-  <sub>462 pages · 2.4 MB · free, no signup · all 45 chapters and 5 appendices</sub>
+  <sub>465 pages · 2.4 MB · free, no signup · all 45 chapters and 5 appendices</sub>
 </p>
 
 ---
