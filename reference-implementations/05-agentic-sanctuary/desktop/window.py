@@ -16,7 +16,9 @@ README for the per-platform note.
 from __future__ import annotations
 
 import os
+import platform
 import socket
+import subprocess
 import threading
 import time
 
@@ -24,6 +26,32 @@ import uvicorn
 
 from .config import Config
 from .main import create_app
+
+
+def _is_wsl() -> bool:
+    return ("microsoft" in platform.release().lower()
+            or bool(os.environ.get("WSL_DISTRO_NAME")))
+
+
+def wsl_server_config(cfg: Config) -> Config:
+    """Expose the WSL server to its Windows-side browser only when needed."""
+    if not _is_wsl() or cfg.host not in ("127.0.0.1", "localhost", "::1", ""):
+        return cfg
+    return cfg.model_copy(update={"host": "0.0.0.0"})
+
+
+def open_wsl_window(port: int, path: str = "/") -> None:
+    """Ask Windows to open a reachable app-mode browser window for WSL."""
+    address = subprocess.check_output(["hostname", "-I"], text=True).split()[0]
+    suffix = f"{path}?desktop=1"
+    urls = [f"http://127.0.0.1:{port}{suffix}", f"http://{address}:{port}{suffix}"]
+    quoted = ", ".join("'" + url + "'" for url in urls)
+    script = (
+        f"$urls = @({quoted}); foreach ($url in $urls) {{ "
+        "try { Invoke-WebRequest -UseBasicParsing $url -TimeoutSec 2 | Out-Null; "
+        "Start-Process $url; exit 0 } catch {} }; "
+        "throw 'Windows could not reach the WSL companion server'")
+    subprocess.run(["powershell.exe", "-NoProfile", "-Command", script], check=True)
 
 
 def desktop_url(cfg: Config) -> str:
@@ -107,6 +135,7 @@ def _pick_gui(cfg: Config) -> str | None:
 
 def run(cfg: Config | None = None) -> None:
     cfg = cfg or Config()
+    server_cfg = wsl_server_config(cfg)
 
     # Refuse to start if something already answers on our port. Without this, our
     # uvicorn fails to bind (a one-line ERROR log), the readiness probe happily
@@ -136,15 +165,20 @@ def run(cfg: Config | None = None) -> None:
     # background after — main.Runtime), so this is normally seconds; the deadline
     # is generous anyway, and a crashed thread aborts the wait with its error.
     print("starting her up… (her voice keeps loading in the background)", flush=True)
-    thread, errors = _serve(cfg)
+    thread, errors = _serve(server_cfg)
     deadline = time.monotonic() + 180
-    while not _wait_for_server(cfg.host, cfg.port, timeout=1.0):
+    while not _wait_for_server(server_cfg.host, server_cfg.port, timeout=1.0):
         if errors or not thread.is_alive():
             raise SystemExit(f"server failed to start: "
                              f"{errors[0] if errors else 'server thread exited'}")
         if time.monotonic() > deadline:
-            raise SystemExit(f"server didn't come up on {cfg.host}:{cfg.port} "
+            raise SystemExit(f"server didn't come up on {server_cfg.host}:{server_cfg.port} "
                              "within 3 minutes")
+
+    if _is_wsl():
+        open_wsl_window(cfg.port)
+        thread.join()
+        return
 
     webview.create_window(
         "yuri",

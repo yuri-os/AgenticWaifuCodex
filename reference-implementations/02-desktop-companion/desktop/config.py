@@ -129,3 +129,4 @@ class Config(BrainConfig):
 
     # where the latency traces go (personal debug data, gitignored like the corpus)
     trace_dir: Path = Path("./traces")
+    trace_max_bytes: int = 2_000_000           # current + one previous trace generation

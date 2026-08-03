@@ -70,6 +70,14 @@ def test_reuses_the_vendored_launcher_helpers():
     assert window._pick_gui is b2_window._pick_gui
 
 
+def test_wsl_widens_only_a_loopback_server(monkeypatch):
+    monkeypatch.setattr(b2_window, "_is_wsl", lambda: True)
+    widened = b2_window.wsl_server_config(Config(host="127.0.0.1"))
+    assert widened.host == "0.0.0.0"
+    assert b2_window.wsl_server_config(Config(host="192.168.1.4")).host == "192.168.1.4"
+    assert window.wsl_server_config is b2_window.wsl_server_config
+
+
 def test_run_refuses_an_occupied_port():
     # if a previous instance still holds the port, run() must die loudly instead
     # of letting the window connect to the stale server (old code, old .env)

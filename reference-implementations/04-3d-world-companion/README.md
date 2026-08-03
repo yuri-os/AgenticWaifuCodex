@@ -31,13 +31,38 @@ cd 04-3d-world-companion
 python3 -m venv .venv && source .venv/bin/activate
 sudo apt-get install espeak-ng     # for the kokoro voice (macOS: brew install espeak-ng)
 pip install -e ".[all,test]"       # brain + MCP + the real voice stack:
-                                   #   faster-whisper (ears) · kokoro (voice) · silero (VAD)
-ollama pull qwen3:8b               # her thinking, local (any LiteLLM route works)
-ollama pull nomic-embed-text       # local embeddings for memory
+                                    #   faster-whisper (ears) · kokoro (voice) · silero (VAD)
+# In LM Studio, download these local models, then start its server on :1234:
+#   google/gemma-4-12b-qat                 # chat + utility model
+#   text-embedding-nomic-embed-text-v1.5   # embeddings
 
 python scripts/seed_vault.py       # once: her mind, from the vendored SOUL (./soul-src)
 cp .env.example .env               # defaults are local-first; edit if you like
 python -m world                    # → http://localhost:8767
+```
+
+The shipped `.env.example` uses **LM Studio** at `http://localhost:1234/v1`: start
+its local server before running the companion. It autoloads the configured chat and
+embedding models on first use, which can make the first boot take a while. LM Studio's
+model IDs must match `CHAT_MODEL`, `UTILITY_MODEL`, and `EMBED_MODEL` in `.env`.
+
+**Ollama is an equally supported local option.** Install Ollama, then pull a chat
+model and the embedding model:
+
+```bash
+ollama pull qwen3:8b
+ollama pull nomic-embed-text
+```
+
+Uncomment the Ollama override block in `.env`, or set these values before
+`python -m world`:
+
+```dotenv
+CHAT_MODEL=ollama/qwen3:8b
+UTILITY_MODEL=ollama/qwen3:8b
+EMBED_BACKEND=ollama
+EMBED_MODEL=nomic-embed-text
+EMBED_DIM=768
 ```
 
 Open it, click **enter the sanctuary** (one click, so the browser lets her speak —
@@ -77,6 +102,10 @@ The window's default body comes from `DESKTOP_BODY` in `.env` (`vrm` | `live2d`)
 overrides it per launch. Size / always-on-top / engine are the `WINDOW_*` knobs. The two
 browser pages are both live all the time — you can even open them side by side; they share
 the session (same someone), and whichever page is free carries her ambient speech.
+
+Under WSL, `--window` exposes a loopback server on the WSL interface and asks Windows to
+open the desktop-mode page in its browser. It falls back between Windows loopback and the
+WSL address so the same command works across WSL networking modes.
 
 **No GPU, no models, no install beyond the basics?** She still boots: with just
 `pip install -e ".[test]"` every voice backend degrades gracefully to a fake (one loud

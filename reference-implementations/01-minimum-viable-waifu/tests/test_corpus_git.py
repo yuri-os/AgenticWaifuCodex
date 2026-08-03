@@ -72,6 +72,8 @@ async def test_one_turn_one_line_one_commit(vault, tmp_path):
     log = vaultgit.log(vault, n=100)
     assert len(log) == commits_before + 1
     assert log[0].split(" ", 1)[1].startswith("turn ")
+    session = next(iter(app.state.mvw.sessions._data["sessions"].values()))
+    assert [message["role"] for message in session["transcript"]] == ["user", "assistant"]
 
 
 async def test_midstream_failure_writes_nothing(vault, tmp_path):
@@ -88,6 +90,28 @@ async def test_midstream_failure_writes_nothing(vault, tmp_path):
     assert not any(e.get("done") for e in events)
     assert not (corpus_dir / "turns.jsonl").exists()
     assert len(vaultgit.log(vault, n=100)) == commits_before
+    session = next(iter(app.state.mvw.sessions._data["sessions"].values()))
+    assert session["transcript"] == []
+    assert session["turn_count"] == 0
+
+
+async def test_first_post_turn_retires_bootstrap_and_replaces_a_restored_copy(vault, tmp_path):
+    app = make_app(vault, tmp_path / "corpus")
+
+    await run_chat(app, "hello")
+
+    bootstrap = vault / "soul" / "BOOTSTRAP.md"
+    archived = vault / "soul" / "onboarded" / "BOOTSTRAP.done.md"
+    assert not bootstrap.exists()
+    assert archived.exists()
+    assert any("first session complete" in line for line in vaultgit.log(vault, n=20))
+
+    # Re-onboarding can restore an untracked bootstrap over an existing archive.
+    bootstrap.write_text("A restored first meeting.", encoding="utf-8")
+    vaultgit.mv(vault, "soul/BOOTSTRAP.md", "soul/onboarded/BOOTSTRAP.done.md",
+                force=True)
+    assert not bootstrap.exists()
+    assert archived.read_text(encoding="utf-8") == "A restored first meeting."
 
 
 def test_collection_scope_is_asserted(tmp_path):

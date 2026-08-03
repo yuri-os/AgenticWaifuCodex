@@ -28,6 +28,8 @@ The key move is *where the signal goes*. It is not just colour for the TTS reply
 
 Local quality has caught up enough that a local-first companion voice is no longer a compromise — it's the default for this project (→ ch. 32 sovereignty). Lead local; reach for hosted only for commercial polish or fastest time-to-ship. The list below is grouped by **hardware weight**, because that — not quality alone — is what decides whether a voice can run on the always-on machine alongside the LLM and an avatar (→ ch. 13 VRAM math, ch. 21). A rough rule: every gigabyte the voice stack eats is a gigabyte the LLM can't, so on a 12 GB card you want the voice under ~2–3 GB.
 
+On Windows, keep capture and playback on the native/browser side when that is simplest. If an STT or TTS backend is Linux-first, WSL2 is a practical service-host fallback over localhost; it does not change the voice protocol or require moving the whole UI into Linux.
+
 **CPU-class (no GPU needed, or <2 GB):**
 
 - **Kokoro (82M).** Tiny, runs faster-than-real-time on CPU, Apache-2.0, 54 voices. Best quality-per-watt for a *fixed* voice. No cloning — but if your persona has one settled voice, this is the cheapest good one, and it leaves the whole GPU for the LLM.
@@ -144,7 +146,7 @@ on stt.endpoint():
                                               #   starts before the reply is finished
 ```
 
-The whole point is that `llm.stream` and `tts.enqueue` are running *while* `mic_frame` keeps firing — so the interrupt can land at any instant. Cancellation has to reach all the way back: stop the speaker, then abort generation, or she'll keep "thinking" a reply no one is waiting for.
+The whole point is that `llm.stream` and `tts.enqueue` are running *while* `mic_frame` keeps firing — so the interrupt can land at any instant. Cancellation has to reach all the way back: stop the speaker, then abort generation, or she'll keep "thinking" a reply no one is waiting for. Treat a client disconnect and a transport failure exactly like barge-in: stop playback, cancel and close the model stream, discard the in-memory draft and staged turn effects, and persist nothing. Only a completed turn crosses the persistence boundary; cancellation or disconnection rolls the partial exchange back so it cannot reappear in memory, the corpus, or a later reconnect.
 
 The latency budget for this whole loop (target <1.2s to first audio) is worked stage-by-stage in ch. 21 — voice is the use case those numbers exist for.
 

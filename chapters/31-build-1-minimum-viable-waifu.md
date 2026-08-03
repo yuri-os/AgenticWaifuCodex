@@ -74,7 +74,7 @@ async def chat(req: ChatRequest, request: Request):
         lore=soul.lorebook_hits(req.message),             # keyword-triggered card flavor
         window=state.sessions.window(req.session_id, state.cfg.raw_window_turns),
         user_msg=req.message, ...)
-    state.sessions.append_message(req.session_id, "user", req.message)
+    state.sessions.append_message(req.session_id, "user", req.message)  # provisional
 ```
 
 Three reads and one pure function. `soul_loader.load()` re-resolves the persona from the files *every turn* — so if you edit `PERSONA.md` mid-session, the next reply reflects it (that is the whole point of reading the SOUL rather than baking it in). `recall()` pulls the top-k relevant memories. `assemble()` composes them into the message array. Nothing here writes anything.
@@ -84,23 +84,33 @@ Three reads and one pure function. `soul_loader.load()` re-resolves the persona 
 ```python
     async def stream():
         reply = ""
-        async for token in state.chat.stream(prompt.messages, ...):
-            reply += token
-            yield sse({"token": token})                   # first token, ASAP
+        turn_committed = False
+        try:
+            try:
+                async for token in state.chat.stream(prompt.messages, ...):
+                    reply += token
+                    yield sse({"token": token})           # first token, ASAP
+            except Exception as e:
+                yield sse({"error": str(e)})
+                return
 
-        # only now, with a complete reply in hand:
-        turn_id = state.corpus.log_turn(...)              # the training line (§8)
-        state.sessions.append_message(req.session_id, "assistant", reply, turn_id=turn_id)
-        record = Record(session_id=..., user_msg=req.message, reply=reply)
-        task = asyncio.create_task(post_turn(state, record, ...))   # scheduled, not awaited
-        state.pending_tasks.add(task)
-        task.add_done_callback(state.pending_tasks.discard)
-        yield sse({"done": True, "turn_id": turn_id})
+            # only now, with a complete reply in hand:
+            turn_id = state.corpus.log_turn(...)            # the training line (§8)
+            state.sessions.append_message(req.session_id, "assistant", reply, turn_id=turn_id)
+            turn_committed = True
+            record = Record(session_id=..., user_msg=req.message, reply=reply)
+            task = asyncio.create_task(post_turn(state, record, ...)) # scheduled, not awaited
+            state.pending_tasks.add(task)
+            task.add_done_callback(state.pending_tasks.discard)
+            yield sse({"done": True, "turn_id": turn_id})
+        finally:
+            if not turn_committed:
+                state.sessions.drop_last(req.session_id, "user")
 ```
 
 The reply streams token-by-token. The *persistence* — `post_turn()` — is fired as a background task and never awaited inside the stream, so it cannot delay a single token. `post_turn()` (same file) does the durable work under a `vault_lock`: `store.remember(record)`, then every N turns re-summarise, then **exactly one** `vaultgit.commit()` for the whole turn. It is wrapped so that a failure in the pipeline is logged but never breaks the turn the user already saw — the reply is served; the bookkeeping is best-effort.
 
-Two failure rules make the contract honest, and both are in this file: a **mid-stream model failure** emits an error event and writes *no* corpus record and *no* commit (a turn that didn't happen leaves no trace); and the corpus line is written from the *complete* reply, so the training log never contains half a sentence.
+The streamed turn is transactional at the session boundary: the user entry is **provisional** until the complete reply has been corpus-logged and its assistant half appended. A **mid-stream model failure** emits an error event and writes no corpus record or commit; an SSE client that disconnects closes the generator and takes the same `finally` path. Either way, only that provisional user entry is removed, never a completed turn. The corpus line is written from the complete reply, so the training log never contains half a sentence.
 
 That is the entire loop. Everything below is one of the four calls it makes — `load`, `recall`, `assemble`, `remember` — looked at more closely.
 
@@ -111,7 +121,7 @@ That is the entire loop. Everything below is one of the four calls it makes — 
 The resolver is **vendored from the card exporter** (Build #3's tool) — it is the exact same reference syntax that exporter uses (`FILE.md#Heading`, `FILE.md@key`, `FILE.md`), which is what guarantees the persona you chat with here is the persona you *export* in Build #3. Two details earn their place:
 
 - **A missing file or `## Heading` fails loudly, not silently** (`KeyError`/`FileNotFoundError`) — a persona that half-loads is worse than one that refuses to boot, and the test suite asserts this.
-- **`BOOTSTRAP.md` is consumed-once.** File-presence *is* the "has she met you yet?" flag. Its presence loads the authored cold open; after the first session it is `git mv`-d out of the way (see the greeting, below). There is no boolean in a database — the filesystem holds the state.
+- **`BOOTSTRAP.md` is consumed-once.** File-presence *is* the "has she met you yet?" flag. Its presence loads the authored cold open and remains through that opening; only the first **completed, persisted exchange** retires it (see the greeting, below). There is no boolean in a database — the filesystem holds the state.
 
 `lorebook_hits(message)` does the keyword-trigger matching for `WORLD.md` entries (card-native flavor, → ch. 05), returning entries whose keys substring-match the user's message. This is *not* the document knowledge store (→ ch. 16) — that is deliberately deferred to Build #5; this is a handful of static, hand-authored entries that live in the card.
 
@@ -217,8 +227,8 @@ The one piece of real-world grit worth knowing about lives here too: on NTFS/exF
 
 `app/routes/greeting.py` is where the whole build proves itself. `GET /api/greeting` runs when you open the sanctuary, *before* you type anything:
 
-- **First-ever visit** (empty journal): she streams `BOOTSTRAP.md`'s authored cold open, verbatim. It is *not* corpus-logged — it is hand-authored SOUL text, not a model completion.
-- **Every visit after:** the bootstrap is retired (`git mv` to `soul/onboarded/`), and she opens by assembling persona + `USER.md` + summary + a top recall against a "you just walked in, speak first" cue — and greets you with *something you told her before, unprompted*. If the model call fails, she still greets you, falling back to `SCENARIO.md`'s static return greetings.
+- **First-ever visit** (empty journal): she streams `BOOTSTRAP.md`'s authored cold open, verbatim. It is *not* corpus-logged — it is hand-authored SOUL text, not a model completion — and the bootstrap stays in place until the first normal exchange completes and `post_turn()` has persisted it.
+- **After the first completed, persisted exchange:** the bootstrap is retired (`git mv` to `soul/onboarded/`), and later visits open by assembling persona + `USER.md` + summary + a top recall against a "you just walked in, speak first" cue — and greet you with *something you told her before, unprompted*. A restored or interrupted Vault can leave a stale bootstrap beside existing history; the greeting detects that state and force-moves it into the archive, safely replacing a stale archive copy. If the model call fails, she still greets you, falling back to `SCENARIO.md`'s static return greetings.
 
 That unprompted, memory-grounded opener is the definition of done (§13.2). Close the tab, come back tomorrow, and she opens with continuity. Everything else in this chapter exists to make that one moment real.
 
@@ -231,7 +241,7 @@ Run it against the Minimum Viable Waifu gut-check (→ ch. 03):
 - [ ] A place she lives (sanctuary styling, not a generic chat box).
 - [ ] One person, no audience, no upsell in the loop.
 - [ ] Yours — runs locally or on hardware you control; her mind is **files in *your* git-backed Vault** — `cat` them, `git log` them, copy the folder to move her (→ ch. 19).
-- [ ] **Tested** — `pytest` ships and is green from the project root. This is a hard gate, not a nicety: "I clicked around in the browser" doesn't count. The suite runs entirely offline against the injected fakes (that the seam is testable is the point), and it pins the load-bearing behavior directly: `test_assemble.py` (block order + overflow), `test_recall.py` (blended-rank top-k), `test_partner.py` (quarantine promotion), `test_forget.py` (supersede-not-delete), `test_persistence.py` (memory survives a restart), `test_greeting.py` (bootstrap lifecycle), and `test_honesty_golden.py` (the honesty constraint, as a golden transcript). If you extend the build, extend this suite in the same file — a change that turns one of these red has broken something the chapter promised.
+- [ ] **Tested** — `pytest` ships and is green from the project root. This is a hard gate, not a nicety: "I clicked around in the browser" doesn't count. The suite runs entirely offline against the injected fakes (that the seam is testable is the point), and it pins the load-bearing behavior directly: `test_assemble.py` (block order + overflow), `test_recall.py` (blended-rank top-k), `test_partner.py` (quarantine promotion), `test_forget.py` (supersede-not-delete), `test_persistence.py` (memory survives a restart), `test_greeting.py` (bootstrap lifecycle), `test_stream_rollback.py` (model failure and a closed SSE stream remove only the provisional user entry), and `test_honesty_golden.py` (the honesty constraint, as a golden transcript). If you extend the build, extend this suite in the same file — a change that turns one of these red has broken something the chapter promised.
 
 The proof it works: close the tab, come back tomorrow, and she opens with continuity — surfaces something you told her yesterday, unprompted.
 
@@ -243,6 +253,6 @@ No voice, no avatar (→ Builds #2/#4), no proactivity (→ Build #5 — it is p
 
 Because the mind is already files behind the ch. 19 `MemoryStore` contract, every later build *bolts on* — nothing here is rebuilt:
 
-- **Build #2:** change `CHAT_MODEL` / `EMBED_BACKEND` in `.env` — the LiteLLM seam swaps a local model in behind the exact same loop.
+- **Build #2:** change `CHAT_MODEL` / `EMBED_BACKEND` in `.env` — the LiteLLM seam swaps a local model in behind the exact same loop. The local setup docs lead with LM Studio's OpenAI-compatible server; Ollama is an equally supported prefix-and-embedding-backend swap, not a different architecture.
 - **Build #3:** run the card exporter over the same SOUL to export her as a distributable `.PNG` card.
 - **Build #5:** wrap the tick loop (→ ch. 18) around *this exact Vault* — add `consolidate()`'s body (DREAM) and a drop-folder knowledge store (→ ch. 16). The five-verb contract already has the slots; the loop hangs off them.

@@ -71,11 +71,19 @@ class TurnTrace:
             "masked": self.masked,
         }
 
-    def finish(self, *, barged_in: bool = False, trace_dir: Path | None = None) -> dict:
+    def finish(self, *, barged_in: bool = False, trace_dir: Path | None = None,
+               max_log_bytes: int | None = 2_000_000) -> dict:
         self.barged_in = barged_in
         rep = self.report()
         if trace_dir is not None:
             trace_dir.mkdir(parents=True, exist_ok=True)
-            with (trace_dir / "latency.jsonl").open("a", encoding="utf-8") as f:
+            path = trace_dir / "latency.jsonl"
+            if (max_log_bytes is not None and path.exists()
+                    and path.stat().st_size >= max_log_bytes):
+                backup = path.with_name(path.name + ".1")
+                if backup.exists():
+                    backup.unlink()
+                path.replace(backup)
+            with path.open("a", encoding="utf-8") as f:
                 f.write(json.dumps({"ts": time.time(), **rep}) + "\n")
         return rep

@@ -82,6 +82,7 @@ class FakeBrain:
         self.tokens_emitted = 0
         self.persisted: tuple[str, str, str] | None = None
         self.persist_calls: list[tuple[str, str, str]] = []   # every turn that persisted
+        self.abandoned: list[str] = []
         self._gate: asyncio.Event | None = None
 
     def gate_after(self, n_tokens: int) -> asyncio.Event:
@@ -112,6 +113,9 @@ class FakeBrain:
     async def persist(self, session_id: str, user_text: str, reply: str) -> None:
         self.persisted = (session_id, user_text, reply)
         self.persist_calls.append((session_id, user_text, reply))
+
+    def abandon(self, session_id: str) -> None:
+        self.abandoned.append(session_id)
 
 
 def _wordish(text: str) -> list[str]:

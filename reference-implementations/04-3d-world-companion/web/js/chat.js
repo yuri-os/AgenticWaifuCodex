@@ -72,6 +72,16 @@
   }
 
   let es = null;
+  let backfilled = false;
+  let queued = [];
+
+  function flushBackfill(history) {
+    if (backfilled) return;
+    history.forEach(addMsg);
+    backfilled = true;
+    queued.forEach(addMsg);
+    queued = [];
+  }
 
   function connect({ onStatus } = {}) {
     if (es) return;                       // one stream per page
@@ -87,14 +97,19 @@
         charName = m.character || '';
         const el = document.getElementById('chat-name');
         if (el && charName) el.textContent = charName;
-      } else if (m.type === 'message') addMsg(m);
+      } else if (m.type === 'message') {
+        if (backfilled) addMsg(m);
+        else queued.push(m);
+      }
       else if (m.type === 'draft') addDraft(m.text);
       else if (m.type === 'draft_cancel') dropDraft();
     };
     // backfill what was said before this page opened (SPEC §2.6)
+    const backfillTimeout = setTimeout(() => flushBackfill([]), 5000);
     fetch('/api/history').then((r) => r.json())
-      .then((d) => (d.messages || []).forEach(addMsg))
-      .catch(() => {});
+      .then((d) => flushBackfill(d.messages || []))
+      .catch(() => flushBackfill([]))
+      .finally(() => clearTimeout(backfillTimeout));
   }
 
   window.WorldChat = { connect };

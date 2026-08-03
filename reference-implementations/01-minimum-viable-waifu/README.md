@@ -18,9 +18,35 @@ cd reference-implementations/01-minimum-viable-waifu
 python3 -m venv .venv && source .venv/bin/activate
 pip install -e ".[test]"
 
-cp .env.example .env            # put your OPENROUTER_API_KEY in it (PORT defaults to 8765)
+# In LM Studio, download these local models, then start its server on :1234:
+#   google/gemma-4-12b-qat                 # chat + utility model
+#   text-embedding-nomic-embed-text-v1.5   # memory embeddings
+cp .env.example .env            # shipped local defaults use LM Studio at :1234/v1
 python scripts/seed_vault.py    # once: Vault from ../yuri-soul (§5.1)
-python -m app                   # reads HOST/PORT from .env → http://localhost:8765
+python -m app                   # the Build #1 entrypoint → http://localhost:8765
+```
+
+The shipped `.env.example` uses LM Studio's OpenAI-compatible server at
+`http://localhost:1234/v1`; the companion itself serves on port `8765` through
+`python -m app`. LM Studio model IDs must match `CHAT_MODEL`, `UTILITY_MODEL`,
+and `EMBED_MODEL`. The first use may take a while while LM Studio loads models.
+
+**Ollama is an equally supported local option.** Pull a chat model and B1's
+embedding model:
+
+```bash
+ollama pull qwen3:8b
+ollama pull nomic-embed-text
+```
+
+Replace the model and embedding settings in `.env` before `python -m app`:
+
+```dotenv
+CHAT_MODEL=ollama/qwen3:8b
+UTILITY_MODEL=ollama/qwen3:8b
+EMBED_BACKEND=ollama
+EMBED_MODEL=nomic-embed-text
+EMBED_DIM=768
 ```
 
 First visit: she opens with the SOUL's authored cold open (`BOOTSTRAP.md`, consumed once).

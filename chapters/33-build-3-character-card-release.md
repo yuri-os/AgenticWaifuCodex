@@ -22,7 +22,7 @@ The soul is cut along one fault line — **split by what may drift** (→ ch. 06
 |---|---|---|
 | `CONSTITUTION.md` | **immutable** | identity, values, the voice law, hard limits — who she is and that she's {{user}}'s |
 | `PERSONA.md` | **editable** | appearance, manner, inner life, growth/reveal tiers, the one-line `personality` |
-| `BOOTSTRAP.md` | **consumed-once** | the first-ever meeting + getting-to-know-you journey; retired after (→ ch. 28) |
+| `BOOTSTRAP.md` | **consumed-once** | the first-ever meeting + getting-to-know-you journey; retired only after the first completed, persisted exchange (→ ch. 28) |
 | `SCENARIO.md` | editable | the situation + the **return** greetings (she's met you before) |
 | `EXAMPLES.md` | editable | demonstrated voice — the highest-ROI field (→ ch. 23, enacted not recited) |
 | `WORLD.md` | editable | the lorebook — the Sprawl, Lumina, the ferry generation, sparse by design |
@@ -75,7 +75,7 @@ The immutable **voice law** in `CONSTITUTION.md` backs the examples with rules t
 
 A companion has two distinct openings, and conflating them is a common card mistake. Yuri's soul splits them into two files:
 
-- **`BOOTSTRAP.md` — the first-ever meeting, consumed once** (→ ch. 28). Its `## Cold open` is the only part baked into a card, as `first_mes`: the one-shot scene a stranger sees on import. The rest of the file — a getting-to-know-you *journey* (four questions worked in as curiosity, not a form, each pinned to a `USER.md` slot), an *exit condition*, and a *handoff* that seeds `USER.md`/`MEMORY.md`/`goals.md` so day two isn't a cold start — are **YuriOS-runtime concerns that never leave the box.** On our runtime the file is author-shipped but self-retiring: the runtime works the journey into the opening conversation, then `git mv`s `BOOTSTRAP.md` into `onboarded/` and commits, so `git log` is the record and restoring the file re-runs onboarding.
+- **`BOOTSTRAP.md` — the first-ever meeting, consumed once** (→ ch. 28). Its `## Cold open` is the only part baked into a card, as `first_mes`: the one-shot scene a stranger sees on import. The rest of the file — a getting-to-know-you *journey* (four questions worked in as curiosity, not a form, each pinned to a `USER.md` slot), an *exit condition*, and a *handoff* that seeds `USER.md`/`MEMORY.md`/`goals.md` so day two isn't a cold start — are **YuriOS-runtime concerns that never leave the box.** On a YuriOS host the file is author-shipped but self-retiring only after the opening exchange has completed and its persistence has succeeded; then the host `git mv`s `BOOTSTRAP.md` into `onboarded/` and commits. A cancelled, disconnected, failed, or unpersisted exchange leaves it in place; recovery completes a pending retirement before replaying the cold open. `git log` is the record, and restoring the file deliberately re-runs onboarding.
 - **`SCENARIO.md` — the persistent scene and the return greetings**, shown *every* session to a companion who has met you before. These ship as the card's `alternate_greetings`.
 
 The payoff of the split is that a foreign runtime, which has no concept of onboarding, still does the right thing: it shows the cold open once as the first message, then treats it as history — while a YuriOS host gets the whole first-session arc. Same file, two behaviours, no compromise on either.

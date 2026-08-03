@@ -23,6 +23,7 @@ class AmbientBrain(FakeBrain):
         super().__init__()
         self.ambient_cues: list[str] = []
         self.hold: asyncio.Event | None = None
+        self.abandoned: list[str] = []
 
     async def stream_reply(self, session_id: str, text: str):
         for tok in _wordish("[happy] One moment. "):
@@ -39,6 +40,14 @@ class AmbientBrain(FakeBrain):
         for tok in _wordish("[relaxed] The rain hasn't let up at all."):
             yield tok
             await asyncio.sleep(0)
+
+    def abandon(self, session_id: str) -> None:
+        self.abandoned.append(session_id)
+
+
+class ColdOpenBrain(AmbientBrain):
+    def cold_open(self) -> str:
+        return "*The rain has just stopped outside.* Welcome home."
 
 
 @pytest.fixture
@@ -89,6 +98,19 @@ def test_b2_behaviour_preserved_greeting_once_noise_drop(rig):
         ws.send_json({"type": "text", "text": "hi again"})
         _, texts = drain(ws)
         assert texts and not any("there you are" in t for t in texts)
+
+
+def test_voice_transcript_keeps_the_authored_cold_open(cfg, controller):
+    cfg = cfg.model_copy(update={"tools_backend": "off", "mind_enabled": False})
+    brain = ColdOpenBrain()
+    app = create_app(cfg, brain=brain, controller=controller)
+    with TestClient(app) as client:
+        with client.websocket_connect("/ws/voice") as ws:
+            ws.send_json({"type": "hello", "session_id": None})
+            ws.receive_json()
+            drain(ws)
+        rt = app.state.rt
+        assert rt.transcript[0]["text"] == brain.cold_open()
 
 
 def test_ambient_injection_reaches_the_client_and_is_not_persisted(rig):
@@ -213,6 +235,19 @@ def test_bargein_drops_the_draft_and_commits_nothing(rig):
     # the user's turn is in the chat; her cut-off reply is not (no trace, B2 §4.4)
     assert wait_for(lambda: len(rt.transcript) == 2)
     assert [m["role"] for m in rt.transcript] == ["assistant", "user"]
+
+
+def test_disconnect_rolls_back_the_active_turn(rig):
+    client, _rt, brain = rig
+    with client.websocket_connect("/ws/voice") as ws:
+        ws.send_json({"type": "hello", "session_id": None})
+        sid = ws.receive_json()["session_id"]
+        drain(ws)
+        brain.hold = asyncio.Event()
+        ws.send_json({"type": "text", "text": "wait for me"})
+        while ws.receive_json()["type"] != "audio":
+            pass
+    assert wait_for(lambda: sid in brain.abandoned)
 
 
 def test_expressions_ride_the_puppet_lane_not_the_wire(rig):

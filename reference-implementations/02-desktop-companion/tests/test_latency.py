@@ -50,3 +50,18 @@ def test_trace_written_to_disk(tmp_path):
     t.finish(barged_in=False, trace_dir=tmp_path)
     line = (tmp_path / "latency.jsonl").read_text().strip()
     assert '"first_audio_ms"' in line
+
+
+def test_trace_rotation_keeps_one_previous_generation(tmp_path):
+    first = TurnTrace()
+    first.mark("endpoint")
+    first.mark("first_audio")
+    first.finish(trace_dir=tmp_path, max_bytes=1)
+
+    second = TurnTrace()
+    second.mark("endpoint")
+    second.mark("first_audio")
+    second.finish(trace_dir=tmp_path, max_bytes=1)
+
+    assert (tmp_path / "latency.jsonl.1").exists()
+    assert (tmp_path / "latency.jsonl").exists()

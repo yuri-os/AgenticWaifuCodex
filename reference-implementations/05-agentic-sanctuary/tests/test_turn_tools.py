@@ -104,3 +104,25 @@ async def test_bargein_mid_continuation_cancels_and_persists_nothing(
     assert "cancelled" in kinds and "done" not in kinds
     assert runner.calls == [("get_weather", {})]   # mid-CONTINUATION, tool did run
     assert brain.persist_calls == []               # a turn that didn't happen (B2 §4.4)
+
+
+async def test_cancel_before_the_turn_generator_is_pulled_is_not_lost():
+    class Brain:
+        persisted = False
+
+        async def stream_reply(self, session_id, text):
+            yield "This should not be spoken."
+
+        async def persist(self, session_id, user_text, reply):
+            self.persisted = True
+
+    brain = Brain()
+    controller = TurnController(brain=brain, tts=FakeTTS(), filler_bank=None,
+                                mask_latency=False)
+    stream = controller.run_turn("s1", "interrupt immediately")
+    controller.cancel()
+
+    events = [event async for event in stream]
+
+    assert [event.kind for event in events] == ["cancelled"]
+    assert not brain.persisted

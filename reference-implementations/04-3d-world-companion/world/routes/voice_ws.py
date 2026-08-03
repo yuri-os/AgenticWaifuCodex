@@ -113,11 +113,13 @@ async def voice(ws: WebSocket):
         brain=brain, tts=rt.tts, filler_bank=rt.filler_bank,
         mask_latency=rt.cfg.mask_latency,
         expression_default=rt.cfg.expression_default,
-        trace_dir=rt.cfg.trace_dir)
+        trace_dir=rt.cfg.trace_dir,
+        trace_max_bytes=rt.cfg.trace_max_bytes)
 
     turn_task: asyncio.Task | None = None
 
-    async def run(agen, proactive: bool = False) -> None:
+    async def run(agen, proactive: bool = False, user_text: str = "",
+                  commit_text: str = "") -> None:
         """Pump one turn's OutEvents to the client until it ends or the client goes.
 
         FORK(B2 §10) #4/#5 live here: spoken sentences accumulate into a `draft`
@@ -134,8 +136,8 @@ async def voice(ws: WebSocket):
                 if ev.kind == "audio" and ev.text:  # FORK(B2 §10): the draft grows
                     spoken.append(ev.text)
                     rt.hub.publish("draft", {"text": " ".join(spoken)})
-                elif ev.kind == "done" and spoken:  # FORK(B2 §10): commit
-                    rt.post_message("assistant", " ".join(spoken),
+                elif ev.kind == "done" and (spoken or commit_text):  # FORK(B2 §10): commit
+                    rt.post_message("assistant", commit_text or " ".join(spoken),
                                     proactive=proactive)
                 elif ev.kind in ("cancelled", "error"):   # FORK(B2 §10): no trace
                     rt.hub.publish("draft_cancel", {})
@@ -148,6 +150,13 @@ async def voice(ws: WebSocket):
             await safe_send({"type": "error", "message": "turn failed"})
         finally:
             rt.turn_ended()                        # FORK(B2 §10)
+            # Closing the generator while it is suspended at an audio yield skips
+            # its normal terminal branch. The route owns the final rollback so a
+            # vanished client cannot leave a user-only turn in session memory.
+            if user_text:
+                abandon = getattr(brain, "abandon", None)
+                if abandon is not None:
+                    abandon(session_id)
 
     # FORK(B2 §10): the ambient injector (SPEC §8.3–§8.4). The idle machine calls
     # this to speak a self-talk line or a timer announcement THROUGH this
@@ -170,10 +179,11 @@ async def voice(ws: WebSocket):
     # but only once per session. Check-and-mark is atomic on the event loop.
     if session_id not in rt.greeted:
         rt.greeted.add(session_id)
+        cold_open = getattr(brain, "cold_open", lambda: None)()
         turn_task = asyncio.create_task(run(
             controller.run_turn(session_id, "", persist=False,
                                 tokens=brain.stream_greeting(session_id)),
-            proactive=True))                       # FORK(B2 §10): she speaks first
+            proactive=True, commit_text=cold_open or ""))  # authored first scene
 
     try:
         while True:
@@ -218,7 +228,8 @@ async def voice(ws: WebSocket):
                 rt.post_message("user", text)
                 trace = TurnTrace()
                 turn_task = asyncio.create_task(
-                    run(controller.run_turn(session_id, text, trace=trace)))
+                    run(controller.run_turn(session_id, text, trace=trace),
+                        user_text=text))
     except WebSocketDisconnect:
         pass
     finally:

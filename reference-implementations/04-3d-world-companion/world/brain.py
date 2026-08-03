@@ -120,6 +120,10 @@ class ToolBrain(BrainAdapter):
         raw = self._raw.pop(session_id, None)
         await super().persist(session_id, user_text, raw or reply)
 
+    def abandon(self, session_id: str) -> None:
+        self._raw.pop(session_id, None)
+        super().abandon(session_id)
+
     # -- ambient speech (SPEC §8.3): the greeting pattern, with any cue ---------
     async def stream_ambient(self, session_id: str, cue: str) -> AsyncIterator[str]:
         """Self-talk / timer announcements. Self-contained like stream_greeting
@@ -133,6 +137,12 @@ class ToolBrain(BrainAdapter):
     # -- the loop of passes (SPEC §7.4) -----------------------------------------
     async def _stream_with_tools(self, messages: list[dict],
                                  raw: list[str]) -> AsyncIterator[str]:
+        with self.guard.turn():
+            async for token in self._stream_with_tools_once(messages, raw):
+                yield token
+
+    async def _stream_with_tools_once(self, messages: list[dict],
+                                      raw: list[str]) -> AsyncIterator[str]:
         messages = list(messages)
         calls_made = 0
         cap = self.cfg.tool_max_calls_per_turn
@@ -188,7 +198,7 @@ class ToolBrain(BrainAdapter):
         """Guard → MCP → audit → host-side realisation. Never raises: a denied or
         failed call becomes a short result string the model can speak to (§7.3)."""
         t0 = self.guard.clock.now()
-        ok, reason = self.guard.check(call.tool)
+        ok, reason = self.guard.check(call.tool, call.args)
         if not ok:
             self.guard.audit(call.tool, call.args, f"denied: {reason}", 0.0, "")
             return f"denied ({reason})"

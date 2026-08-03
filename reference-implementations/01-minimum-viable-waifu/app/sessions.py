@@ -67,6 +67,16 @@ class SessionStore:
         s["last_active"] = _now()
         self._save()
 
+    def drop_last(self, session_id: str, role: str) -> bool:
+        """Undo a provisional message only when it is still the latest entry."""
+        s = self._data["sessions"][session_id]
+        if not s["transcript"] or s["transcript"][-1]["role"] != role:
+            return False
+        s["transcript"].pop()
+        s["last_active"] = _now()
+        self._save()
+        return True
+
     def window(self, session_id: str, n: int) -> list[dict]:
         """Last n raw transcript messages, chronological (§7.1). Small on
         purpose — the rolling summary carries older context (§7.2)."""

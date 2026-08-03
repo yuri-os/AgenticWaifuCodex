@@ -75,6 +75,7 @@ class TurnController:
     mask_latency: bool = True
     max_sentence_chars: int = 240   # flush an over-long run even without a terminator
     trace_dir: Path | None = None
+    trace_max_bytes: int | None = None
 
     _cancel: asyncio.Event = field(default_factory=asyncio.Event)
 
@@ -82,104 +83,138 @@ class TurnController:
         """Barge-in. Idempotent; safe to call from the mic handler at any instant."""
         self._cancel.set()
 
-    async def run_turn(self, session_id: str, text: str,
-                       trace: TurnTrace | None = None,
-                       persist: bool = True,
-                       tokens: AsyncIterator[str] | None = None) -> AsyncIterator[OutEvent]:
+    def run_turn(self, session_id: str, text: str,
+                 trace: TurnTrace | None = None,
+                 persist: bool = True,
+                 tokens: AsyncIterator[str] | None = None) -> AsyncIterator[OutEvent]:
         """Drive one turn end to end. Caller has already endpointed + transcribed.
 
         `persist=False` + a `tokens` override is the greeting path (SPEC §7): she
         speaks first from `brain.stream_greeting`, but an opener is not a turn the
         user took, so it is not remembered as one. With no override, tokens come
-        from `brain.stream_reply` — the normal turn."""
-        self._cancel = asyncio.Event()      # fresh cancel token per turn
+        from `brain.stream_reply` — the normal turn.
+
+        This is deliberately a plain method around the async generator: creating a
+        fresh cancel event here means a barge-in received immediately after the
+        caller schedules the turn cannot set the previous turn's event and vanish.
+        """
+        cancel = asyncio.Event()            # fresh cancel token per turn
+        self._cancel = cancel
+        return self._run_turn(session_id, text, trace, persist, tokens, cancel)
+
+    async def _run_turn(self, session_id: str, text: str,
+                        trace: TurnTrace | None, persist: bool,
+                        tokens: AsyncIterator[str] | None,
+                        cancel: asyncio.Event) -> AsyncIterator[OutEvent]:
         trace = trace or TurnTrace()
         trace.mark("endpoint")
+        completed = False
 
-        # --- §5: mask the first-audio gap with an instant acknowledgment ---
-        if self.mask_latency and self.filler_bank is not None and not self._cancel.is_set():
-            clip = self.filler_bank.pick()
-            if clip is not None:
-                trace.masked = True
-                yield OutEvent.filler(clip)
-
-        parser = EmotionParser(default=self.expression_default)
-        sentence_q: asyncio.Queue = asyncio.Queue()
-        raw_reply: list[str] = []           # model output verbatim (tags kept, for the corpus)
-        source = tokens if tokens is not None else self.brain.stream_reply(session_id, text)
-
-        async def produce() -> None:
-            """Drain brain tokens → expression events + sentences onto the queue."""
-            buf = ""
-            prev_events = 0
-            try:
-                async for token in source:
-                    if self._cancel.is_set():
-                        break
-                    trace.mark("first_token")
-                    raw_reply.append(token)
-                    speakable = parser.push(token)
-                    # a closed tag precedes the text after it: emit expr first
-                    while len(parser.events) > prev_events:
-                        await sentence_q.put(("expr", parser.events[prev_events].expression))
-                        prev_events += 1
-                    buf += speakable
-                    done, buf = cut_sentences(buf)
-                    for s in done:
-                        await sentence_q.put(("say", s))
-                    if len(buf) > self.max_sentence_chars:  # runaway with no terminator
-                        await sentence_q.put(("say", buf.strip()))
-                        buf = ""
-                parser.finish()
-                if buf.strip() and not self._cancel.is_set():
-                    await sentence_q.put(("say", buf.strip()))
-            except Exception as e:                      # brain blew up mid-stream
-                await sentence_q.put(("error", str(e)))
-            finally:
-                await sentence_q.put(None)              # sentinel: producer done
-
-        producer = asyncio.create_task(produce())
-        errored: str | None = None
         try:
-            while True:
-                item = await sentence_q.get()
-                if item is None or self._cancel.is_set():
-                    break
-                kind, payload = item
-                if kind == "error":
-                    errored = payload
-                    break
-                if kind == "expr":
-                    yield OutEvent.expr(payload)         # face leads the voice
-                    continue
-                # kind == "say": synthesize this sentence (off the event loop) and
-                # emit its audio. The producer keeps pulling tokens meanwhile —
-                # sentence two is written while sentence one is spoken (§4.2).
-                for chunk in await asyncio.to_thread(self._synth, payload):
-                    if self._cancel.is_set():
+            # --- §5: mask the first-audio gap with an instant acknowledgment ---
+            if self.mask_latency and self.filler_bank is not None and not cancel.is_set():
+                clip = self.filler_bank.pick()
+                if clip is not None:
+                    trace.masked = True
+                    yield OutEvent.filler(clip)
+
+            parser = EmotionParser(default=self.expression_default)
+            sentence_q: asyncio.Queue = asyncio.Queue()
+            raw_reply: list[str] = []       # model output verbatim (tags kept, for the corpus)
+            source = tokens if tokens is not None else self.brain.stream_reply(session_id, text)
+
+            async def produce() -> None:
+                """Drain brain tokens → expression events + sentences onto the queue."""
+                buf = ""
+                prev_events = 0
+                try:
+                    async for token in source:
+                        if cancel.is_set():
+                            break
+                        trace.mark("first_token")
+                        raw_reply.append(token)
+                        speakable = parser.push(token)
+                        # a closed tag precedes the text after it: emit expr first
+                        while len(parser.events) > prev_events:
+                            await sentence_q.put(("expr", parser.events[prev_events].expression))
+                            prev_events += 1
+                        buf += speakable
+                        done, buf = cut_sentences(buf)
+                        for s in done:
+                            await sentence_q.put(("say", s))
+                        if len(buf) > self.max_sentence_chars:  # runaway with no terminator
+                            await sentence_q.put(("say", buf.strip()))
+                            buf = ""
+                    parser.finish()
+                    if buf.strip() and not cancel.is_set():
+                        await sentence_q.put(("say", buf.strip()))
+                except Exception as e:                  # brain blew up mid-stream
+                    await sentence_q.put(("error", str(e)))
+                finally:
+                    await sentence_q.put(None)          # sentinel: producer done
+
+            producer = asyncio.create_task(produce())
+            errored: str | None = None
+            try:
+                while True:
+                    item_task = asyncio.create_task(sentence_q.get())
+                    cancel_task = asyncio.create_task(cancel.wait())
+                    done, pending = await asyncio.wait(
+                        (item_task, cancel_task), return_when=asyncio.FIRST_COMPLETED)
+                    for task in pending:
+                        task.cancel()
+                    await asyncio.gather(*pending, return_exceptions=True)
+                    if cancel_task in done:
                         break
-                    trace.mark("first_audio")
-                    yield OutEvent.say(chunk)
+                    item = item_task.result()
+                    if item is None:
+                        break
+                    kind, payload = item
+                    if kind == "error":
+                        errored = payload
+                        break
+                    if kind == "expr":
+                        yield OutEvent.expr(payload)     # face leads the voice
+                        continue
+                    # kind == "say": synthesize this sentence off the event loop.
+                    for chunk in await asyncio.to_thread(self._synth, payload):
+                        if cancel.is_set():
+                            break
+                        trace.mark("first_audio")
+                        yield OutEvent.say(chunk)
+            finally:
+                if not producer.done():                 # barge-in path: stop the brain
+                    producer.cancel()
+                await asyncio.gather(producer, return_exceptions=True)
+
+            # --- close out: error / barge-in write nothing; a clean turn persists ---
+            if errored is not None:
+                yield OutEvent("error", detail={"message": errored})
+                return
+            if cancel.is_set():
+                trace.finish(barged_in=True, trace_dir=self.trace_dir,
+                             max_bytes=self.trace_max_bytes)
+                yield OutEvent("cancelled")
+                return
+
+            rep = trace.finish(barged_in=False, trace_dir=self.trace_dir,
+                               max_bytes=self.trace_max_bytes)
+            # persist off the hot path (Build #1's post-turn pipeline), verbatim reply
+            if persist:
+                try:
+                    await self.brain.persist(session_id, text, "".join(raw_reply))
+                except Exception as e:
+                    log.exception("turn persistence failed")
+                    yield OutEvent("error", detail={"message": str(e)})
+                    return
+            completed = True
+            yield OutEvent("done", detail={"latency": rep,
+                                           "expression": parser.current_expression()})
         finally:
-            if not producer.done():                     # barge-in path: stop the brain
-                producer.cancel()
-            await asyncio.gather(producer, return_exceptions=True)
-
-        # --- close out: error / barge-in write nothing; a clean turn persists ---
-        if errored is not None:
-            yield OutEvent("error", detail={"message": errored})
-            return
-        if self._cancel.is_set():
-            trace.finish(barged_in=True, trace_dir=self.trace_dir)
-            yield OutEvent("cancelled")
-            return
-
-        rep = trace.finish(barged_in=False, trace_dir=self.trace_dir)
-        # persist off the hot path (Build #1's post-turn pipeline), verbatim reply
-        if persist:
-            await self.brain.persist(session_id, text, "".join(raw_reply))
-        yield OutEvent("done", detail={"latency": rep,
-                                       "expression": parser.current_expression()})
+            # `aclose()` from a disconnected websocket skips the branches above.
+            # Roll the brain back here too, after its producer has been cancelled.
+            if persist and not completed:
+                self.brain.abandon(session_id)
 
     def _synth(self, sentence: str) -> list[AudioChunk]:
         """Synthesize one sentence to audio chunks (runs in a worker thread)."""

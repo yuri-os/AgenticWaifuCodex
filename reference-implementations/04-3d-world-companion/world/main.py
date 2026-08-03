@@ -75,7 +75,8 @@ class Runtime:
         if cfg.selfie_backend != "off":        # absent from the allowlist = no hand (§7.3)
             rates["take_selfie"] = cfg.tool_rate_selfie
         self.guard = Guard(rates_per_min=rates,
-                           log_dir=cfg.tool_log_dir, clock=self.clock)
+                           log_dir=cfg.tool_log_dir, clock=self.clock,
+                           max_log_bytes=cfg.tool_log_max_bytes)
         self.timers = TimerBoard(self.clock)
         # her camera (SPEC §7.6): the vendored forge behind the SelfieLab. Built
         # even when tools are faked (tests inject a fake runner but still want

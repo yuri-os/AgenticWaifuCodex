@@ -78,7 +78,8 @@ class Runtime:
         if cfg.selfie_backend != "off":        # absent from the allowlist = no hand (§7.3)
             rates["take_selfie"] = cfg.tool_rate_selfie
         self.guard = Guard(rates_per_min=rates,
-                           log_dir=cfg.tool_log_dir, clock=self.clock)
+                           log_dir=cfg.tool_log_dir, clock=self.clock,
+                           max_log_bytes=cfg.tool_log_max_bytes)
         self.timers = TimerBoard(self.clock)
         # her camera (SPEC §7.6): the vendored forge behind the SelfieLab. Built
         # even when tools are faked (tests inject a fake runner but still want
@@ -104,7 +105,8 @@ class Runtime:
         # typed signal here, and the mind's SENSE drains it. Producers (the
         # voice route, the events route, a landed timer) post facts; the loop
         # decides what they mean.
-        self.signals = SignalBus(self.clock, log_dir=cfg.trace_dir)
+        self.signals = SignalBus(self.clock, log_dir=cfg.trace_dir,
+                                 max_log_bytes=cfg.trace_max_bytes)
         self.mind: MindLoop | None = None
         self.mind_status = "disabled"
 
@@ -232,9 +234,9 @@ class Runtime:
 
     # ---- engagement notifications from the voice route (SPEC §15.3) ----
 
-    def turn_started(self) -> None:
+    def turn_started(self, proactive: bool = False) -> None:
         if self.mind:
-            self.mind.turn_started()           # the ENGAGED preempt, from any state
+            self.mind.turn_started(proactive=proactive)
 
     def turn_ended(self) -> None:
         if self.mind:

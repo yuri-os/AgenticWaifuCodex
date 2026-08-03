@@ -28,6 +28,7 @@ from app.corpus import CorpusLogger  # noqa: F401 (documents the reused surface)
 from app.main import AppState, create_app
 from app.memory.store import Record
 from app.routes.chat import post_turn
+from app import vaultgit
 
 from .config import Config
 from .voice.emotion import EXPRESSION_DIRECTIVE, SPOKEN_STYLE_DIRECTIVE
@@ -118,7 +119,7 @@ class BrainAdapter:
     async def persist(self, session_id: str, user_text: str, reply: str) -> None:
         """Build #1's post-turn pipeline, verbatim: corpus line, then journal +
         index + USER.md + summary + exactly one git commit (SPEC §2, §4.4)."""
-        pend = self._pending.pop(session_id, None)
+        pend = self._pending.get(session_id)
         if pend is None:
             return
         turn_id = self.state.corpus.log_turn(
@@ -132,15 +133,55 @@ class BrainAdapter:
         self.state.sessions.append_message(session_id, "assistant", reply,
                                            turn_id=turn_id)
         self.state.sessions.bump_turn(session_id)
+        # From here the turn is durably represented in the transcript; errors in
+        # the slower post-turn work must not roll its user half back.
+        self._pending.pop(session_id, None)
         record = Record(session_id=session_id, turn_index=pend.turn_index,
                         user_msg=user_text, reply=reply)
         await post_turn(self.state, record, session_id, pend.turn_index + 1)
 
+    def abandon(self, session_id: str) -> None:
+        """Discard the uncommitted half of a cancelled streamed turn."""
+        if self._pending.pop(session_id, None) is not None:
+            self.state.sessions.drop_last(session_id, "user")
+
     # -- the greeting: she speaks first (SPEC §7) -------------------------------
+    def _has_history(self) -> bool:
+        episodic = self.state.cfg.vault_dir / "memory" / "episodic"
+        return episodic.exists() and any(episodic.glob("*.md"))
+
+    async def _retire_bootstrap(self) -> None:
+        """Archive stale onboarding state if a restored vault still has it."""
+        async with self.state.vault_lock:
+            try:
+                await asyncio.to_thread(
+                    vaultgit.mv, self.state.cfg.vault_dir, "soul/BOOTSTRAP.md",
+                    "soul/onboarded/BOOTSTRAP.done.md", force=True)
+                await asyncio.to_thread(vaultgit.commit, self.state.cfg.vault_dir,
+                                        "first session complete")
+            except Exception:
+                log.exception("bootstrap retirement failed (will retry next greeting)")
+
+    def cold_open(self) -> str | None:
+        """Return the authored first scene while no completed history exists."""
+        soul = self.state.soul_loader.load()
+        if soul.bootstrap is None or self._has_history():
+            return None
+        return soul.bootstrap
+
     async def stream_greeting(self, session_id: str) -> AsyncIterator[str]:
         """Stream the continuity opener. Self-contained: window=[] and the cue is
         NOT appended to the transcript (an opener is not a turn the user took), so
         it never pollutes the next window and is never persisted (§7)."""
+        cold = self.cold_open()
+        if cold is not None:
+            if self.state.sessions.get(session_id) is not None:
+                self.state.sessions.append_message(session_id, "assistant", cold)
+            for word in cold.split(" "):
+                yield word + " "
+            return
+        if self.state.soul_loader.load().bootstrap is not None:
+            await self._retire_bootstrap()
         cue = GREET_CUE.format(user=self.cfg.user_name)
         _soul, prompt = self._assemble(session_id, cue, window=[], lore=[])
         async for token in self.state.chat.stream(

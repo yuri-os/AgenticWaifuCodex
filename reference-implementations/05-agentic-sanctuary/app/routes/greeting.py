@@ -33,15 +33,18 @@ def _has_history(state) -> bool:
     return episodic.exists() and any(episodic.glob("*.md"))
 
 
-def _retire_bootstrap(state) -> None:
+async def _retire_bootstrap(state) -> None:
     """Consumed once (§5.4): git mv soul/BOOTSTRAP.md soul/onboarded/… and
     commit. From now on, file-absence means 'she has met you'."""
-    try:
-        vaultgit.mv(state.cfg.vault_dir, "soul/BOOTSTRAP.md",
-                    "soul/onboarded/BOOTSTRAP.done.md")
-        vaultgit.commit(state.cfg.vault_dir, "first session complete")
-    except Exception:
-        log.exception("bootstrap retirement failed (will retry next greeting)")
+    async with state.vault_lock:
+        try:
+            await asyncio.to_thread(
+                vaultgit.mv, state.cfg.vault_dir, "soul/BOOTSTRAP.md",
+                "soul/onboarded/BOOTSTRAP.done.md", force=True)
+            await asyncio.to_thread(vaultgit.commit, state.cfg.vault_dir,
+                                    "first session complete")
+        except Exception:
+            log.exception("bootstrap retirement failed (will retry next greeting)")
 
 
 GREET_CUE = ("(({user} just opened the sanctuary — no message yet; you speak "
@@ -73,7 +76,7 @@ async def greeting(session_id: str, request: Request):
 
     # she has met you: retire the bootstrap if it is still around (§5.4)…
     if soul.bootstrap is not None and _has_history(state):
-        _retire_bootstrap(state)
+        await _retire_bootstrap(state)
 
     # …and open from memory (§9.3): persona + USER.md + summary + a top recall.
     user_md = state.store.read_user_md()

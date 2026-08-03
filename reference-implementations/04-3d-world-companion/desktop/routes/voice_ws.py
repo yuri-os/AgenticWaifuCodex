@@ -100,11 +100,12 @@ async def voice(ws: WebSocket):
         brain=brain, tts=rt.tts, filler_bank=rt.filler_bank,
         mask_latency=rt.cfg.mask_latency,
         expression_default=rt.cfg.expression_default,
-        trace_dir=rt.cfg.trace_dir)
+        trace_dir=rt.cfg.trace_dir,
+        trace_max_bytes=rt.cfg.trace_max_bytes)
 
     turn_task: asyncio.Task | None = None
 
-    async def run(agen) -> None:
+    async def run(agen, user_text: str = "") -> None:
         """Pump one turn's OutEvents to the client until it ends or the client goes."""
         try:
             async for ev in agen:
@@ -114,6 +115,12 @@ async def voice(ws: WebSocket):
         except Exception:
             log.exception("turn stream failed")
             await safe_send({"type": "error", "message": "turn failed"})
+        finally:
+            # Closing a generator at an audio yield skips its terminal rollback.
+            if user_text:
+                abandon = getattr(brain, "abandon", None)
+                if abandon is not None:
+                    abandon(session_id)
 
     # she speaks first (§7): greet from memory the moment the headset goes on —
     # but only once per session. A reconnect (or a second connection that parked
@@ -170,7 +177,8 @@ async def voice(ws: WebSocket):
                     continue
                 trace = TurnTrace()
                 turn_task = asyncio.create_task(
-                    run(controller.run_turn(session_id, text, trace=trace)))
+                    run(controller.run_turn(session_id, text, trace=trace),
+                        user_text=text))
     except WebSocketDisconnect:
         pass
     finally:

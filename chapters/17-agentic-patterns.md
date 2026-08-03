@@ -33,7 +33,7 @@ So: two dials, not one ladder — and they can be set independently. You could r
 ## Reactive patterns
 
 - **The everyday tool surface.** Keep the *reactive* surface small and coherent — but tune the size to the *user*, not to a magic number. The principle is *restraint*, not a count: a companion wired to 200 reactive tools is an assistant console; one that can pick a song, set a reminder, read and write her own notes, and look one thing up is a friend with help. A dozen coherent personal tools is perfectly fine if that's what a given user wants — the real ceilings are context-token budget and attack surface (→ ch. 22), both of which scale with the set, so "small" is a sensible *default* the user is free to raise, not a law. And what stays off this surface is decided by *shape*, not category: the multi-step coding/research/building *grind* lives in the workshop harness (→ §1; "the heavy hands," below), reached deliberately — but single-shot operations like reading or writing a markdown note, one web lookup, or a summarize pass are *not* heavy work and belong right here on the everyday hands. (Routing a one-shot file read through the coding harness is absurd overkill — a whole agent loop to open one `.md`.) The one carve-out is *self-modification*: she can draft an edit to her own personality files from here, but it only takes effect through the human-gated self-edit flow (→ ch. 19), never as a direct write — that's a governance gate, not a question of which hands hold the pen.
-- **Reactive tool calls.** The model, mid-conversation, emits a structured call; your code runs it; the result returns to the context (→ MCP, below). This is rung 5 and it's purely reactive — she does the thing *because you asked*.
+- **Reactive tool calls.** The model, mid-conversation, emits a structured call; your code runs it; the result returns to the context (→ MCP, below). Give every logical call a per-turn idempotency key and retain its decision/result, so a model retry, reconnect, or transport retry returns the original outcome instead of repeating a side effect. This is rung 5 and it's purely reactive — she does the thing *because you asked*.
 - **Scheduled and event-triggered initiative** (rungs 3–4 — morning rituals, calendar-end pings, an RSS item she'd care about) look like tool patterns but are really *autonomy*: they need something deciding *whether and when* to fire, which is the salience/interrupt model of ch. 18. Build them there, not as naked cron jobs (a timer can't decide to stay quiet).
 
 ## MCP and the tool ecosystem
@@ -62,7 +62,7 @@ The deciding caveat is security, and it points the same way. An open shell in th
 You can hand-roll the agent loop or adopt a framework. By 2026 the field has consolidated:
 
 - **LangGraph** — production-grade default; explicit-state-machine model (the *graph is the agent*); biggest ecosystem. MIT-licensed core, but its first-class observability (LangSmith) is a hosted, proprietary add-on.
-- **Pydantic AI** — typed, production Python; MIT-licensed; an agent is a *first-class Python object you call*, not a runtime that owns your control flow; model-agnostic across 25+ providers including local OpenAI-compatible endpoints (vLLM, llama.cpp, Ollama).
+- **Pydantic AI** — typed, production Python; MIT-licensed; an agent is a *first-class Python object you call*, not a runtime that owns your control flow; model-agnostic across 25+ providers including local OpenAI-compatible endpoints (LM Studio, vLLM, llama.cpp, Ollama).
 - **Strands** — AWS's Apache-2.0 SDK; MCP- and A2A-native; model-agnostic with a local Ollama path, but its gravity pulls toward Bedrock.
 - **CrewAI** — role-based multi-agent; Python; easiest learning curve.
 - **Mastra** — TypeScript-native; pairs naturally with a Next.js sanctuary frontend.
@@ -105,8 +105,9 @@ Give her a *small*, bounded tool surface via MCP (→ Build #4, ch. 34):
 tools:  set_timer(duration)        — household help
         play_music(query)          — pick a song
         web_lookup(query)          — fetch one fact
-policy: each tool call is logged; web_lookup rate-limited; no tool may act
-        outside an allowlist; results returned to context for her to speak to.
+policy: each tool call is logged and carries a per-turn idempotency key; web_lookup
+        rate-limited; no tool may act outside an allowlist; results returned to
+        context for her to speak to.
 ```
 
 The discipline is *restraint*: a friend with a little help, not an assistant with a console. The game-NPC lesson applies (→ ch. 02 §1, LLM-driven game characters) — clamp the tools so she can't be talked into nonsense ("sure, I'll delete everything"). For *scheduled* and *event-triggered* uses of these same tools (she sets a timer because it's your usual study time), see the salience/interrupt model in ch. 18 — the tool is the same; the decision to fire it unprompted is autonomy.

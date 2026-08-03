@@ -26,7 +26,8 @@ import threading
 import time
 
 # Vendored Build #2 launcher internals, called not copied (§2.2's discipline):
-from desktop.window import _pick_gui, _wait_for_server
+from desktop.window import (_is_wsl, _pick_gui, _wait_for_server, open_wsl_window,
+                            wsl_server_config)
 
 from .config import Config
 from .main import build_server, create_app
@@ -67,6 +68,7 @@ def _serve(cfg: Config) -> tuple[threading.Thread, list[BaseException]]:
 
 def run(cfg: Config | None = None) -> None:
     cfg = cfg or Config()
+    server_cfg = wsl_server_config(cfg)
 
     # A foreign server on our port would hand the window a stale instance (old
     # code, old .env) — refuse loudly instead (B2's rule; the incident is
@@ -92,15 +94,21 @@ def run(cfg: Config | None = None) -> None:
             f"(import failed: {e})")
 
     print("starting her up… (her voice keeps loading in the background)", flush=True)
-    thread, errors = _serve(cfg)
+    thread, errors = _serve(server_cfg)
     deadline = time.monotonic() + 180
-    while not _wait_for_server(cfg.host, cfg.port, timeout=1.0):
+    while not _wait_for_server(server_cfg.host, server_cfg.port, timeout=1.0):
         if errors or not thread.is_alive():
             raise SystemExit(f"server failed to start: "
                              f"{errors[0] if errors else 'server thread exited'}")
         if time.monotonic() > deadline:
-            raise SystemExit(f"server didn't come up on {cfg.host}:{cfg.port} "
+            raise SystemExit(f"server didn't come up on {server_cfg.host}:{server_cfg.port} "
                              "within 3 minutes")
+
+    if _is_wsl():
+        path = "/live2d/" if (cfg.desktop_body or "vrm").strip().lower() == "live2d" else "/"
+        open_wsl_window(cfg.port, path)
+        thread.join()
+        return
 
     webview.create_window(
         "yuri",

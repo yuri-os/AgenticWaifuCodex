@@ -56,6 +56,13 @@ def test_desktop_url_never_targets_wildcard_host():
     assert url == "http://127.0.0.1:9000/?desktop=1"
 
 
+def test_wsl_widens_only_a_loopback_server(monkeypatch):
+    monkeypatch.setattr(b2_window, "_is_wsl", lambda: True)
+    widened = b2_window.wsl_server_config(Config(host="127.0.0.1"))
+    assert widened.host == "0.0.0.0"
+    assert b2_window.wsl_server_config(Config(host="192.168.1.4")).host == "192.168.1.4"
+
+
 def test_desktop_url_picks_the_body():
     assert window.desktop_url(Config(port=8767, desktop_body="live2d")) \
         == "http://127.0.0.1:8767/live2d/?desktop=1"
@@ -68,6 +75,7 @@ def test_reuses_the_vendored_launcher_helpers():
     # probe and the engine pick are B2's own functions, not lookalikes.
     assert window._wait_for_server is b2_window._wait_for_server
     assert window._pick_gui is b2_window._pick_gui
+    assert window.wsl_server_config is b2_window.wsl_server_config
 
 
 def test_run_refuses_an_occupied_port():

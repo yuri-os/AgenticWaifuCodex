@@ -23,6 +23,7 @@ class Config(VoiceConfig):
     tool_max_calls_per_turn: int = 2            # per-turn cap (§7.3)
     tool_timeout_s: float = 10.0                # per-call timeout (§7.3)
     tool_log_dir: Path = Path("./tool-logs")    # JSONL audit, one line per call (§7.3)
+    tool_log_max_bytes: int = 2_000_000         # rotate calls.jsonl at 2 MB
     tool_rate_timer: int = 6                    # calls/minute, token bucket (§7.3)
     tool_rate_music: int = 6
     tool_rate_weather: int = 4

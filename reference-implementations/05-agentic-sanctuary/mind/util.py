@@ -59,8 +59,13 @@ def write_json(path: Path, obj: Any) -> None:
     atomic_write(path, json.dumps(obj, ensure_ascii=False, indent=2) + "\n")
 
 
-def jsonl_append(path: Path, obj: dict) -> None:
+def jsonl_append(path: Path, obj: dict, *, max_bytes: int | None = None) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+    if max_bytes is not None and path.exists() and path.stat().st_size >= max_bytes:
+        backup = path.with_name(path.name + ".1")
+        if backup.exists():
+            backup.unlink()
+        path.replace(backup)
     with open(path, "a", encoding="utf-8") as f:
         f.write(json.dumps(obj, ensure_ascii=False) + "\n")
         f.flush()

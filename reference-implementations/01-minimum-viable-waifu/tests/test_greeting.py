@@ -9,6 +9,7 @@ import json
 import httpx
 
 from app import vaultgit
+from app.memory.store import Record
 from tests.conftest import FakeChat, make_app
 
 
@@ -84,6 +85,29 @@ async def test_return_greeting_retires_bootstrap_and_uses_memory(vault, tmp_path
         tagged = [json.loads(l) for l in lines if "tags" in json.loads(l)]
         assert any("greeting" in rec["tags"] for rec in tagged)
         assert events[-1].get("done") is True
+
+
+async def test_return_greeting_retires_an_occupied_stale_bootstrap(vault, tmp_path):
+    app = make_app(vault, tmp_path / "corpus")
+    bootstrap = vault / "soul" / "BOOTSTRAP.md"
+    cold_open = bootstrap.read_text(encoding="utf-8")
+    archived = vault / "soul" / "onboarded" / "BOOTSTRAP.done.md"
+    archived.parent.mkdir(parents=True, exist_ok=True)
+    archived.write_text("stale archive", encoding="utf-8")
+    await app.state.mvw.store.remember(
+        Record(session_id="prior", turn_index=0, user_msg="we met before",
+               reply="I remember."))
+
+    transport = httpx.ASGITransport(app=app)
+    async with httpx.AsyncClient(transport=transport,
+                                 base_url="http://sanctuary") as client:
+        sid = (await client.post("/api/session")).json()["session_id"]
+        _, events = await collect_sse(client, f"/api/greeting?session_id={sid}")
+
+    assert events[-1].get("done") is True
+    assert not bootstrap.exists()
+    assert archived.read_text(encoding="utf-8") == cold_open
+    assert any("first session complete" in line for line in vaultgit.log(vault, n=20))
 
 
 async def test_sanctuary_page_is_served(vault, tmp_path):

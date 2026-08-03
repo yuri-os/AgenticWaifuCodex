@@ -25,6 +25,7 @@ from world.brain import ToolBrain                  # noqa: E402
 from world.tools.fakes import SPECS, FakeToolRunner  # noqa: E402
 from world.tools.guard import Guard                # noqa: E402
 from world.tools.timers import TimerBoard          # noqa: E402
+from app import vaultgit                            # noqa: E402
 
 from .conftest import ScriptedChat                 # noqa: E402
 
@@ -141,3 +142,81 @@ async def test_ambient_stream_over_the_real_brain_never_persists(vault, cfg, clo
     assert any(e.kind == "audio" for e in events)
     corpus = cfg.corpus_dir / "turns.jsonl"
     assert not corpus.exists() or not corpus.read_text().strip()
+
+
+async def test_cancelled_real_turn_is_removed_from_the_next_session_window(vault, cfg, clock):
+    cfg = cfg.model_copy(update={
+        "vault_dir": vault, "embed_dim": 8,
+        "corpus_dir": vault.parent / "corpus"})
+    chat = ScriptedChat([["One sentence. ", "Another sentence. "]])
+    brain = ToolBrain.build(
+        cfg, guard=Guard(rates_per_min={}, log_dir=cfg.tool_log_dir, clock=clock),
+        timers=TimerBoard(clock), controller=VrmController(), chat_model=chat,
+        utility_model=FakeUtility(), embedder=FakeEmbedder())
+    sid = brain.resolve_session(None)
+    controller = TurnController(brain=brain, tts=FakeTTS(), filler_bank=None,
+                                mask_latency=False)
+
+    async def interrupt_after_first_audio():
+        async for event in controller.run_turn(sid, "an interrupted question"):
+            if event.kind == "audio":
+                controller.cancel()
+
+    await interrupt_after_first_audio()
+
+    session = brain.state.sessions.get(sid)
+    assert session["transcript"] == []
+    assert sid not in brain._pending
+
+
+async def test_first_voice_greeting_uses_the_authored_bootstrap(vault, cfg, clock):
+    cfg = cfg.model_copy(update={"vault_dir": vault, "embed_dim": 8})
+    chat = ScriptedChat([])
+    brain = ToolBrain.build(
+        cfg, guard=Guard(rates_per_min={}, log_dir=cfg.tool_log_dir, clock=clock),
+        timers=TimerBoard(clock), controller=VrmController(), chat_model=chat,
+        utility_model=FakeUtility(), embedder=FakeEmbedder())
+    sid = brain.resolve_session(None)
+    cold_open = brain.cold_open()
+
+    spoken = "".join([token async for token in brain.stream_greeting(sid)])
+
+    assert cold_open is not None
+    assert spoken.strip() == cold_open
+    assert chat.calls == []
+    transcript = brain.state.sessions.get(sid)["transcript"]
+    assert len(transcript) == 1
+    assert transcript[0]["role"] == "assistant"
+    assert transcript[0]["content"] == cold_open
+
+
+async def test_first_completed_turn_archives_bootstrap_and_restored_copy(vault, cfg, clock):
+    cfg = cfg.model_copy(update={
+        "vault_dir": vault, "embed_dim": 8,
+        "corpus_dir": vault.parent / "corpus"})
+    brain = ToolBrain.build(
+        cfg,
+        guard=Guard(rates_per_min={}, log_dir=cfg.tool_log_dir, clock=clock),
+        timers=TimerBoard(clock), controller=VrmController(),
+        chat_model=ScriptedChat([["I remember."]]),
+        utility_model=FakeUtility(), embedder=FakeEmbedder())
+    sid = brain.resolve_session(None)
+    controller = TurnController(brain=brain, tts=FakeTTS(), filler_bank=None,
+                                mask_latency=False)
+
+    events = [event async for event in controller.run_turn(sid, "hello")]
+
+    assert events[-1].kind == "done"
+    bootstrap = vault / "soul" / "BOOTSTRAP.md"
+    archived = vault / "soul" / "onboarded" / "BOOTSTRAP.done.md"
+    assert not bootstrap.exists() and archived.exists()
+    log = subprocess.run(["git", "-C", str(vault), "log", "--oneline"],
+                         capture_output=True, text=True).stdout
+    assert "first session complete" in log
+
+    # Re-onboarding can restore an untracked bootstrap over an existing archive.
+    bootstrap.write_text("A restored first meeting.", encoding="utf-8")
+    vaultgit.mv(vault, "soul/BOOTSTRAP.md", "soul/onboarded/BOOTSTRAP.done.md",
+                force=True)
+    assert not bootstrap.exists()
+    assert archived.read_text(encoding="utf-8") == "A restored first meeting."

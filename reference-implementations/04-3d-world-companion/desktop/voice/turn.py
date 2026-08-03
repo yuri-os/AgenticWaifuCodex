@@ -75,6 +75,7 @@ class TurnController:
     mask_latency: bool = True
     max_sentence_chars: int = 240   # flush an over-long run even without a terminator
     trace_dir: Path | None = None
+    trace_max_bytes: int | None = 2_000_000
 
     _cancel: asyncio.Event = field(default_factory=asyncio.Event)
 
@@ -82,17 +83,27 @@ class TurnController:
         """Barge-in. Idempotent; safe to call from the mic handler at any instant."""
         self._cancel.set()
 
-    async def run_turn(self, session_id: str, text: str,
-                       trace: TurnTrace | None = None,
-                       persist: bool = True,
-                       tokens: AsyncIterator[str] | None = None) -> AsyncIterator[OutEvent]:
+    def run_turn(self, session_id: str, text: str,
+                 trace: TurnTrace | None = None,
+                 persist: bool = True,
+                 tokens: AsyncIterator[str] | None = None) -> AsyncIterator[OutEvent]:
         """Drive one turn end to end. Caller has already endpointed + transcribed.
 
         `persist=False` + a `tokens` override is the greeting path (SPEC §7): she
         speaks first from `brain.stream_greeting`, but an opener is not a turn the
         user took, so it is not remembered as one. With no override, tokens come
-        from `brain.stream_reply` — the normal turn."""
+        from `brain.stream_reply` — the normal turn.
+
+        This is deliberately a plain method around the async generator: creating a
+        fresh cancel event here means a barge-in received immediately after the
+        caller schedules the turn cannot set the previous turn's event and vanish.
+        """
         self._cancel = asyncio.Event()      # fresh cancel token per turn
+        return self._run_turn(session_id, text, trace, persist, tokens)
+
+    async def _run_turn(self, session_id: str, text: str,
+                        trace: TurnTrace | None, persist: bool,
+                        tokens: AsyncIterator[str] | None) -> AsyncIterator[OutEvent]:
         trace = trace or TurnTrace()
         trace.mark("endpoint")
 
@@ -167,14 +178,24 @@ class TurnController:
 
         # --- close out: error / barge-in write nothing; a clean turn persists ---
         if errored is not None:
+            if persist:
+                abandon = getattr(self.brain, "abandon", None)
+                if abandon is not None:
+                    abandon(session_id)
             yield OutEvent("error", detail={"message": errored})
             return
         if self._cancel.is_set():
-            trace.finish(barged_in=True, trace_dir=self.trace_dir)
+            if persist:
+                abandon = getattr(self.brain, "abandon", None)
+                if abandon is not None:
+                    abandon(session_id)
+            trace.finish(barged_in=True, trace_dir=self.trace_dir,
+                         max_log_bytes=self.trace_max_bytes)
             yield OutEvent("cancelled")
             return
 
-        rep = trace.finish(barged_in=False, trace_dir=self.trace_dir)
+        rep = trace.finish(barged_in=False, trace_dir=self.trace_dir,
+                           max_log_bytes=self.trace_max_bytes)
         # persist off the hot path (Build #1's post-turn pipeline), verbatim reply
         if persist:
             await self.brain.persist(session_id, text, "".join(raw_reply))

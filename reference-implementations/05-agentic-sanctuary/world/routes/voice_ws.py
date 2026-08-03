@@ -123,7 +123,8 @@ async def voice(ws: WebSocket):
 
     turn_task: asyncio.Task | None = None
 
-    async def run(agen, proactive: bool = False, user_text: str = "") -> None:
+    async def run(agen, proactive: bool = False, user_text: str = "",
+                  commit_text: str = "") -> None:
         """Pump one turn's OutEvents to the client until it ends or the client goes.
 
         FORK(B2 §10) #4/#5 live here: spoken sentences accumulate into a `draft`
@@ -133,7 +134,7 @@ async def voice(ws: WebSocket):
         FORK(B5 §16): a committed real turn is teed onto the SignalBus as a
         `turn_committed` signal — the mind's REFLECT share of the conversation
         (world model, promise extraction). A barged-in turn posts nothing."""
-        rt.turn_started()                          # FORK(B2 §10): the mind (§15.3)
+        rt.turn_started(proactive=proactive)        # user turns preempt the mind
         spoken: list[str] = []                     # FORK(B2 §10): the draft
         try:
             async for ev in agen:
@@ -143,9 +144,9 @@ async def voice(ws: WebSocket):
                 if ev.kind == "audio" and ev.text:  # FORK(B2 §10): the draft grows
                     spoken.append(ev.text)
                     rt.hub.publish("draft", {"text": " ".join(spoken)})
-                elif ev.kind == "done" and spoken:  # FORK(B2 §10): commit
-                    rt.post_message("assistant", " ".join(spoken),
-                                    proactive=proactive)
+                elif ev.kind == "done" and (spoken or commit_text):  # FORK(B2 §10): commit
+                    rt.post_message("assistant", commit_text or " ".join(spoken),
+                                     proactive=proactive)
                     if user_text:                  # FORK(B5 §16): the tee
                         rt.signals.post("turn_committed",
                                         {"text": user_text,
@@ -162,6 +163,13 @@ async def voice(ws: WebSocket):
             await safe_send({"type": "error", "message": "turn failed"})
         finally:
             rt.turn_ended()                        # FORK(B2 §10)
+            # Closing the generator while it is suspended at an audio yield skips
+            # its normal terminal branch. The route owns the final rollback so a
+            # vanished client cannot leave a user-only turn in session memory.
+            if user_text:
+                abandon = getattr(brain, "abandon", None)
+                if abandon is not None:
+                    abandon(session_id)
 
     # FORK(B2 §10): the ambient injector (SPEC §15.5). The mind calls this to
     # speak a self-initiated line — a murmur, a timer announcement, a reach-out
@@ -184,10 +192,11 @@ async def voice(ws: WebSocket):
     # but only once per session. Check-and-mark is atomic on the event loop.
     if session_id not in rt.greeted:
         rt.greeted.add(session_id)
+        cold_open = getattr(brain, "cold_open", lambda: None)()
         turn_task = asyncio.create_task(run(
             controller.run_turn(session_id, "", persist=False,
-                                tokens=brain.stream_greeting(session_id)),
-            proactive=True))                       # FORK(B2 §10): she speaks first
+                                 tokens=brain.stream_greeting(session_id)),
+            proactive=True, commit_text=cold_open or ""))  # authored first scene
 
     try:
         while True:

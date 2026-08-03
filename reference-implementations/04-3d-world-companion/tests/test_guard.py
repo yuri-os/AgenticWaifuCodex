@@ -26,6 +26,18 @@ def test_rate_limit_token_bucket_refills_on_the_injected_clock(clock, cfg):
     assert not guard.check("set_timer")[0]
 
 
+def test_turn_scope_deduplicates_only_matching_calls(clock, cfg):
+    guard = Guard(rates_per_min={"set_timer": 2}, log_dir=cfg.tool_log_dir,
+                  clock=clock)
+    with guard.turn():
+        assert guard.check("set_timer", {"minutes": 1})[0]
+        assert guard.check("set_timer", {"minutes": 1}) == (
+            False, "already done this turn")
+        assert guard.check("set_timer", {"minutes": 2})[0]
+    with guard.turn():
+        assert not guard.check("set_timer", {"minutes": 1})[0]
+
+
 def test_truncate_caps_result_length():
     long = "x" * (RESULT_MAX_CHARS * 2)
     out = Guard.truncate(long)
@@ -42,3 +54,14 @@ def test_audit_writes_one_jsonl_line_per_call_allowed_or_denied(guard, cfg):
     assert lines[0]["tool"] == "set_timer" and lines[0]["verdict"] == "ok"
     assert lines[0]["duration_ms"] == 12.3
     assert lines[1]["verdict"].startswith("denied")
+
+
+def test_audit_rotates_before_it_can_grow_without_bound(clock, cfg):
+    guard = Guard(rates_per_min={}, log_dir=cfg.tool_log_dir, clock=clock,
+                  max_log_bytes=1)
+    guard.audit("one", {}, "ok", 0, "")
+    guard.audit("two", {}, "ok", 0, "")
+
+    assert (cfg.tool_log_dir / "calls.jsonl.1").exists()
+    lines = (cfg.tool_log_dir / "calls.jsonl").read_text().splitlines()
+    assert len(lines) == 1 and json.loads(lines[0])["tool"] == "two"

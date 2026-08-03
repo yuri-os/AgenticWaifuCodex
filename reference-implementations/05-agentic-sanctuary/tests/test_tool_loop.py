@@ -63,6 +63,24 @@ async def test_per_turn_cap_second_call_runs_third_denied(cfg, guard, timers,
     assert "budget for this turn is now spent" in chat.calls[2][-1]["content"]
 
 
+async def test_repeated_tool_call_is_denied_without_spending_another_rate_token(
+        cfg, guard, timers, controller):
+    chat = ScriptedChat([
+        ["checking [[get_weather {\"city\": \"Tokyo\"}]]"],
+        ["again [[get_weather {\"city\": \"Tokyo\"}]]"],
+        ["already checked."],
+    ])
+    runner = FakeToolRunner()
+    tb = make_toolbrain(cfg, guard, timers, controller, chat, runner=runner)
+
+    spoken = "".join(await collect(tb._stream_with_tools([], [])))
+
+    assert runner.calls == [("get_weather", {"city": "Tokyo"})]
+    assert "already checked" in spoken
+    assert "already done this turn" in chat.calls[2][-1]["content"]
+    assert guard._buckets["get_weather"]["tokens"] == 3.0
+
+
 async def test_denied_by_guard_becomes_a_speakable_result(cfg, guard, timers,
                                                           controller):
     chat = ScriptedChat([

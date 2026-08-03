@@ -47,3 +47,23 @@ def test_wait_for_server_times_out_fast_on_dead_port():
     t0 = time.monotonic()
     assert window._wait_for_server("127.0.0.1", 1, timeout=0.5) is False
     assert time.monotonic() - t0 < 3.0
+
+
+def test_wsl_rebinds_loopback_for_the_windows_browser(monkeypatch):
+    monkeypatch.setattr(window, "_is_wsl", lambda: True)
+    cfg = Config(host="127.0.0.1", port=9000)
+    assert window.wsl_server_config(cfg).host == "0.0.0.0"
+    assert window.wsl_server_config(Config(host="0.0.0.0", port=9000)).host == "0.0.0.0"
+
+
+def test_wsl_handoff_uses_windows_browser(monkeypatch):
+    calls = []
+    monkeypatch.setattr(window.subprocess, "check_output",
+                        lambda *args, **kwargs: "172.30.1.2\n")
+    monkeypatch.setattr(window.subprocess, "run",
+                        lambda args, **kwargs: calls.append((args, kwargs)))
+
+    window.open_wsl_window(9000)
+
+    assert calls[0][0][:2] == ["powershell.exe", "-NoProfile"]
+    assert "172.30.1.2:9000" in calls[0][0][-1]

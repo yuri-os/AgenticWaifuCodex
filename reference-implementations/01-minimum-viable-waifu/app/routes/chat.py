@@ -36,8 +36,17 @@ async def post_turn(state, record: Record, session_id: str, turn_count: int) -> 
     """§10.1 step 9 — the post-turn pipeline, off the critical path (§2.2):
     remember (journal + index + USER.md), maybe summarise, then ONE git commit."""
     async with state.vault_lock:
+        retired_bootstrap = False
         try:
             await state.store.remember(record)
+            bootstrap = state.cfg.vault_dir / "soul" / "BOOTSTRAP.md"
+            if bootstrap.is_file():
+                try:
+                    vaultgit.mv(state.cfg.vault_dir, "soul/BOOTSTRAP.md",
+                                "soul/onboarded/BOOTSTRAP.done.md", force=True)
+                    retired_bootstrap = True
+                except Exception:
+                    log.exception("bootstrap retirement failed (will retry next greeting)")
             if turn_count % state.cfg.summary_every_n == 0:
                 window = state.sessions.window(
                     session_id, state.cfg.summary_every_n * 2)
@@ -58,8 +67,10 @@ async def post_turn(state, record: Record, session_id: str, turn_count: int) -> 
             log.exception("post-turn pipeline error (turn already served)")
         finally:
             # every durable change is a commit — the diary of how she grew (§6.5)
-            vaultgit.commit(state.cfg.vault_dir,
-                            f"turn {session_id[:8]}:{record.turn_index}")
+            message = f"turn {session_id[:8]}:{record.turn_index}"
+            if retired_bootstrap:
+                message += "; first session complete"
+            vaultgit.commit(state.cfg.vault_dir, message)
 
 
 @router.post("/api/chat")
@@ -90,40 +101,48 @@ async def chat(req: ChatRequest, request: Request):
 
     async def stream():
         reply = ""
+        turn_committed = False
         try:
-            async for token in state.chat.stream(
-                    prompt.messages, temperature=state.cfg.temperature,
-                    max_tokens=state.cfg.max_reply_tokens):
-                reply += token
-                yield sse({"token": token})
-        except Exception as e:
-            # §10.1: a mid-stream failure emits an error event and writes NO
-            # corpus record and NO partial commit.
-            log.exception("model stream failed")
-            yield sse({"error": str(e)})
-            return
+            try:
+                async for token in state.chat.stream(
+                        prompt.messages, temperature=state.cfg.temperature,
+                        max_tokens=state.cfg.max_reply_tokens):
+                    reply += token
+                    yield sse({"token": token})
+            except Exception as e:
+                # §10.1: a mid-stream failure emits an error event and writes NO
+                # corpus record and NO partial commit.
+                log.exception("model stream failed")
+                yield sse({"error": str(e)})
+                return
 
-        # ---- steps 7–8: transcript + corpus + bookkeeping ----
-        turn_id = state.corpus.log_turn(
-            session_id=req.session_id, turn_index=turn_index,
-            messages=prompt.messages, completion=reply,
-            model=state.cfg.chat_model,
-            card_version=soul.card_version,
-            companion=soul.name.lower(),
-            template_version=prompt.template_version,
-            gen_params={"temperature": state.cfg.temperature})
-        state.sessions.append_message(req.session_id, "assistant", reply,
-                                      turn_id=turn_id)
-        state.sessions.bump_turn(req.session_id)
+            # ---- steps 7–8: transcript + corpus + bookkeeping ----
+            turn_id = state.corpus.log_turn(
+                session_id=req.session_id, turn_index=turn_index,
+                messages=prompt.messages, completion=reply,
+                model=state.cfg.chat_model,
+                card_version=soul.card_version,
+                companion=soul.name.lower(),
+                template_version=prompt.template_version,
+                gen_params={"temperature": state.cfg.temperature})
+            state.sessions.append_message(req.session_id, "assistant", reply,
+                                          turn_id=turn_id)
+            state.sessions.bump_turn(req.session_id)
+            turn_committed = True
 
-        # step 9: schedule the post-turn pipeline; never blocks the stream
-        record = Record(session_id=req.session_id, turn_index=turn_index,
-                        user_msg=req.message, reply=reply)
-        task = asyncio.create_task(
-            post_turn(state, record, req.session_id, turn_index + 1))
-        state.pending_tasks.add(task)
-        task.add_done_callback(state.pending_tasks.discard)
+            # step 9: schedule the post-turn pipeline; never blocks the stream
+            record = Record(session_id=req.session_id, turn_index=turn_index,
+                            user_msg=req.message, reply=reply)
+            task = asyncio.create_task(
+                post_turn(state, record, req.session_id, turn_index + 1))
+            state.pending_tasks.add(task)
+            task.add_done_callback(state.pending_tasks.discard)
 
-        yield sse({"done": True, "turn_id": turn_id})
+            yield sse({"done": True, "turn_id": turn_id})
+        finally:
+            # A failed model stream or disconnected SSE client leaves only the
+            # provisional user append. Never remove a completed turn.
+            if not turn_committed:
+                state.sessions.drop_last(req.session_id, "user")
 
     return StreamingResponse(stream(), media_type="text/event-stream")

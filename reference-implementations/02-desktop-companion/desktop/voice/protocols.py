@@ -90,3 +90,7 @@ class ReplyBrain(Protocol):
         """Run Build #1's post-turn pipeline (journal, index, USER.md, commit,
         corpus) off the hot path. Never called on a barged-in (incomplete) turn."""
         ...
+
+    def abandon(self, session_id: str) -> None:
+        """Discard any provisional state from an incomplete streamed turn."""
+        ...

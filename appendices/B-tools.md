@@ -14,7 +14,7 @@ Curated short lists, organised by layer. Confirm current versions before committ
 
 - **vLLM** — server-side default for open models.
 - **SGLang** — competitive vLLM alternative.
-- **llama.cpp / llamafile / Ollama** — laptop-grade local.
+- **llama.cpp / llamafile / Ollama / LM Studio** — laptop-grade local; LM Studio provides a desktop-friendly OpenAI-compatible server.
 - **MLX** — Apple Silicon local.
 - **TensorRT-LLM** — fastest if you've committed to Nvidia.
 

@@ -24,6 +24,7 @@ class Config(VoiceConfig):
     tool_max_calls_per_turn: int = 2            # per-turn cap (§7.3)
     tool_timeout_s: float = 10.0                # per-call timeout (§7.3)
     tool_log_dir: Path = Path("./tool-logs")    # JSONL audit, one line per call (§7.3)
+    tool_log_max_bytes: int = 2_000_000          # rotate calls.jsonl at 2 MB
     tool_rate_timer: int = 6                    # calls/minute, token bucket (§7.3)
     tool_rate_music: int = 6
     tool_rate_weather: int = 4
@@ -52,6 +53,7 @@ class Config(VoiceConfig):
     mind_consider_cooldown_s: float = 3600.0    # min gap between re-chewing one goal
     mind_daily_tokens: int = 200_000            # the budget governor's cap (§17.3)
     mind_dream_tick_tokens: int = 4000          # per-DREAM-tick consolidation budget (§21)
+    trace_max_bytes: int = 2_000_000             # per JSONL trace/signal generation
 
     # activity-state cadences + drift timeouts (§17.1)
     mind_engaged_cadence_s: float = 2.0

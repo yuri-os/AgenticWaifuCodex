@@ -24,7 +24,9 @@ class WhisperSTT:
             from faster_whisper import WhisperModel
         except ImportError as e:  # pragma: no cover
             raise RuntimeError(_INSTALL_HINT) from e
-        self._model = WhisperModel(model, device="auto", compute_type=compute_type)
+        # WSL may expose a Windows GPU while its Linux CUDA libraries are absent.
+        # CPU is predictable for the small real-time models this backend targets.
+        self._model = WhisperModel(model, device="cpu", compute_type=compute_type)
         self._frames: list[np.ndarray] = []
         self._sr = 16000
         # Drop segments Whisper itself flags as probably-not-speech. Non-speech

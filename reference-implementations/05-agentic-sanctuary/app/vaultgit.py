@@ -101,12 +101,17 @@ def head(vault: Path) -> str | None:
     return result.stdout.strip() if result.returncode == 0 else None
 
 
-def mv(vault: Path, src: str, dst: str) -> None:
-    """`git mv` inside the Vault (used to retire BOOTSTRAP.md, §5.4)."""
-    Path(vault, dst).parent.mkdir(parents=True, exist_ok=True)
-    result = _git(vault, "mv", src, dst)
+def mv(vault: Path, src: str, dst: str, *, force: bool = False) -> None:
+    """Move a Vault file, with a recovery path for restored onboarding state."""
+    source, target = Path(vault, src), Path(vault, dst)
+    if not source.exists():
+        raise RuntimeError(f"vault mv failed: {src} is not there to move")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    result = _git(vault, "mv", *( ["-f"] if force else []), src, dst)
     if result.returncode != 0:
-        raise RuntimeError(f"vault mv failed: {result.stderr.strip()}")
+        if not force:
+            raise RuntimeError(f"vault mv failed: {result.stderr.strip()}")
+        source.replace(target)
 
 
 def log(vault: Path, n: int = 20) -> list[str]:

@@ -132,6 +132,17 @@ def test_transcript_ring_is_bounded(client):
     assert len(rt.transcript) == 200                    # the ring holds
 
 
+def test_chat_client_queues_live_messages_until_history_is_rendered():
+    """A reconnect must not append a live message ahead of older history."""
+    from pathlib import Path
+    chat = (Path(__file__).resolve().parent.parent / "web/js/chat.js").read_text()
+    assert "let backfilled = false" in chat
+    assert "let queued = []" in chat
+    assert "history.forEach(addMsg);" in chat
+    assert "queued.forEach(addMsg);" in chat
+    assert "if (backfilled) addMsg(m);" in chat
+
+
 def test_selfie_route_404s_outside_the_flat_dir(client):
     assert client.get("/selfies/nope.png").status_code == 404
     assert client.get("/selfies/..%2F.env").status_code in (400, 404)

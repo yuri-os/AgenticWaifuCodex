@@ -71,11 +71,20 @@ class TurnTrace:
             "masked": self.masked,
         }
 
-    def finish(self, *, barged_in: bool = False, trace_dir: Path | None = None) -> dict:
+    def finish(self, *, barged_in: bool = False, trace_dir: Path | None = None,
+               max_bytes: int | None = None) -> dict:
         self.barged_in = barged_in
         rep = self.report()
         if trace_dir is not None:
             trace_dir.mkdir(parents=True, exist_ok=True)
-            with (trace_dir / "latency.jsonl").open("a", encoding="utf-8") as f:
+            path = trace_dir / "latency.jsonl"
+            # Latency is high-frequency diagnostic data, unlike the durable corpus.
+            # Retain one previous generation without ever rotating corpus records.
+            if max_bytes is not None and path.exists() and path.stat().st_size >= max_bytes:
+                previous = path.with_name(path.name + ".1")
+                if previous.exists():
+                    previous.unlink()
+                path.replace(previous)
+            with path.open("a", encoding="utf-8") as f:
                 f.write(json.dumps({"ts": time.time(), **rep}) + "\n")
         return rep

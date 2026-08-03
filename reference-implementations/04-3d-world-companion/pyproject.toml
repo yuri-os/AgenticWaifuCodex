@@ -14,7 +14,7 @@ dependencies = [
     "pyyaml",                 # soul.yaml + .md frontmatter
     "numpy",                  # the flat vector index + audio frames
     "httpx",                  # ollama embeddings, GPT-SoVITS client, Open-Meteo (§7.5)
-    "mcp",                    # the hands (§7): real MCP server + client, in-repo
+    "mcp>=1.2,<2",             # FastMCP's 1.x module path is used by the tool server
     "Pillow",                 # her camera (§7.6): the vendored forge's mock backend + provenance
 ]
 

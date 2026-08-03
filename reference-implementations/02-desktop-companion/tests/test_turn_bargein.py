@@ -90,3 +90,39 @@ async def test_cancel_is_idempotent_and_next_turn_is_clean(controller, brain):
     events = [ev async for ev in controller.run_turn("s2", "again")]
     assert events[-1].kind == "done"
     assert brain2.persisted is not None
+
+
+async def test_early_cancel_is_not_lost_before_the_generator_starts(controller, brain):
+    """Scheduling a turn then immediately barging in must cancel that new turn."""
+    agen = controller.run_turn("s1", "hi")
+    controller.cancel()
+
+    events = [ev async for ev in agen]
+
+    assert events[-1].kind == "cancelled"
+    assert brain.persisted is None
+    assert brain.abandoned == ["s1"]
+
+
+async def test_stream_error_abandons_the_provisional_turn(controller, brain):
+    async def broken_reply(session_id, text):
+        yield "[sad] "
+        raise RuntimeError("model stopped")
+
+    brain.stream_reply = broken_reply
+    events = [ev async for ev in controller.run_turn("s1", "hi")]
+
+    assert events[-1].kind == "error"
+    assert brain.persisted is None
+    assert brain.abandoned == ["s1"]
+
+
+async def test_persist_error_is_reported_and_abandoned(controller, brain):
+    async def broken_persist(session_id, user_text, reply):
+        raise RuntimeError("vault unavailable")
+
+    brain.persist = broken_persist
+    events = [ev async for ev in controller.run_turn("s1", "hi")]
+
+    assert events[-1].kind == "error"
+    assert brain.abandoned == ["s1"]

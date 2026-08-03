@@ -127,5 +127,6 @@ class Config(BrainConfig):
     # while Chromium holds 60 and is crisp. Force "gtk" or "qt" to pin an engine.
     window_gui: str = ""                        # "" (auto: qt if installed) | qt | gtk
 
-    # where the latency traces go (personal debug data, gitignored like the corpus)
+    # Personal high-frequency diagnostics, rotated separately from the corpus.
     trace_dir: Path = Path("./traces")
+    trace_max_bytes: int = 2_000_000
