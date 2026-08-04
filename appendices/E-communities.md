@@ -28,6 +28,7 @@ The active communities for this niche, in 2026, with what they're good for.
 - **LocalLLaMA on Reddit.** Local LLM news + tooling.
 - **r/LocalLLaMA, r/MachineLearning.** Mainstream.
 - **The Pile of LLM Discord servers** (TheBloke, vLLM, etc.). Niche but knowledgeable.
+- **Civitai.** The largest hub for Stable Diffusion checkpoints and LoRAs — character likenesses, art styles. Covers the image-gen half of a companion's visual identity; also increasingly a source for character-adjacent tools, not just a download site.
 
 ## Indie builders / creator economy
 
