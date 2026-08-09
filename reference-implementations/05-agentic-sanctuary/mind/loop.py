@@ -115,6 +115,8 @@ class MindLoop:
                                                # now carries the store's stage
         self.knowledge = KnowledgeStore(self.vault, state.embedder, clock,
                                         utility=self._utility)
+        if hasattr(brain, "set_knowledge"):
+            brain.set_knowledge(self.knowledge)  # normal replies retrieve from the shelf
         self.goals = GoalStore(self.vault, clock)
         self.selfedit = SelfEdit(self.vault, clock)
         self.journal = Journal(self.vault, clock, hub, store=state.store)
